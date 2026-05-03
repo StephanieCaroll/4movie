@@ -1,6 +1,9 @@
 # 🎬 4Movie (Em Desenvolvimento)
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/StephanieCaroll/4movie?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/StephanieCaroll/bakery?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/StephanieCaroll/bakery?style=for-the-badge)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/StephanieCaroll/bakery?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/StephanieCaroll/4movie?style=for-the-badge)
 ![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=for-the-badge&logo=ionic&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
