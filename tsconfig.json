@@ -1,0 +1,39 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    /* Define a pasta raiz do código fonte - resolveu o aviso do TypeScript */
+    "rootDir": "./src",
+    
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    
+    /* Ativa verificações rigorosas - boa prática profissional */
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    
+    /* Define como o TypeScript encontra imports - versão moderna para Angular CLI */
+    "moduleResolution": "bundler",
+    
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "es2020",
+    "lib": ["es2018", "dom"],
+    "skipLibCheck": true,
+    "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    /* Verifica erros nos templates HTML - pega erros antes de rodar */
+    "strictTemplates": true
+  }
+}

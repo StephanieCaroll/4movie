@@ -1,0 +1,12 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+ion-thumbnail {
+  width: 60px;
+  height: 90px;
+}

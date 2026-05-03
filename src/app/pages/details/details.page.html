@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalhes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Enquanto carrega -->
+  <div class="loading-container" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Carregando detalhes...</p>
+  </div>
+
+  <!-- Depois que carregar -->
+  <ion-card *ngIf="!loading && filme">
+    <img [src]="movieService.getPosterUrl(filme.poster_path)" />
+    
+    <ion-card-header>
+      <ion-card-title>{{ filme.title }}</ion-card-title>
+      <ion-card-subtitle>
+        Lançamento: {{ filme.release_date | date:'dd/MM/yyyy' }}
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-text>
+        <h3>Sinopse</h3>
+        <p>{{ filme.overview || 'Sinopse não disponível' }}</p>
+        
+        <h3>Avaliação</h3>
+        <p>⭐ {{ filme.vote_average }} / 10</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Caso não encontre o filme -->
+  <div class="loading-container" *ngIf="!loading && !filme">
+    <p>❌ Filme não encontrado</p>
+  </div>
+</ion-content>
