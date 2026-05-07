@@ -1,21 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonBackButton,
-  IonButtons,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
-  IonText,
-  IonSpinner,
-  IonIcon, IonButton } from '@ionic/angular/standalone';
+import { 
+  IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons,
+  IonIcon, IonButton, IonGrid, IonRow, IonCol,
+  IonChip, IonLabel, IonSkeletonText, IonSpinner
+} from '@ionic/angular/standalone';
 import { MovieService, Movie } from '../../services/movie.service';
 import { addIcons } from 'ionicons';
 import { starOutline, calendarOutline, timeOutline, languageOutline } from 'ionicons/icons';
@@ -34,12 +24,6 @@ import { CartService } from '../../services/cart.service';
     IonToolbar,
     IonBackButton,
     IonButtons,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonCardContent,
-    IonText,
     IonSpinner,
     IonIcon
   ]

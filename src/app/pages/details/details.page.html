@@ -81,10 +81,10 @@
             <span class="info-label">Avaliação</span>
             <div class="rating-large">
               <ion-icon name="star-outline"></ion-icon>
-              <span>{{ filme.vote_average?.toFixed(1) || 'N/A' }}</span>
+              <span>{{ (filme.vote_average || 0).toFixed(1) }}</span>
               <span class="rating-out-of">/10</span>
             </div>
-            <span class="info-value">{{ filme.vote_count?.toLocaleString() || 0 }} votos</span>
+           <span>{{ (filme.vote_count || 0).toLocaleString() }} votos</span>
           </div>
           
           <div class="info-item">
@@ -97,7 +97,7 @@
           
           <div class="info-item" *ngIf="filme.original_language">
             <span class="info-label">Idioma Original</span>
-            <span class="info-value">{{ filme.original_language?.toUpperCase() }}</span>
+          <span class="info-value">{{ (filme.original_language || '').toUpperCase() }}</span>
           </div>
           
           <div class="info-item" *ngIf="filme.adult !== undefined">

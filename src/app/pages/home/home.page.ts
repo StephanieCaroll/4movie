@@ -4,7 +4,7 @@ import { RouterModule, RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { 
   IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, 
-  IonContent, IonBadge, IonIcon, IonButton
+  IonContent, IonIcon, IonButton
 } from '@ionic/angular/standalone';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
@@ -27,7 +27,7 @@ register();
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
     IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar,
-    IonContent, IonBadge, IonIcon, IonButton
+    IonContent, IonIcon, IonButton
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {
