@@ -113,8 +113,8 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
     </td>
 
   <td align="center">
-      <a href="https://github.com/..." title="Lucas Gabriel Santos">
-        <img src="..." width="100px;" alt="Foto do Lucas"/><br>
+      <a href="https://github.com/lucasand-dev1" title="Lucas Gabriel Santos">
+        <img src="https://github.com/lucasand-dev1.png" width="100px;" alt="Foto do Lucas"/><br>
         <sub><b>Lucas Gabriel Santos de Andrade</b></sub>
       </a>
     </td>
