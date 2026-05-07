@@ -4,7 +4,7 @@ import { RouterModule, RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { 
   IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, 
-  IonContent, IonIcon, IonButton
+  IonContent, IonIcon, IonButton, IonSpinner
 } from '@ionic/angular/standalone';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
@@ -27,7 +27,7 @@ register();
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
     IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar,
-    IonContent, IonIcon, IonButton
+    IonContent, IonIcon, IonButton, IonSpinner
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {
@@ -43,9 +43,12 @@ export class HomePage implements OnInit, AfterViewInit {
   public comedyMovies: any[] = [];
   public carouselMovies: any[] = []; 
   
+  public isSearching: boolean = false;
+  public searchResults: any[] = [];
+  public searchQuery = '';
+  
   public imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
   public imageBaseUrlOriginal = 'https://image.tmdb.org/t/p/original'; 
-  public searchQuery = '';
   
   private isDragging = false;
   private startX = 0;
@@ -165,18 +168,24 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   onSearchChange(event: any) {
-    const query = event.target.value;
-    if (query?.length > 2) {
-      this.movieService.searchMovies(query).subscribe((res: any) => {
-        this.popularMovies = res.results.slice(0, 10);
-        this.nowPlayingMovies = [];
-        this.upcomingMovies = [];
-        this.topRatedMovies = [];
-        this.actionMovies = [];
-        this.comedyMovies = [];
-      });
+    const query = event.target.value?.trim() || '';
+    
+    // Se tiver algo digitado, ativa o modo de busca
+    if (query.length > 0) {
+      this.isSearching = true;
+      
+      // Só faz a requisição se tiver mais de 1 letra
+      if (query.length >= 1) {
+        this.movieService.searchMovies(query).subscribe((res: any) => {
+          this.searchResults = res.results;
+        });
+      } else {
+        this.searchResults = [];
+      }
     } else {
-      this.loadAllMovies();
+      // Se apagar tudo, sai do modo de busca (volta pra tela normal)
+      this.isSearching = false;
+      this.searchResults = [];
     }
   }
 }
