@@ -4,6 +4,7 @@
   font-family: 'Roboto', sans-serif;
 }
 
+// Variáveis de Estilo
 $primary-red: #e50914; 
 $dark-bg: #000000;
 $dark-surface: #141414;
@@ -14,6 +15,7 @@ $text-muted: #a3a3a3;
   --background: #{$dark-bg};
 }
 
+// Botão de Voltar Flutuante
 .floating-back {
   position: absolute;
   top: 40px; 
@@ -35,6 +37,7 @@ $text-muted: #a3a3a3;
   }
 }
 
+// Container de Carregamento
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -42,23 +45,25 @@ $text-muted: #a3a3a3;
   justify-content: center;
   height: 100%;
   
-  .loading-spinner {
-    --color: $primary-red;
+  ion-spinner {
+    --color: #{$primary-red};
     width: 40px;
     height: 40px;
   }
   
-  .loading-text {
+  p {
     color: $text-muted;
     margin-top: 16px;
     font-size: 14px;
   }
 }
 
+// Seção de Destaque 
 .hero-section {
   position: relative;
   width: 100%;
   height: 55vh; 
+  z-index: 1; 
   
   .hero-backdrop {
     width: 100%;
@@ -76,6 +81,7 @@ $text-muted: #a3a3a3;
       position: absolute;
       inset: 0;
       background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+      z-index: 2;
     }
     
     .hero-gradient-bottom {
@@ -85,15 +91,17 @@ $text-muted: #a3a3a3;
       right: 0;
       height: 150px;
       background: linear-gradient(to bottom, transparent 0%, $dark-bg 100%);
+      z-index: 3;
     }
   }
 }
 
+// Conteúdo Principal
 .main-content {
   position: relative;
   padding: 0 20px 40px;
   margin-top: -80px;
-  z-index: 10;
+  z-index: 10; 
 
   .header-info {
     display: flex;
@@ -127,12 +135,6 @@ $text-muted: #a3a3a3;
         line-height: 1.2;
       }
 
-      .movie-original-title {
-        font-size: 13px;
-        color: $text-muted;
-        margin: 0 0 12px;
-      }
-
       .movie-quick-stats {
         display: flex;
         flex-wrap: wrap;
@@ -153,9 +155,7 @@ $text-muted: #a3a3a3;
           &.highlight {
             color: #fff;
             background: rgba(255, 215, 0, 0.2);
-            ion-icon {
-              color: #ffd700;
-            }
+            ion-icon { color: #ffd700; }
           }
 
           &.adult {
@@ -192,22 +192,8 @@ $text-muted: #a3a3a3;
       --background: #{$primary-red};
       --color: #{$text-light};
       --border-radius: 8px;
-      margin: 0;
       height: 48px;
       font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-secondary {
-      --border-color: rgba(255,255,255,0.3);
-      --color: #{$text-light};
-      --border-radius: 8px;
-      margin: 0;
-      height: 48px;
-      font-weight: 600;
-      font-size: 14px;
-      --background: transparent;
     }
   }
 
@@ -219,13 +205,15 @@ $text-muted: #a3a3a3;
       font-weight: 700;
       color: $text-light;
       margin: 0 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .overview-text {
       font-size: 14px;
       line-height: 1.6;
       color: #cccccc;
-      margin: 0;
     }
 
     .info-grid {
@@ -236,23 +224,46 @@ $text-muted: #a3a3a3;
       .info-item {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-
-        .info-label {
-          font-size: 12px;
-          color: $text-muted;
-        }
-
-        .info-value {
-          font-size: 14px;
-          font-weight: 500;
-          color: $text-light;
-        }
+        .info-label { font-size: 12px; color: $text-muted; }
+        .info-value { font-size: 14px; color: $text-light; font-weight: 500; }
       }
     }
   }
 }
 
+// --- ESTILOS DO TRAILER  ---
+.trailer-wrapper-large {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  z-index: 20; 
+  position: relative;
+}
+
+.trailer-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; 
+  height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  background: #000;
+  pointer-events: auto !important; 
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    z-index: 25;
+    pointer-events: auto;
+  }
+}
+
+// Error Container
 .error-container {
   display: flex;
   flex-direction: column;
@@ -261,57 +272,37 @@ $text-muted: #a3a3a3;
   height: 100vh;
   text-align: center;
   padding: 20px;
-  
-  .error-icon {
-    font-size: 64px;
-    color: $text-muted;
-    margin-bottom: 16px;
-  }
-  
-  h3 {
-    font-size: 20px;
-    font-weight: 700;
-    color: $text-light;
-    margin: 0 0 8px;
-  }
-  
-  p {
-    color: $text-muted;
-    margin-bottom: 24px;
-    font-size: 14px;
-  }
+  ion-icon { font-size: 64px; color: $text-muted; }
+  h3 { color: $text-light; margin: 16px 0 8px; }
+  p { color: $text-muted; }
 }
 
+// --- AJUSTES PARA TELAS GRANDES ---
 @media (min-width: 768px) {
   .hero-section {
-    height: 55vh; 
+    height: 60vh;
     max-height: 600px;
   }
 
   .main-content {
-    max-width: 800px; 
+    max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
     padding: 0 40px 40px; 
+    margin-top: -120px; 
   }
 
   .header-info {
-    .poster-wrapper {
-      width: 150px; 
-    }
-
-    .title-wrapper {
-      .movie-title {
-        font-size: 32px; 
-      }
-    }
+    .poster-wrapper { width: 160px; }
+    .title-wrapper .movie-title { font-size: 38px; }
   }
 
   .action-buttons {
     flex-direction: row;
-    
-    ion-button {
-      flex: 1; 
-    }
+    ion-button { flex: 1; }
+  }
+
+  .trailer-wrapper-large {
+    padding: 10px 0;
   }
 }

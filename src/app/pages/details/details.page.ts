@@ -1,79 +1,91 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { 
-  IonContent, IonSpinner, IonIcon, IonButton
-} from '@ionic/angular/standalone';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { IonContent, IonSpinner, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { MovieService, Movie } from '../../services/movie.service';
+import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
 import { 
-  star, 
-  arrowBackOutline, 
-  cartOutline, 
-  heartOutline, 
-  sadOutline, 
-  homeOutline 
+  star, arrowBackOutline, cartOutline, heartOutline, 
+  sadOutline, homeOutline, playOutline 
 } from 'ionicons/icons';
-import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule, 
-    IonContent,
-    IonSpinner,
-    IonIcon,
-    IonButton
-  ]
+  imports: [CommonModule, RouterModule, IonContent, IonSpinner, IonIcon, IonButton]
 })
-export class DetailsPage implements OnInit {
+export class DetailsPage implements OnInit, OnDestroy {
   filme: Movie | null = null;
   loading: boolean = true;
-  filmeId: string | null = null;
-  imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  erro: boolean = false; 
+  trailerUrl: SafeResourceUrl | null = null;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     public movieService: MovieService,
-    private cartService: CartService
+    private cartService: CartService,
+    private sanitizer: DomSanitizer
   ) {
-   
     addIcons({ 
-      star, 
-      arrowBackOutline, 
-      cartOutline, 
-      heartOutline, 
-      sadOutline, 
-      homeOutline 
+      star, arrowBackOutline, cartOutline, heartOutline, 
+      sadOutline, homeOutline, playOutline 
     });
   }
 
   ngOnInit() {
-    this.filmeId = this.route.snapshot.paramMap.get('id');
-    console.log('ID do filme:', this.filmeId);
-    
-    if (this.filmeId) {
-      this.carregarDetalhes(parseInt(this.filmeId));
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.carregarDetalhes(parseInt(id));
+      }
+    });
+  }
+
+  voltar() {
+    this.trailerUrl = null; 
+    this.router.navigate(['/home'], { replaceUrl: true });
+  }
+
+  ngOnDestroy() {
+    this.trailerUrl = null;
   }
 
   carregarDetalhes(id: number) {
     this.loading = true;
+    this.erro = false;
     this.movieService.getMovieById(id).subscribe({
       next: (filme) => {
         this.filme = filme;
         this.loading = false;
-        console.log('✅ Detalhes carregados:', filme.title);
+        this.carregarTrailer(id);
       },
       error: (err) => {
-        console.error('❌ Erro ao carregar detalhes:', err);
+        console.error('Erro:', err);
         this.loading = false;
+        this.erro = true;
       }
     });
+  }
+
+  carregarTrailer(id: number) {
+    this.movieService.getMovieVideos(id).subscribe(res => {
+      const trailer = res.results.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer');
+      if (trailer) {
+       
+        this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+          `https://www.youtube.com/embed/${trailer.key}?rel=0&showinfo=0&controls=1`
+        );
+      }
+    });
+  }
+
+  formatDate(date: string): string {
+    return date ? new Date(date).toLocaleDateString('pt-BR') : 'Data N/D';
   }
 
   getGenreNames(genreIds: number[]): string {
@@ -84,19 +96,10 @@ export class DetailsPage implements OnInit {
       9648: 'Mistério', 10749: 'Romance', 878: 'Ficção Científica',
       10770: 'TV Movie', 53: 'Thriller', 10752: 'Guerra', 37: 'Faroeste'
     };
-    
     return genreIds.map(id => genres[id] || 'Geral').join(', ');
   }
 
-  formatDate(date: string): string {
-    if (!date) return 'Data não disponível';
-    return new Date(date).toLocaleDateString('pt-BR');
-  }
-
   addToCart() {
-    if (this.filme) {
-      this.cartService.addToCart(this.filme, 1);
-      console.log('Filme adicionado ao carrinho:', this.filme.title);
-    }
+    if (this.filme) this.cartService.addToCart(this.filme, 1);
   }
 }

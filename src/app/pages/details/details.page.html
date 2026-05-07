@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true" class="details-content">
-  <div class="floating-back" routerLink="/home">
+  <div class="floating-back" (click)="voltar()">
     <ion-icon name="arrow-back-outline"></ion-icon>
   </div>
 
@@ -68,6 +68,24 @@
         <p class="overview-text">
           {{ filme.overview || 'Sinopse não disponível para este filme no momento.' }}
         </p>
+      </div>
+
+      <div class="detail-section" *ngIf="trailerUrl">
+        <h2 class="section-title">
+          <ion-icon name="play-outline" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
+          Trailer Oficial
+        </h2>
+        <div class="trailer-wrapper-large">
+          <div class="trailer-container">
+            <iframe 
+              [src]="trailerUrl" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen
+              style="pointer-events: auto;">
+            </iframe>
+          </div>
+        </div>
       </div>
 
       <div class="detail-section">

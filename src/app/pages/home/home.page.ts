@@ -129,6 +129,16 @@ export class HomePage implements OnInit, AfterViewInit {
 
   loadAllMovies() {
     this.movieService.getPopularMovies().subscribe((res: any) => {
+      
+      console.group('🎬 [APRESENTAÇÃO] Requisito: Consumo da API com método GET');
+      console.log('📦 1. Resposta Bruta Completa (JSON):', res);
+      if (res.results && res.results.length > 0) {
+        console.log('🔍 2. Estrutura específica de UM filme (Primeiro item):', res.results[0]);
+        console.log('📊 3. Tabela com os principais dados extraídos:');
+        console.table(res.results.slice(0, 5), ['id', 'title', 'release_date', 'vote_average', 'original_language']);
+      }
+      console.groupEnd();
+      
       this.popularMovies = res.results.slice(0, 10);
       
       const top4 = res.results.slice(0, 4);
@@ -170,20 +180,26 @@ export class HomePage implements OnInit, AfterViewInit {
   onSearchChange(event: any) {
     const query = event.target.value?.trim() || '';
     
-    // Se tiver algo digitado, ativa o modo de busca
     if (query.length > 0) {
       this.isSearching = true;
-      
-      // Só faz a requisição se tiver mais de 1 letra
+     
       if (query.length >= 1) {
         this.movieService.searchMovies(query).subscribe((res: any) => {
+          
+          console.group(`🔎 [APRESENTAÇÃO] Requisito: Busca Dinâmica na API por "${query}"`);
+          console.log(`Total de resultados encontrados para "${query}":`, res.total_results);
+          if (res.results && res.results.length > 0) {
+            console.table(res.results.slice(0, 5), ['title', 'popularity']);
+          }
+          console.groupEnd();
+
           this.searchResults = res.results;
         });
       } else {
         this.searchResults = [];
       }
     } else {
-      // Se apagar tudo, sai do modo de busca (volta pra tela normal)
+      
       this.isSearching = false;
       this.searchResults = [];
     }

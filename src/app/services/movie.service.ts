@@ -68,4 +68,9 @@ export class MovieService {
     if (!backdropPath) return 'assets/default-backdrop.jpg';
     return `https://image.tmdb.org/t/p/original${backdropPath}`;
   }
+
+  getMovieVideos(id: number): Observable<any> {
+  return this.http.get(`${this.baseUrl}/movie/${id}/videos?api_key=${this.apiKey}&language=pt-BR`);
+}
+
 }
