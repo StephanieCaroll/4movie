@@ -10,11 +10,11 @@
 
 <img src="/..." width="1200" alt="EM DESENVOLVIMENTO">
 
-> O **4Movie** é um aplicativo mobile desenvolvido com **Ionic** e **Angular (Standalone)** que consome dados de APIs de cinema para oferecer um catálogo de filmes moderno e interativo[cite: 1, 2].
+> O **4Movie** é um aplicativo mobile desenvolvido com **Ionic** e **Angular (Standalone)** que consome dados de APIs de cinema para oferecer um catálogo de filmes moderno e interativo.
 
 ## ✨ Sobre o Projeto
 
-O projeto foi construído focando em modularidade e performance, utilizando as funcionalidades mais recentes do Angular 18[cite: 1]. Ele permite que usuários naveguem por uma lista de filmes e acessem detalhes específicos de cada obra[cite: 1, 2].
+O projeto foi construído focando em modularidade e performance, utilizando as funcionalidades mais recentes do Angular 18. Ele permite que usuários naveguem por uma lista de filmes e acessem detalhes específicos de cada obra.
 
 ### Funcionalidades Atuais (O que já fiz):
 - **Arquitetura Standalone**: Configuração completa sem o uso de módulos tradicionais[cite: 2].
@@ -28,10 +28,10 @@ O projeto foi construído focando em modularidade e performance, utilizando as f
 
 O projeto está em fase de implementação ativa. Os próximos passos são:
 
-- [ ] **Consumo de API Real**: Finalizar as chamadas `GET` para listar filmes dinamicamente[cite: 1].
-- [ ] **Diretiva de Destaque**: Implementar interação visual ao passar o mouse ou tocar nos cards[cite: 1, 2].
-- [ ] **Passagem de Parâmetros**: Conectar a navegação para enviar o ID do filme selecionado para a tela de detalhes[cite: 1].
-- [ ] **Refinamento de UI**: Aplicar componentes avançados do Ionic para uma estética premium[cite: 1].
+- [ ] **Consumo de API Real**: Finalizar as chamadas `GET` para listar filmes dinamicamente.
+- [ ] **Diretiva de Destaque**: Implementar interação visual ao passar o mouse ou tocar nos cards.
+- [ ] **Passagem de Parâmetros**: Conectar a navegação para enviar o ID do filme selecionado para a tela de detalhes.
+- [ ] **Refinamento de UI**: Aplicar componentes avançados do Ionic para uma estética premium.
 
 ---
 
@@ -85,8 +85,8 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
     </td>
 
   <td align="center">
-      <a href="https://github.com/..." title="Jorge Henrique Lima">
-        <img src="..." width="100px;" alt="Foto do Jorge"/><br>
+      <a href="https://github.com/knowhl" title="Jorge Henrique Lima">
+        <img src="https://github.com/knowhl.png" width="100px;" alt="Foto do Jorge"/><br>
         <sub><b>Jorge Henrique Lima do Amaral e Silva</b></sub>
       </a>
     </td>
@@ -99,15 +99,15 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
     </td>
 
    <td align="center">
-      <a href="https://github.com/..." title="Kauã de Santana Torres">
-        <img src="..." width="100px;" alt="Foto do Kauã"/><br>
+      <a href="https://github.com/k1onehub" title="Kauã de Santana Torres">
+        <img src="https://github.com/k1onehub.png" width="100px;" alt="Foto do Kauã"/><br>
         <sub><b>Kauã de Santana Torres Bandeira</b></sub>
       </a>
     </td>
 
    <td align="center">
-      <a href="https://github.com/..." title="Luísa Brandão Cordeiro">
-        <img src="..." width="100px;" alt="Foto da Luisa"/><br>
+      <a href="https://github.com/lubclacerda" title="Luísa Brandão Cordeiro">
+        <img src="https://github.com/lubclacerda.png" width="100px;" alt="Foto da Luisa"/><br>
         <sub><b>Luísa Brandão Cordeiro Lacerda</b></sub>
       </a>
     </td>
