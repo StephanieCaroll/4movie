@@ -1,0 +1,16 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "www",
+  "framework": "ionic",
+  "installCommand": "npm install",
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max_old_space_size=4096"
+    }
+  },
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 10
+    }
+  }
+}
