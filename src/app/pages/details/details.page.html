@@ -1,43 +1,136 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="details-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/home" class="back-button"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalhes</ion-title>
+    <ion-title class="details-title">Detalhes do Filme</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Enquanto carrega -->
+<ion-content class="details-content">
+  <!-- Loading State -->
   <div class="loading-container" *ngIf="loading">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Carregando detalhes...</p>
+    <div class="loading-spinner">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    <p class="loading-text">Carregando detalhes...</p>
   </div>
 
-  <!-- Depois que carregar -->
-  <ion-card *ngIf="!loading && filme">
-    <img [src]="movieService.getPosterUrl(filme.poster_path)" />
-    
-    <ion-card-header>
-      <ion-card-title>{{ filme.title }}</ion-card-title>
-      <ion-card-subtitle>
-        Lançamento: {{ filme.release_date | date:'dd/MM/yyyy' }}
-      </ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-text>
-        <h3>Sinopse</h3>
-        <p>{{ filme.overview || 'Sinopse não disponível' }}</p>
+  <!-- Movie Details -->
+  <div class="movie-container" *ngIf="!loading && filme">
+    <!-- Hero Image -->
+    <div class="hero-section">
+      <div class="hero-backdrop">
+        <img [src]="movieService.getPosterUrl(filme.poster_path)" [alt]="filme.title" />
+        <div class="hero-overlay"></div>
+        <div class="hero-gradient"></div>
+      </div>
+      
+      <div class="hero-content">
+        <div class="poster-container">
+          <img [src]="movieService.getPosterUrl(filme.poster_path)" [alt]="filme.title" />
+        </div>
         
-        <h3>Avaliação</h3>
-        <p>⭐ {{ filme.vote_average }} / 10</p>
-      </ion-text>
-    </ion-card-content>
-  </ion-card>
+        <div class="movie-info">
+          <h1 class="movie-title">{{ filme.title }}</h1>
+          <p class="movie-original-title" *ngIf="filme.original_title !== filme.title">
+            {{ filme.original_title }}
+          </p>
+          
+          <div class="movie-meta">
+            <div class="rating-badge">
+              <ion-icon name="star-outline"></ion-icon>
+              <span>{{ filme.vote_average?.toFixed(1) || 'N/A' }}</span>
+              <span class="rating-max">/10</span>
+            </div>
+            <div class="meta-item">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>{{ formatDate(filme.release_date) }}</span>
+            </div>
+            <div class="meta-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ filme.runtime || 'N/A' }} min</span>
+            </div>
+          </div>
+          
+          <div class="genre-tags">
+            <span class="genre-tag" *ngFor="let genreId of filme.genre_ids?.slice(0, 3)">
+              {{ getGenreNames([genreId]) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <!-- Caso não encontre o filme -->
-  <div class="loading-container" *ngIf="!loading && !filme">
-    <p>❌ Filme não encontrado</p>
+    <!-- Details Card -->
+    <div class="details-card">
+      <!-- Sinopse -->
+      <div class="detail-section">
+        <h2 class="section-title gradient-text">SINOPSE</h2>
+        <p class="overview-text">
+          {{ filme.overview || 'Sinopse não disponível para este filme.' }}
+        </p>
+      </div>
+
+      <!-- Informações Adicionais -->
+      <div class="detail-section">
+        <h2 class="section-title gradient-text">INFORMAÇÕES</h2>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Avaliação</span>
+            <div class="rating-large">
+              <ion-icon name="star-outline"></ion-icon>
+              <span>{{ filme.vote_average?.toFixed(1) || 'N/A' }}</span>
+              <span class="rating-out-of">/10</span>
+            </div>
+            <span class="info-value">{{ filme.vote_count?.toLocaleString() || 0 }} votos</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Popularidade</span>
+            <div class="popularity-bar">
+              <div class="popularity-fill" [style.width.%]="(filme.popularity || 0) / 100"></div>
+            </div>
+            <span class="info-value">{{ (filme.popularity || 0).toFixed(0) }}</span>
+          </div>
+          
+          <div class="info-item" *ngIf="filme.original_language">
+            <span class="info-label">Idioma Original</span>
+            <span class="info-value">{{ filme.original_language?.toUpperCase() }}</span>
+          </div>
+          
+          <div class="info-item" *ngIf="filme.adult !== undefined">
+            <span class="info-label">Classificação</span>
+            <span class="info-value" [class.adult]="filme.adult">
+              {{ filme.adult ? '+18' : 'Livre' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="action-buttons">
+        <ion-button class="btn-primary" expand="block" (click)="addToCart()">
+          <ion-icon slot="start" name="cart-outline"></ion-icon>
+          ALUGAR AGORA
+        </ion-button>
+        <ion-button class="btn-secondary" expand="block" fill="outline">
+          <ion-icon slot="start" name="heart-outline"></ion-icon>
+          ADICIONAR À LISTA
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="!loading && !filme">
+    <ion-icon name="sad-outline" class="error-icon"></ion-icon>
+    <h3>Filme não encontrado</h3>
+    <p>O filme que você está procurando não está disponível.</p>
+    <ion-button class="btn-primary" routerLink="/home">
+      <ion-icon slot="start" name="home-outline"></ion-icon>
+      Voltar para o início
+    </ion-button>
   </div>
 </ion-content>
