@@ -78,8 +78,8 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
   <tr>
 
   <td align="center">
-      <a href="https://github.com/..." title="Ana Beatriz Leal">
-        <img src="..." width="100px;" alt="Foto da Ana"/><br>
+      <a href="https://github.com/beatrizgordilho" title="Ana Beatriz Leal">
+        <img src="https://github.com/beatrizgordilho.png" width="100px;" alt="Foto da Ana"/><br>
         <sub><b>Ana Beatriz Leal Gordilho</b></sub>
       </a>
     </td>
