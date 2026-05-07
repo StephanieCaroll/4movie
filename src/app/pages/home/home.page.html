@@ -1,207 +1,187 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border premium-header">
   <ion-toolbar class="main-toolbar">
     <ion-buttons slot="start">
-      <ion-menu-button class="menu-button"></ion-menu-button>
+      <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
-    
-    <div class="logo-container" routerLink="/">
-      <div class="logo-icon">
-        <ion-icon name="film-outline"></ion-icon>
-      </div>
-      <span class="logo-text">Cine<span class="logo-highlight">Rent</span></span>
+
+    <div class="logo-wrapper" routerLink="/">
+      <span class="logo-main">4<span class="logo-accent">MOVIE</span></span>
     </div>
-    
-    <ion-searchbar 
-      [(ngModel)]="searchQuery"
-      (ionInput)="onSearchChange($any($event))"
-      placeholder="Buscar filmes..."
-      animated="true"
-      debounce="500"
-      class="custom-searchbar">
-    </ion-searchbar>
-    
-    <ion-buttons slot="end">
-      <ion-button class="cart-button" routerLink="/cart">
+
+    <div class="mobile-search-container">
+      <ion-searchbar 
+        [(ngModel)]="searchQuery"
+        (ionInput)="onSearchChange($any($event))"
+        placeholder="Buscar..."
+        class="mobile-searchbar">
+      </ion-searchbar>
+    </div>
+
+    <ion-buttons slot="end" class="header-actions-group">
+      <ion-button class="header-icon-btn" routerLink="/categories">
+        <ion-icon slot="icon-only" name="grid-outline"></ion-icon>
+      </ion-button>
+      
+      <ion-button class="header-icon-btn" routerLink="/profile">
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button class="header-icon-btn cart-btn" routerLink="/cart">
         <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
-        <ion-badge class="cart-badge" *ngIf="itemCount > 0">{{ itemCount }}</ion-badge>
+        <span class="badge-dot" *ngIf="itemCount > 0">{{ itemCount }}</span>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar class="search-toolbar desktop-search">
+    <ion-searchbar 
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearchChange($any($event))"
+      placeholder="Buscar no 4movie..."
+      class="app-searchbar">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content class="premium-content">
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <div class="hero-background">
-      <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1920&h=1080&fit=crop" alt="Cinema" />
-      <div class="hero-overlay"></div>
-      <div class="hero-gradient"></div>
-    </div>
-    
-    <div class="hero-content" *ngIf="featuredMovie">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        <span>EM DESTAQUE</span>
-      </div>
+<ion-content class="app-background">
+  <div class="hero-carousel-container" *ngIf="carouselMovies.length > 0">
+    <swiper-container 
+      init="true"
+      autoplay="true"
+      autoplay-delay="5000"
+      autoplay-disable-on-interaction="false"
+      loop="true"
+      speed="800"
+      class="hero-swiper">
       
-      <h1 class="hero-title">{{ featuredMovie.title }}</h1>
-      
-      <div class="hero-meta">
-        <div class="rating">
-          <ion-icon name="star"></ion-icon>
-          <span>{{ featuredMovie.vote_average?.toFixed(1) }}</span>
-        </div>
-        <span>{{ featuredMovie.release_date | date:'yyyy' }}</span>
-        <span>{{ featuredMovie.runtime }} min</span>
-        <span class="genre-badge">{{ featuredMovie.genre_ids?.[0] | genreName }}</span>
-      </div>
-      
-      <p class="hero-description">{{ featuredMovie.overview | slice:0:200 }}...</p>
-      
-      <div class="hero-buttons">
-        <ion-button class="btn-primary" [routerLink]="['/details', featuredMovie.id]">
-          <ion-icon slot="start" name="play-circle-outline"></ion-icon>
-          ALUGAR AGORA
-        </ion-button>
-        <ion-button class="btn-secondary" routerLink="/catalog">
-          VER CATÁLOGO
-        </ion-button>
-      </div>
-      
-      <div class="hero-price">
-        <span>A partir de</span>
-        <strong>R$ {{ getMoviePrice(featuredMovie)?.toFixed(2) }}</strong>
-        <span>/dia</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Features Section -->
-  <div class="features-section">
-    <div class="features-grid">
-      <div class="feature-card glow-card">
-        <div class="feature-icon"><ion-icon name="film-outline"></ion-icon></div>
-        <h3>+10.000 Filmes</h3>
-        <p>O maior catálogo de filmes para alugar</p>
-      </div>
-      <div class="feature-card glow-card">
-        <div class="feature-icon"><ion-icon name="tv-outline"></ion-icon></div>
-        <h3>Qualidade 4K</h3>
-        <p>Assista em alta definição</p>
-      </div>
-      <div class="feature-card glow-card">
-        <div class="feature-icon"><ion-icon name="trophy-outline"></ion-icon></div>
-        <h3>Premiados</h3>
-        <p>Os melhores filmes do cinema</p>
-      </div>
-      <div class="feature-card glow-card">
-        <div class="feature-icon"><ion-icon name="sparkles-outline"></ion-icon></div>
-        <h3>Lançamentos</h3>
-        <p>Filmes novos toda semana</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Movie Sections -->
-  <div class="section-container">
-    <div class="section-header">
-      <div class="header-left">
-        <div class="section-indicator"></div>
-        <h2 class="section-title gradient-text">POPULARES</h2>
-      </div>
-      <button class="see-all-btn" routerLink="/catalog">VER MAIS</button>
-    </div>
-
-    <div class="movies-grid">
-      <div class="movie-item" *ngFor="let movie of movies.slice(0, 8)">
-        <div class="movie-card glow-card" [routerLink]="['/details', movie.id]">
-          <div class="movie-poster">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" />
-            <div class="movie-overlay">
-              <div class="rating glow-rating">
-                <ion-icon name="star"></ion-icon>
+      <swiper-slide *ngFor="let movie of carouselMovies">
+        <div class="hero-section">
+          <div class="hero-img-container">
+            <img [src]="imageBaseUrlOriginal + movie.backdrop_path" [alt]="movie.title" />
+            <div class="hero-overlay"></div>
+          </div>
+          
+          <div class="hero-info">
+            <h1 class="movie-title">{{ movie.title }}</h1>
+            
+            <div class="movie-meta">
+              <div class="rating-box">
+                <ion-icon name="star" class="star-icon"></ion-icon>
                 <span>{{ movie.vote_average?.toFixed(1) }}</span>
               </div>
-              <ion-button class="quick-view">VER MAIS</ion-button>
+              <span class="separator">•</span>
+              <span class="runtime">{{ movie.runtime }} min</span>
+              <span class="separator">•</span>
+              <span>{{ movie.release_date | date:'yyyy' }}</span>
+              <span class="quality-tag">4K</span>
             </div>
-          </div>
-          <div class="movie-info">
-            <h3 class="movie-title">{{ movie.title | slice:0:25 }}{{ movie.title.length > 25 ? '...' : '' }}</h3>
-            <div class="movie-meta">
-              <span class="year">{{ movie.release_date | date:'yyyy' }}</span>
-              <div class="movie-actions">
-                <button class="action-btn heart-btn glow-on-hover">
-                  <ion-icon name="heart-outline"></ion-icon>
-                </button>
-                <button class="action-btn add-btn glow-on-hover">
-                  <ion-icon name="add-circle-outline"></ion-icon>
-                </button>
-              </div>
-            </div>
-            <div class="movie-price">
-              <span class="price">R$ {{ getMoviePrice(movie)?.toFixed(2) }}</span>
-              <span class="price-period">/dia</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-container">
-    <div class="section-header">
-      <div class="header-left">
-        <div class="section-indicator"></div>
-        <h2 class="section-title gradient-text">LANÇAMENTOS</h2>
-      </div>
-      <button class="see-all-btn" routerLink="/catalog">VER MAIS</button>
-    </div>
-
-    <div class="movies-grid">
-      <div class="movie-item" *ngFor="let movie of newReleases.slice(0, 4)">
-        <div class="movie-card glow-card" [routerLink]="['/details', movie.id]">
-          <div class="movie-poster">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" />
-            <div class="movie-overlay">
-              <div class="rating glow-rating">
-                <ion-icon name="star"></ion-icon>
-                <span>{{ movie.vote_average?.toFixed(1) }}</span>
-              </div>
-              <ion-button class="quick-view">VER MAIS</ion-button>
-            </div>
-          </div>
-          <div class="movie-info">
-            <h3 class="movie-title">{{ movie.title | slice:0:25 }}{{ movie.title.length > 25 ? '...' : '' }}</h3>
-            <div class="movie-meta">
-              <span class="year">{{ movie.release_date | date:'yyyy' }}</span>
-              <div class="movie-actions">
-                <button class="action-btn heart-btn glow-on-hover">
-                  <ion-icon name="heart-outline"></ion-icon>
-                </button>
-                <button class="action-btn add-btn glow-on-hover">
-                  <ion-icon name="add-circle-outline"></ion-icon>
-                </button>
-              </div>
-            </div>
-            <div class="movie-price">
-              <span class="price">R$ {{ getMoviePrice(movie)?.toFixed(2) }}</span>
-              <span class="price-period">/dia</span>
+            
+            <p class="hero-description">{{ movie.overview }}</p>
+            
+            <div class="hero-actions">
+              <ion-button class="btn-play" [routerLink]="['/details', movie.id]">
+                <ion-icon slot="start" name="play"></ion-icon>
+                ALUGAR
+              </ion-button>
+              <ion-button class="btn-info" mode="md">
+                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+              </ion-button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </swiper-slide>
+    </swiper-container>
   </div>
 
-  <!-- CTA Section -->
-  <div class="cta-section">
-    <div class="cta-content">
-      <h2>Pronto para começar?</h2>
-      <p>Alugue seus filmes favoritos agora mesmo. Preços a partir de R$ 5,90 por dia.</p>
-      <ion-button class="btn-primary" routerLink="/catalog">
-        EXPLORAR CATÁLOGO
-        <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
-      </ion-button>
-    </div>
+  <div class="main-sections-container">
+    <section class="content-wrapper">
+      <div class="section-title">
+        <h2>🔥 Populares</h2>
+        <span class="see-all" [routerLink]="['/category/popular']">Ver tudo</span>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="movie-card" *ngFor="let movie of popularMovies" (click)="onCardClick($event, movie.id)">
+          <div class="poster-container">
+            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-wrapper">
+      <div class="section-title">
+        <h2>🎬 Lançamentos</h2>
+        <span class="see-all" [routerLink]="['/category/now-playing']">Ver tudo</span>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="movie-card" *ngFor="let movie of nowPlayingMovies" (click)="onCardClick($event, movie.id)">
+          <div class="poster-container">
+            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-wrapper">
+      <div class="section-title">
+        <h2>⏰ Em Breve</h2>
+        <span class="see-all" [routerLink]="['/category/upcoming']">Ver tudo</span>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="movie-card" *ngFor="let movie of upcomingMovies" (click)="onCardClick($event, movie.id)">
+          <div class="poster-container">
+            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-wrapper">
+      <div class="section-title">
+        <h2>⭐ Mais Votados</h2>
+        <span class="see-all" [routerLink]="['/category/top-rated']">Ver tudo</span>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="movie-card" *ngFor="let movie of topRatedMovies" (click)="onCardClick($event, movie.id)">
+          <div class="poster-container">
+            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-wrapper">
+      <div class="section-title">
+        <h2>💥 Ação</h2>
+        <span class="see-all" [routerLink]="['/genre/28']">Ver tudo</span>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="movie-card" *ngFor="let movie of actionMovies" (click)="onCardClick($event, movie.id)">
+          <div class="poster-container">
+            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-wrapper">
+      <div class="section-title">
+        <h2>😂 Comédia</h2>
+        <span class="see-all" [routerLink]="['/genre/35']">Ver tudo</span>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="movie-card" *ngFor="let movie of comedyMovies" (click)="onCardClick($event, movie.id)">
+          <div class="poster-container">
+            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </ion-content>

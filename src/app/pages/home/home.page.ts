@@ -1,46 +1,55 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, RouterLink } from '@angular/router';
+import { RouterModule, RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { 
   IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, 
-  IonContent, IonBadge, IonIcon, IonButton, IonFooter 
+  IonContent, IonBadge, IonIcon, IonButton
 } from '@ionic/angular/standalone';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
-import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
 import { 
-  filmOutline, cartOutline, starOutline, playCircleOutline,
-  tvOutline, trophyOutline, sparklesOutline, heartOutline,
-  addCircleOutline, arrowForwardOutline, menuOutline, closeOutline
+  searchOutline, personOutline, cartOutline, star, 
+  play, addCircleOutline, menuOutline, gridOutline 
 } from 'ionicons/icons';
+import { forkJoin } from 'rxjs';
+
+import { register } from 'swiper/element/bundle';
+register(); 
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], 
   imports: [
-    CommonModule,
-    RouterModule,
-    RouterLink,
-    FormsModule,
-    GenreNamePipe,
+    CommonModule, RouterModule, RouterLink, FormsModule,
     IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar,
     IonContent, IonBadge, IonIcon, IonButton
   ]
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit {
   private movieService = inject(MovieService);
   private cartService = inject(CartService);
+  private router = inject(Router);
   
-  public movies: any[] = [];
-  public newReleases: any[] = [];
-  public featuredMovie: any = null;
+  public popularMovies: any[] = [];
+  public nowPlayingMovies: any[] = [];
+  public upcomingMovies: any[] = [];
+  public topRatedMovies: any[] = [];
+  public actionMovies: any[] = [];
+  public comedyMovies: any[] = [];
+  public carouselMovies: any[] = []; 
+  
   public imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  public imageBaseUrlOriginal = 'https://image.tmdb.org/t/p/original'; 
   public searchQuery = '';
-  public isLoading = true;
+  
+  private isDragging = false;
+  private startX = 0;
+  private scrollLeft = 0;
   
   public get itemCount(): number {
     return this.cartService.getItemCount();
@@ -48,69 +57,126 @@ export class HomePage implements OnInit {
 
   constructor() {
     addIcons({ 
-      filmOutline, cartOutline, starOutline, playCircleOutline,
-      tvOutline, trophyOutline, sparklesOutline, heartOutline,
-      addCircleOutline, arrowForwardOutline, menuOutline, closeOutline
+      searchOutline, personOutline, cartOutline, star, 
+      play, addCircleOutline, menuOutline, gridOutline
     });
   }
 
   ngOnInit() {
-    this.loadMovies();
+    this.loadAllMovies();
+    this.initDragScroll();
   }
 
-  private loadMovies() {
-    this.isLoading = true;
-    this.movieService.getPopularMovies().subscribe({
-      next: (res: any) => {
-        this.movies = res.results;
-        this.featuredMovie = this.movies[0];
-        this.newReleases = this.movies.slice(4, 8);
-        this.isLoading = false;
-      },
-      error: (err: any) => {
-        console.error('Erro ao carregar filmes:', err);
-        this.isLoading = false;
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const swiperEl = document.querySelector('swiper-container');
+      if (swiperEl && swiperEl.swiper) {
+        swiperEl.swiper.autoplay.start();
       }
+    }, 500);
+  }
+
+  initDragScroll() {
+    setTimeout(() => {
+      const sliders = document.querySelectorAll('.horizontal-scroll');
+      
+      sliders.forEach((slider) => {
+        const sliderElement = slider as HTMLElement;
+        
+        sliderElement.addEventListener('mousedown', (e: MouseEvent) => {
+          this.isDragging = false;
+          this.startX = e.pageX - sliderElement.offsetLeft;
+          this.scrollLeft = sliderElement.scrollLeft;
+          
+          const handleMouseMove = (e: MouseEvent) => {
+            const x = e.pageX - sliderElement.offsetLeft;
+            const walk = (x - this.startX);
+            if (Math.abs(walk) > 5) {
+              this.isDragging = true;
+            }
+            if (this.isDragging) {
+              e.preventDefault();
+              sliderElement.scrollLeft = this.scrollLeft - walk;
+            }
+          };
+          
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+          };
+          
+          document.addEventListener('mousemove', handleMouseMove);
+          document.addEventListener('mouseup', handleMouseUp);
+        });
+        
+        sliderElement.style.cursor = 'grab';
+      });
+    }, 100);
+  }
+
+  onCardClick(event: MouseEvent, movieId: number) {
+    if (this.isDragging) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragging = false;
+      return;
+    }
+    this.router.navigate(['/details', movieId]);
+  }
+
+  loadAllMovies() {
+    this.movieService.getPopularMovies().subscribe((res: any) => {
+      this.popularMovies = res.results.slice(0, 10);
+      
+      const top4 = res.results.slice(0, 4);
+      const detailRequests = top4.map((m: any) => this.movieService.getMovieById(m.id));
+      
+      forkJoin(detailRequests).subscribe((details: any) => {
+        this.carouselMovies = details;
+        
+        setTimeout(() => {
+          const swiperEl = document.querySelector('swiper-container');
+          if (swiperEl && swiperEl.swiper) {
+            swiperEl.swiper.autoplay.start();
+          }
+        }, 100);
+      });
+    });
+
+    this.movieService.getNowPlaying().subscribe((res: any) => {
+      this.nowPlayingMovies = res.results.slice(0, 10);
+    });
+
+    this.movieService.getUpcoming().subscribe((res: any) => {
+      this.upcomingMovies = res.results.slice(0, 10);
+    });
+
+    this.movieService.getTopRated().subscribe((res: any) => {
+      this.topRatedMovies = res.results.slice(0, 10);
+    });
+
+    this.movieService.getMoviesByGenre(28).subscribe((res: any) => {
+      this.actionMovies = res.results.slice(0, 10);
+    });
+
+    this.movieService.getMoviesByGenre(35).subscribe((res: any) => {
+      this.comedyMovies = res.results.slice(0, 10);
     });
   }
 
   onSearchChange(event: any) {
     const query = event.target.value;
-    if (query && query.length > 2) {
-      this.movieService.searchMovies(query).subscribe({
-        next: (res: any) => {
-          this.movies = res.results;
-        },
-        error: (err: any) => {
-          console.error('Erro ao buscar filmes:', err);
-        }
+    if (query?.length > 2) {
+      this.movieService.searchMovies(query).subscribe((res: any) => {
+        this.popularMovies = res.results.slice(0, 10);
+        this.nowPlayingMovies = [];
+        this.upcomingMovies = [];
+        this.topRatedMovies = [];
+        this.actionMovies = [];
+        this.comedyMovies = [];
       });
-    } else if (!query || query.length === 0) {
-      this.loadMovies();
+    } else {
+      this.loadAllMovies();
     }
-  }
-
-  getMoviePrice(movie: any): number {
-    // Preço base baseado na popularidade e avaliação
-    const basePrice = 5.9;
-    const rating = movie.vote_average || 7;
-    const popularity = movie.popularity || 100;
-    
-    // Filmes mais populares e bem avaliados são mais caros
-    let price = basePrice;
-    if (rating > 8) price += 2;
-    else if (rating > 7) price += 1;
-    
-    if (popularity > 1000) price += 1.5;
-    else if (popularity > 500) price += 0.5;
-    
-    return Math.min(price, 15.9); // Preço máximo de R$ 15,90
-  }
-
-  doRefresh(event: any) {
-    this.loadMovies();
-    setTimeout(() => {
-      event.target.complete();
-    }, 1000);
   }
 }
