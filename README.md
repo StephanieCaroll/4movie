@@ -53,7 +53,7 @@ Linux, macOS e Windows:
 
 # Clone o repositório
 ```bash
-git clone [https://github.com/StephanieCaroll/4movie](https://github.com/StephanieCaroll/4movie)
+git clone https://github.com/StephanieCaroll/4movie
 ```
 # Entre no diretório
 ```
