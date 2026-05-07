@@ -1,136 +1,106 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="details-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" class="back-button"></ion-back-button>
-    </ion-buttons>
-    <ion-title class="details-title">Detalhes do Filme</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="details-content">
+  <div class="floating-back" routerLink="/home">
+    <ion-icon name="arrow-back-outline"></ion-icon>
+  </div>
 
-<ion-content class="details-content">
-  <!-- Loading State -->
   <div class="loading-container" *ngIf="loading">
     <div class="loading-spinner">
       <ion-spinner name="crescent"></ion-spinner>
     </div>
-    <p class="loading-text">Carregando detalhes...</p>
+    <p class="loading-text">Carregando filme...</p>
   </div>
 
-  <!-- Movie Details -->
   <div class="movie-container" *ngIf="!loading && filme">
-    <!-- Hero Image -->
     <div class="hero-section">
       <div class="hero-backdrop">
-        <img [src]="movieService.getPosterUrl(filme.poster_path)" [alt]="filme.title" />
+        <img [src]="movieService.getBackdropUrl(filme.backdrop_path || filme.poster_path)" [alt]="filme.title" />
         <div class="hero-overlay"></div>
-        <div class="hero-gradient"></div>
+        <div class="hero-gradient-bottom"></div>
       </div>
-      
-      <div class="hero-content">
-        <div class="poster-container">
+    </div>
+
+    <div class="main-content">
+      <div class="header-info">
+        <div class="poster-wrapper">
           <img [src]="movieService.getPosterUrl(filme.poster_path)" [alt]="filme.title" />
         </div>
         
-        <div class="movie-info">
+        <div class="title-wrapper">
           <h1 class="movie-title">{{ filme.title }}</h1>
           <p class="movie-original-title" *ngIf="filme.original_title !== filme.title">
             {{ filme.original_title }}
           </p>
           
-          <div class="movie-meta">
-            <div class="rating-badge">
-              <ion-icon name="star-outline"></ion-icon>
-              <span>{{ filme.vote_average.toFixed(1) || 'N/A' }}</span>
-              <span class="rating-max">/10</span>
-            </div>
-            <div class="meta-item">
-              <ion-icon name="calendar-outline"></ion-icon>
-              <span>{{ formatDate(filme.release_date) }}</span>
-            </div>
-            <div class="meta-item">
-              <ion-icon name="time-outline"></ion-icon>
-              <span>{{ filme.runtime || 'N/A' }} min</span>
-            </div>
-          </div>
-          
-          <div class="genre-tags">
-            <span class="genre-tag" *ngFor="let genreId of filme.genre_ids?.slice(0, 3)">
-              {{ getGenreNames([genreId]) }}
+          <div class="movie-quick-stats">
+            <span class="stat-badge highlight">
+              <ion-icon name="star"></ion-icon>
+              {{ filme.vote_average.toFixed(1) || 'N/A' }}
             </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Details Card -->
-    <div class="details-card">
-      <!-- Sinopse -->
-      <div class="detail-section">
-        <h2 class="section-title gradient-text">SINOPSE</h2>
-        <p class="overview-text">
-          {{ filme.overview || 'Sinopse não disponível para este filme.' }}
-        </p>
-      </div>
-
-      <!-- Informações Adicionais -->
-      <div class="detail-section">
-        <h2 class="section-title gradient-text">INFORMAÇÕES</h2>
-        
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Avaliação</span>
-            <div class="rating-large">
-              <ion-icon name="star-outline"></ion-icon>
-              <span>{{ (filme.vote_average || 0).toFixed(1) }}</span>
-              <span class="rating-out-of">/10</span>
-            </div>
-           <span>{{ (filme.vote_count || 0).toLocaleString() }} votos</span>
-          </div>
-          
-          <div class="info-item">
-            <span class="info-label">Popularidade</span>
-            <div class="popularity-bar">
-              <div class="popularity-fill" [style.width.%]="(filme.popularity || 0) / 100"></div>
-            </div>
-            <span class="info-value">{{ (filme.popularity || 0).toFixed(0) }}</span>
-          </div>
-          
-          <div class="info-item" *ngIf="filme.original_language">
-            <span class="info-label">Idioma Original</span>
-          <span class="info-value">{{ (filme.original_language || '').toUpperCase() }}</span>
-          </div>
-          
-          <div class="info-item" *ngIf="filme.adult !== undefined">
-            <span class="info-label">Classificação</span>
-            <span class="info-value" [class.adult]="filme.adult">
+            <span class="stat-badge">
+              {{ filme.release_date ? (filme.release_date | slice:0:4) : 'N/A' }}
+            </span>
+            <span class="stat-badge" *ngIf="filme.adult !== undefined" [class.adult]="filme.adult">
               {{ filme.adult ? '+18' : 'Livre' }}
             </span>
           </div>
         </div>
       </div>
 
-      <!-- Ações -->
+      <div class="genre-list">
+        <span class="genre-pill" *ngFor="let genreId of filme.genre_ids?.slice(0, 3)">
+          {{ getGenreNames([genreId]) }}
+        </span>
+      </div>
+
       <div class="action-buttons">
-        <ion-button class="btn-primary" expand="block" (click)="addToCart()">
+        <ion-button class="btn-primary" expand="block" mode="ios" (click)="addToCart()">
           <ion-icon slot="start" name="cart-outline"></ion-icon>
           ALUGAR AGORA
         </ion-button>
-        <ion-button class="btn-secondary" expand="block" fill="outline">
+        <ion-button class="btn-secondary" expand="block" fill="outline" mode="ios">
           <ion-icon slot="start" name="heart-outline"></ion-icon>
-          ADICIONAR À LISTA
+          MINHA LISTA
         </ion-button>
+      </div>
+
+      <div class="detail-section">
+        <h2 class="section-title">Sinopse</h2>
+        <p class="overview-text">
+          {{ filme.overview || 'Sinopse não disponível para este filme no momento.' }}
+        </p>
+      </div>
+
+      <div class="detail-section">
+        <h2 class="section-title">Detalhes</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Lançamento</span>
+            <span class="info-value">{{ formatDate(filme.release_date) }}</span>
+          </div>
+          <div class="info-item" *ngIf="filme.original_language">
+            <span class="info-label">Idioma</span>
+            <span class="info-value">{{ (filme.original_language || '').toUpperCase() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Popularidade</span>
+            <span class="info-value">{{ (filme.popularity || 0).toFixed(0) }} pts</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Total de Votos</span>
+            <span class="info-value">{{ (filme.vote_count || 0).toLocaleString() }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Error State -->
   <div class="error-container" *ngIf="!loading && !filme">
     <ion-icon name="sad-outline" class="error-icon"></ion-icon>
     <h3>Filme não encontrado</h3>
-    <p>O filme que você está procurando não está disponível.</p>
-    <ion-button class="btn-primary" routerLink="/home">
+    <p>O título que você procura não está mais disponível.</p>
+    <ion-button class="btn-secondary" mode="ios" routerLink="/home">
       <ion-icon slot="start" name="home-outline"></ion-icon>
-      Voltar para o início
+      Voltar para o Início
     </ion-button>
   </div>
 </ion-content>

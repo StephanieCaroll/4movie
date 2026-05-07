@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { 
-  IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons,
-  IonIcon, IonButton, IonGrid, IonRow, IonCol,
-  IonChip, IonLabel, IonSkeletonText, IonSpinner
+  IonContent, IonSpinner, IonIcon, IonButton
 } from '@ionic/angular/standalone';
 import { MovieService, Movie } from '../../services/movie.service';
 import { addIcons } from 'ionicons';
-import { starOutline, calendarOutline, timeOutline, languageOutline } from 'ionicons/icons';
+import { 
+  star, 
+  arrowBackOutline, 
+  cartOutline, 
+  heartOutline, 
+  sadOutline, 
+  homeOutline 
+} from 'ionicons/icons';
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -16,16 +21,13 @@ import { CartService } from '../../services/cart.service';
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
   standalone: true,
-  imports: [IonButton, 
+  imports: [
     CommonModule,
+    RouterModule, 
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonBackButton,
-    IonButtons,
     IonSpinner,
-    IonIcon
+    IonIcon,
+    IonButton
   ]
 })
 export class DetailsPage implements OnInit {
@@ -39,7 +41,15 @@ export class DetailsPage implements OnInit {
     public movieService: MovieService,
     private cartService: CartService
   ) {
-    addIcons({ starOutline, calendarOutline, timeOutline, languageOutline });
+   
+    addIcons({ 
+      star, 
+      arrowBackOutline, 
+      cartOutline, 
+      heartOutline, 
+      sadOutline, 
+      homeOutline 
+    });
   }
 
   ngOnInit() {
@@ -84,11 +94,9 @@ export class DetailsPage implements OnInit {
   }
 
   addToCart() {
-  if (this.filme) {
-    this.cartService.addToCart(this.filme, 1);
-   
-    console.log('Filme adicionado ao carrinho:', this.filme.title);
+    if (this.filme) {
+      this.cartService.addToCart(this.filme, 1);
+      console.log('Filme adicionado ao carrinho:', this.filme.title);
+    }
   }
-}
-
 }
