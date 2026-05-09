@@ -1,47 +1,8 @@
-<ion-header class="ion-no-border premium-header">
-  <ion-toolbar class="main-toolbar">
-    <ion-buttons slot="start">
-      <ion-menu-button color="light"></ion-menu-button>
-    </ion-buttons>
-
-    <div class="logo-wrapper" routerLink="/">
-      <span class="logo-main">4<span class="logo-accent">MOVIE</span></span>
-    </div>
-
-    <div class="mobile-search-container">
-      <ion-searchbar 
-        [(ngModel)]="searchQuery"
-        (ionInput)="onSearchChange($any($event))"
-        placeholder="Buscar..."
-        class="mobile-searchbar">
-      </ion-searchbar>
-    </div>
-
-    <ion-buttons slot="end" class="header-actions-group">
-      <ion-button class="header-icon-btn" routerLink="/categories">
-        <ion-icon slot="icon-only" name="grid-outline"></ion-icon>
-      </ion-button>
-      
-      <ion-button class="header-icon-btn" routerLink="/profile">
-        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
-      </ion-button>
-
-      <ion-button class="header-icon-btn cart-btn" routerLink="/cart">
-        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
-        <span class="badge-dot" *ngIf="itemCount > 0">{{ itemCount }}</span>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-
-  <ion-toolbar class="search-toolbar desktop-search">
-    <ion-searchbar 
-      [(ngModel)]="searchQuery"
-      (ionInput)="onSearchChange($any($event))"
-      placeholder="Buscar no 4movie..."
-      class="app-searchbar">
-    </ion-searchbar>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  [(searchQuery)]="searchQuery" 
+  [itemCount]="itemCount" 
+  (searchChange)="onSearchChange($event)">
+</app-header>
 
 <ion-content class="app-background">
   
@@ -51,7 +12,6 @@
         init="true"
         autoplay="true"
         autoplay-delay="5000"
-        autoplay-disable-on-interaction="false"
         loop="true"
         speed="800"
         class="hero-swiper">
@@ -81,7 +41,7 @@
               <p class="hero-description">{{ movie.overview }}</p>
               
               <div class="hero-actions">
-                <ion-button class="btn-play" [routerLink]="['/details', movie.id]">
+                <ion-button class="btn-play" (click)="onCardClick($event, movie.id)">
                   <ion-icon slot="start" name="play"></ion-icon>
                   ALUGAR
                 </ion-button>
@@ -96,95 +56,100 @@
     </div>
 
     <div class="main-sections-container">
+      
       <section class="content-wrapper">
         <div class="section-title">
           <h2>🔥 Populares</h2>
-          <span class="see-all" [routerLink]="['/category/popular']">Ver tudo</span>
+          <span class="see-all" routerLink="/category/popular">Ver tudo</span>
         </div>
         <div class="horizontal-scroll">
           <div class="movie-card" *ngFor="let movie of popularMovies" (click)="onCardClick($event, movie.id)">
             <div class="poster-container">
               <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-              <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+              <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="content-wrapper">
-        <div class="section-title">
-          <h2>🎬 Lançamentos</h2>
-          <span class="see-all" [routerLink]="['/category/now-playing']">Ver tudo</span>
-        </div>
-        <div class="horizontal-scroll">
-          <div class="movie-card" *ngFor="let movie of nowPlayingMovies" (click)="onCardClick($event, movie.id)">
-            <div class="poster-container">
-              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-              <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="content-wrapper">
-        <div class="section-title">
-          <h2>⏰ Em Breve</h2>
-          <span class="see-all" [routerLink]="['/category/upcoming']">Ver tudo</span>
-        </div>
-        <div class="horizontal-scroll">
-          <div class="movie-card" *ngFor="let movie of upcomingMovies" (click)="onCardClick($event, movie.id)">
-            <div class="poster-container">
-              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-              <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="content-wrapper">
-        <div class="section-title">
-          <h2>⭐ Mais Votados</h2>
-          <span class="see-all" [routerLink]="['/category/top-rated']">Ver tudo</span>
-        </div>
-        <div class="horizontal-scroll">
-          <div class="movie-card" *ngFor="let movie of topRatedMovies" (click)="onCardClick($event, movie.id)">
-            <div class="poster-container">
-              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-              <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="content-wrapper">
+      <section class="content-wrapper" *ngIf="actionMovies.length > 0">
         <div class="section-title">
           <h2>💥 Ação</h2>
-          <span class="see-all" [routerLink]="['/genre/28']">Ver tudo</span>
+          <span class="see-all" routerLink="/genre/28">Ver tudo</span>
         </div>
         <div class="horizontal-scroll">
           <div class="movie-card" *ngFor="let movie of actionMovies" (click)="onCardClick($event, movie.id)">
             <div class="poster-container">
               <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-              <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+              <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="content-wrapper">
+      <section class="content-wrapper" *ngIf="actionMovies.length > 0">
         <div class="section-title">
-          <h2>😂 Comédia</h2>
-          <span class="see-all" [routerLink]="['/genre/35']">Ver tudo</span>
+          <h2>😂 Comédia </h2>
+          <span class="see-all" routerLink="/genre/28">Ver tudo</span>
         </div>
         <div class="horizontal-scroll">
           <div class="movie-card" *ngFor="let movie of comedyMovies" (click)="onCardClick($event, movie.id)">
             <div class="poster-container">
               <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-              <div class="card-badge" *ngIf="movie.vote_average > 8">★ {{ movie.vote_average.toFixed(1) }}</div>
+              <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
             </div>
           </div>
         </div>
       </section>
+
+      <section class="content-wrapper" *ngIf="actionMovies.length > 0">
+        </section>
+
+      <section class="content-wrapper" *ngIf="horrorMovies.length > 0">
+        <div class="section-title">
+          <h2>👻 Terror</h2>
+          <span class="see-all" routerLink="/genre/27">Ver tudo</span>
+        </div>
+        <div class="horizontal-scroll">
+          <div class="movie-card" *ngFor="let movie of horrorMovies" (click)="onCardClick($event, movie.id)">
+            <div class="poster-container">
+              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+              <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-wrapper" *ngIf="romanceMovies.length > 0">
+        <div class="section-title">
+          <h2>💖 Romance</h2>
+          <span class="see-all" routerLink="/genre/10749">Ver tudo</span>
+        </div>
+        <div class="horizontal-scroll">
+          <div class="movie-card" *ngFor="let movie of romanceMovies" (click)="onCardClick($event, movie.id)">
+            <div class="poster-container">
+              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+              <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-wrapper" *ngIf="animationMovies.length > 0">
+        <div class="section-title">
+          <h2>🧸 Animação</h2>
+          <span class="see-all" routerLink="/genre/16">Ver tudo</span>
+        </div>
+        <div class="horizontal-scroll">
+          <div class="movie-card" *ngFor="let movie of animationMovies" (click)="onCardClick($event, movie.id)">
+            <div class="poster-container">
+              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+              <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 
@@ -198,20 +163,15 @@
         <div class="poster-container">
           <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" *ngIf="movie.poster_path" draggable="false" />
           <div class="no-image" *ngIf="!movie.poster_path">Sem Imagem</div>
-          <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
+          <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
         </div>
         <p class="movie-grid-title">{{ movie.title }}</p>
       </div>
     </div>
 
-    <div class="no-results" *ngIf="searchResults.length === 0 && searchQuery.length > 2">
-      <ion-icon name="search-outline"></ion-icon>
+    <div class="no-results" *ngIf="searchResults.length === 0 && searchQuery.length > 0">
       <p>Nenhum título encontrado para "{{ searchQuery }}"</p>
     </div>
-    
-    <div class="typing-state" *ngIf="searchResults.length === 0 && searchQuery.length > 0 && searchQuery.length <= 2">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Continue digitando...</p>
-    </div>
   </div>
+
 </ion-content>

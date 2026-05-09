@@ -3,16 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { 
-  IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, 
-  IonContent, IonIcon, IonButton, IonSpinner
+  IonContent, IonIcon, IonButton
 } from '@ionic/angular/standalone';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
+import { HeaderComponent } from '../../components/header/header.component';
 import { addIcons } from 'ionicons';
-import { 
-  searchOutline, personOutline, cartOutline, star, 
-  play, addCircleOutline, menuOutline, gridOutline 
-} from 'ionicons/icons';
+import { star, play, addCircleOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 
 import { register } from 'swiper/element/bundle';
@@ -26,8 +23,8 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
-    IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSearchbar,
-    IonContent, IonIcon, IonButton, IonSpinner
+    IonContent, IonIcon, IonButton,
+    HeaderComponent
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {
@@ -42,10 +39,13 @@ export class HomePage implements OnInit, AfterViewInit {
   public actionMovies: any[] = [];
   public comedyMovies: any[] = [];
   public carouselMovies: any[] = []; 
+  public horrorMovies: any[] = [];
+  public romanceMovies: any[] = [];
+  public animationMovies: any[] = [];
   
   public isSearching: boolean = false;
   public searchResults: any[] = [];
-  public searchQuery = '';
+  public searchQuery: string = '';
   
   public imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
   public imageBaseUrlOriginal = 'https://image.tmdb.org/t/p/original'; 
@@ -59,10 +59,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   constructor() {
-    addIcons({ 
-      searchOutline, personOutline, cartOutline, star, 
-      play, addCircleOutline, menuOutline, gridOutline
-    });
+    addIcons({ star, play, addCircleOutline });
   }
 
   ngOnInit() {
@@ -71,10 +68,14 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.startAutoplay();
+  }
+
+  private startAutoplay() {
     setTimeout(() => {
       const swiperEl = document.querySelector('swiper-container');
-      if (swiperEl && swiperEl.swiper) {
-        swiperEl.swiper.autoplay.start();
+      if (swiperEl && (swiperEl as any).swiper) {
+        (swiperEl as any).swiper.autoplay.start();
       }
     }, 500);
   }
@@ -82,23 +83,19 @@ export class HomePage implements OnInit, AfterViewInit {
   initDragScroll() {
     setTimeout(() => {
       const sliders = document.querySelectorAll('.horizontal-scroll');
-      
       sliders.forEach((slider) => {
         const sliderElement = slider as HTMLElement;
-        
         sliderElement.addEventListener('mousedown', (e: MouseEvent) => {
           this.isDragging = false;
           this.startX = e.pageX - sliderElement.offsetLeft;
           this.scrollLeft = sliderElement.scrollLeft;
           
-          const handleMouseMove = (e: MouseEvent) => {
-            const x = e.pageX - sliderElement.offsetLeft;
+          const handleMouseMove = (ev: MouseEvent) => {
+            const x = ev.pageX - sliderElement.offsetLeft;
             const walk = (x - this.startX);
-            if (Math.abs(walk) > 5) {
-              this.isDragging = true;
-            }
+            if (Math.abs(walk) > 5) this.isDragging = true;
             if (this.isDragging) {
-              e.preventDefault();
+              ev.preventDefault();
               sliderElement.scrollLeft = this.scrollLeft - walk;
             }
           };
@@ -111,7 +108,6 @@ export class HomePage implements OnInit, AfterViewInit {
           document.addEventListener('mousemove', handleMouseMove);
           document.addEventListener('mouseup', handleMouseUp);
         });
-        
         sliderElement.style.cursor = 'grab';
       });
     }, 100);
@@ -128,78 +124,43 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   loadAllMovies() {
+   
     this.movieService.getPopularMovies().subscribe((res: any) => {
-      
-      console.group('🎬 [APRESENTAÇÃO] Requisito: Consumo da API com método GET');
-      console.log('📦 1. Resposta Bruta Completa (JSON):', res);
-      if (res.results && res.results.length > 0) {
-        console.log('🔍 2. Estrutura específica de UM filme (Primeiro item):', res.results[0]);
-        console.log('📊 3. Tabela com os principais dados extraídos:');
-        console.table(res.results.slice(0, 5), ['id', 'title', 'release_date', 'vote_average', 'original_language']);
-      }
-      console.groupEnd();
-      
       this.popularMovies = res.results.slice(0, 10);
-      
       const top4 = res.results.slice(0, 4);
       const detailRequests = top4.map((m: any) => this.movieService.getMovieById(m.id));
       
       forkJoin(detailRequests).subscribe((details: any) => {
         this.carouselMovies = details;
-        
-        setTimeout(() => {
-          const swiperEl = document.querySelector('swiper-container');
-          if (swiperEl && swiperEl.swiper) {
-            swiperEl.swiper.autoplay.start();
-          }
-        }, 100);
+        this.startAutoplay();
       });
     });
 
-    this.movieService.getNowPlaying().subscribe((res: any) => {
-      this.nowPlayingMovies = res.results.slice(0, 10);
-    });
-
-    this.movieService.getUpcoming().subscribe((res: any) => {
-      this.upcomingMovies = res.results.slice(0, 10);
-    });
-
-    this.movieService.getTopRated().subscribe((res: any) => {
-      this.topRatedMovies = res.results.slice(0, 10);
-    });
-
-    this.movieService.getMoviesByGenre(28).subscribe((res: any) => {
-      this.actionMovies = res.results.slice(0, 10);
-    });
-
-    this.movieService.getMoviesByGenre(35).subscribe((res: any) => {
-      this.comedyMovies = res.results.slice(0, 10);
-    });
-  }
+    this.movieService.getNowPlaying().subscribe((res: any) => this.nowPlayingMovies = res.results.slice(0, 10));
+    this.movieService.getUpcoming().subscribe((res: any) => this.upcomingMovies = res.results.slice(0, 10));
+    this.movieService.getTopRated().subscribe((res: any) => this.topRatedMovies = res.results.slice(0, 10));
+    // Filmes de Ação (ID: 28)
+    this.movieService.getMoviesByGenre(28).subscribe((res: any) => this.actionMovies = res.results.slice(0, 10));
+    // Filmes de Comédia (ID: 35)
+    this.movieService.getMoviesByGenre(35).subscribe((res: any) => this.comedyMovies = res.results.slice(0, 10));
+    // Filmes de Terror (ID: 27)
+    this.movieService.getMoviesByGenre(27).subscribe((res: any) => {this.horrorMovies = res.results.slice(0, 10);});
+    // Filmes de Romance (ID: 10749)
+    this.movieService.getMoviesByGenre(10749).subscribe((res: any) => {this.romanceMovies = res.results.slice(0, 10);});
+    // Filmes de Animação (ID: 16)
+    this.movieService.getMoviesByGenre(16).subscribe((res: any) => {this.animationMovies = res.results.slice(0, 10);});
+    }
 
   onSearchChange(event: any) {
     const query = event.target.value?.trim() || '';
+    this.searchQuery = query;
     
     if (query.length > 0) {
       this.isSearching = true;
-     
-      if (query.length >= 1) {
-        this.movieService.searchMovies(query).subscribe((res: any) => {
-          
-          console.group(`🔎 [APRESENTAÇÃO] Requisito: Busca Dinâmica na API por "${query}"`);
-          console.log(`Total de resultados encontrados para "${query}":`, res.total_results);
-          if (res.results && res.results.length > 0) {
-            console.table(res.results.slice(0, 5), ['title', 'popularity']);
-          }
-          console.groupEnd();
-
-          this.searchResults = res.results;
-        });
-      } else {
-        this.searchResults = [];
-      }
+      this.movieService.searchMovies(query).subscribe((res: any) => {
+        this.searchResults = res.results;
+      });
     } else {
-      
       this.isSearching = false;
       this.searchResults = [];
     }

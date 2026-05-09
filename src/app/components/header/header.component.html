@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar class="main-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <div class="logo-wrapper" routerLink="/">
+      <span class="logo-main">4<span class="logo-accent">MOVIE</span></span>
+    </div>
+
+    <div class="mobile-search-container">
+      <ion-searchbar 
+        [(ngModel)]="searchQuery"
+        (ionInput)="onSearchChange($event)"
+        placeholder="Buscar..."
+        class="mobile-searchbar">
+      </ion-searchbar>
+    </div>
+
+    <ion-buttons slot="end" class="header-actions-group">
+      <ion-button class="header-icon-btn" routerLink="/categories">
+        <ion-icon slot="icon-only" name="grid-outline"></ion-icon>
+      </ion-button>
+      
+      <ion-button class="header-icon-btn" routerLink="/profile">
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button class="header-icon-btn cart-btn" routerLink="/cart">
+        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
+        <span class="badge-dot" *ngIf="itemCount > 0">{{ itemCount }}</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="search-toolbar desktop-search">
+    <ion-searchbar 
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearchChange($event)"
+      placeholder="Buscar no 4movie..."
+      class="app-searchbar">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>

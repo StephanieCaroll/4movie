@@ -1,0 +1,128 @@
+$primary: #e50914;
+$bg-absolute: #000000;
+
+.premium-header {
+  background: $bg-absolute;
+  
+  .main-toolbar {
+    --background: #000000;
+    --min-height: 56px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --border-style: none;
+
+    .logo-wrapper {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      margin-right: 10px;
+      
+      .logo-main {
+        font-size: 20px;
+        font-weight: 900;
+        color: white;
+        white-space: nowrap;
+        
+        .logo-accent { 
+          color: $primary; 
+        }
+      }
+    }
+
+    .mobile-search-container {
+      flex: 1;
+      display: none;
+      margin: 0 10px;
+      
+      .mobile-searchbar {
+        --background: #1a1a1a;
+        --color: white;
+        --placeholder-color: #888;
+        --border-radius: 8px;
+        --box-shadow: none;
+        height: 36px;
+        padding: 0;
+      }
+    }
+
+    .header-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 0 0 auto;
+
+      .header-icon-btn {
+        --padding-start: 8px;
+        --padding-end: 8px;
+        --color: white;
+        margin: 0;
+        width: 40px;
+        height: 40px;
+        
+        ion-icon {
+          font-size: 22px;
+        }
+      }
+    }
+
+    .cart-btn {
+      position: relative;
+      
+      .badge-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: $primary;
+        color: white;
+        font-size: 9px;
+        font-weight: bold;
+        padding: 1px 4px;
+        border-radius: 10px;
+        min-width: 14px;
+        z-index: 10;
+      }
+    }
+  }
+
+  .search-toolbar {
+    --background: #000000;
+    --min-height: 44px;
+    padding: 0 12px 10px;
+    
+    &.desktop-search {
+      display: block;
+    }
+    
+    .app-searchbar {
+      --background: #1a1a1a;
+      --color: white;
+      --border-radius: 8px;
+      height: 36px;
+      padding: 0;
+    }
+  }
+}
+
+/* Media Queries específicas do Header */
+@media (max-width: 768px) {
+  .premium-header {
+    .main-toolbar {
+      .logo-wrapper { display: none; }
+      .mobile-search-container { display: block; }
+    }
+    .search-toolbar.desktop-search { display: none; }
+  }
+}
+
+@media (max-width: 480px) {
+  .premium-header .main-toolbar {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    .header-actions-group .header-icon-btn {
+      width: 36px;
+      height: 36px;
+      ion-icon { font-size: 18px; }
+    }
+  }
+}
