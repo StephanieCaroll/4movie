@@ -40,13 +40,13 @@ $bg-absolute: #000000;
     
     .movie-card {
       flex-shrink: 0;
-      width: 150px; // Mesmo tamanho da Home
+      width: 150px; 
       cursor: pointer;
       
       .poster-container {
         position: relative;
         width: 100%;
-        aspect-ratio: 2/3; // Mantém a proporção vertical
+        aspect-ratio: 2/3; 
         
         img { 
           border-radius: 8px; 
@@ -62,7 +62,7 @@ $bg-absolute: #000000;
           right: 8px; 
           background: rgba(0,0,0,0.8);
           backdrop-filter: blur(4px);
-          color: #ffc107; // Amarelo da estrela igual à Home
+          color: #ffc107; 
           font-size: 10px;
           font-weight: bold;
           padding: 3px 6px; 

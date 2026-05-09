@@ -28,7 +28,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private navCtrl: NavController, // Adicionado
+    private navCtrl: NavController, 
     public movieService: MovieService,
     private cartService: CartService,
     private sanitizer: DomSanitizer
@@ -48,7 +48,6 @@ export class DetailsPage implements OnInit, OnDestroy {
     });
   }
 
-  // Método voltar corrigido - volta para a página anterior
   voltar() {
     this.trailerUrl = null;
     // Usa o NavController para voltar na pilha de navegação
