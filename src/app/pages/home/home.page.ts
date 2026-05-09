@@ -43,9 +43,7 @@ export class HomePage implements OnInit, AfterViewInit {
   public romanceMovies: any[] = [];
   public animationMovies: any[] = [];
   
-  public isSearching: boolean = false;
-  public searchResults: any[] = [];
-  public searchQuery: string = '';
+ 
   
   public imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
   public imageBaseUrlOriginal = 'https://image.tmdb.org/t/p/original'; 
@@ -151,18 +149,4 @@ export class HomePage implements OnInit, AfterViewInit {
     this.movieService.getMoviesByGenre(16).subscribe((res: any) => {this.animationMovies = res.results.slice(0, 10);});
     }
 
-  onSearchChange(event: any) {
-    const query = event.target.value?.trim() || '';
-    this.searchQuery = query;
-    
-    if (query.length > 0) {
-      this.isSearching = true;
-      this.movieService.searchMovies(query).subscribe((res: any) => {
-        this.searchResults = res.results;
-      });
-    } else {
-      this.isSearching = false;
-      this.searchResults = [];
-    }
-  }
 }

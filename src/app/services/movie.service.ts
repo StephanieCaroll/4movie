@@ -51,6 +51,10 @@ export class MovieService {
     return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=pt-BR&page=1`);
   }
 
+  getGenres(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=pt-BR`);
+  }
+
   searchMovies(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${query}&language=pt-BR`);
   }

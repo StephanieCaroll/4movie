@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IonContent, IonSpinner, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { NavController, Platform } from '@ionic/angular';
 import { MovieService, Movie } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
@@ -27,6 +28,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private navCtrl: NavController, // Adicionado
     public movieService: MovieService,
     private cartService: CartService,
     private sanitizer: DomSanitizer
@@ -46,9 +48,11 @@ export class DetailsPage implements OnInit, OnDestroy {
     });
   }
 
+  // Método voltar corrigido - volta para a página anterior
   voltar() {
-    this.trailerUrl = null; 
-    this.router.navigate(['/home'], { replaceUrl: true });
+    this.trailerUrl = null;
+    // Usa o NavController para voltar na pilha de navegação
+    this.navCtrl.back();
   }
 
   ngOnDestroy() {
@@ -76,7 +80,6 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.movieService.getMovieVideos(id).subscribe(res => {
       const trailer = res.results.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer');
       if (trailer) {
-       
         this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
           `https://www.youtube.com/embed/${trailer.key}?rel=0&showinfo=0&controls=1`
         );

@@ -8,6 +8,7 @@
       <span class="logo-main">4<span class="logo-accent">MOVIE</span></span>
     </div>
 
+    <!-- Mobile search bar -->
     <div class="mobile-search-container">
       <ion-searchbar 
         [(ngModel)]="searchQuery"
@@ -40,5 +41,29 @@
       placeholder="Buscar no 4movie..."
       class="app-searchbar">
     </ion-searchbar>
+    <div class="search-underline" [class.active]="searchQuery.length > 0"></div>
   </ion-toolbar>
 </ion-header>
+
+<!-- Search Results Overlay -->
+<div class="search-results-overlay" *ngIf="isSearching && searchQuery.length > 0">
+  <div class="search-header">
+    <h2 class="search-title">Resultados para "{{ searchQuery }}"</h2>
+    <ion-button fill="clear" color="light" (click)="closeSearch()">Fechar</ion-button>
+  </div>
+
+  <div class="search-grid" *ngIf="searchResults.length > 0">
+    <div class="movie-card" *ngFor="let movie of searchResults" (click)="navigateToMovie(movie.id)">
+      <div class="poster-container">
+        <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" *ngIf="movie.poster_path" draggable="false" />
+        <div class="no-image" *ngIf="!movie.poster_path">Sem Imagem</div>
+        <div class="card-badge">★ {{ movie.vote_average?.toFixed(1) }}</div>
+      </div>
+      <p class="movie-grid-title">{{ movie.title }}</p>
+    </div>
+  </div>
+
+  <div class="no-results" *ngIf="searchResults.length === 0 && searchQuery.length > 0">
+    <p>Nenhum título encontrado para "{{ searchQuery }}"</p>
+  </div>
+</div>
