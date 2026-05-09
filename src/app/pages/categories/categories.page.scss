@@ -36,12 +36,30 @@ $bg-absolute: #000000;
     gap: 15px;
     padding: 0 20px 20px;
     scrollbar-width: none;
-    &::-webkit-scrollbar { display: none; }
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    &:active {
+      cursor: grabbing;
+    }
     
     .movie-card {
       flex-shrink: 0;
       width: 150px; 
       cursor: pointer;
+      transition: transform 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+      
+      &:active {
+        transform: scale(0.98);
+      }
       
       .poster-container {
         position: relative;
@@ -54,6 +72,27 @@ $bg-absolute: #000000;
           height: 100%; 
           object-fit: cover;
           box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .no-image {
+          width: 100%;
+          height: 100%;
+          background: #1a1a1a;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          color: #666;
+          
+          ion-icon {
+            font-size: 32px;
+          }
+          
+          span {
+            font-size: 11px;
+          }
         }
         
         .card-badge {
@@ -71,35 +110,71 @@ $bg-absolute: #000000;
         }
       }
 
-      // Estilo interno do container "Ver mais"
-      .view-more-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        height: 100%;
-        gap: 10px;
+      .movie-title {
         color: white;
-
-        ion-icon {
-          font-size: 32px;
-          color: $primary;
-        }
-
-        span {
-          font-size: 12px;
-          font-weight: bold;
-          text-transform: uppercase;
-        }
+        font-size: 12px;
+        margin-top: 8px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
 }
 
-/* Responsividade*/
+.mobile-home-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: $primary;
+  color: white;
+  border-radius: 40px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  ion-icon {
+    font-size: 20px;
+  }
+  
+  span {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-home-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-home-btn {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 16px;
+    
+    ion-icon {
+      font-size: 18px;
+    }
+    
+    span {
+      font-size: 12px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .content-wrapper .horizontal-scroll .movie-card {
     width: 130px;
@@ -110,4 +185,8 @@ $bg-absolute: #000000;
   .content-wrapper .horizontal-scroll .movie-card {
     width: 110px;
   }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }

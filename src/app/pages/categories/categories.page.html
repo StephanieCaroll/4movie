@@ -1,6 +1,12 @@
 <app-header title="Categorias"></app-header>
 
 <ion-content class="app-background">
+  <!-- Botão flutuante para voltar à home (apenas mobile) -->
+  <div class="mobile-home-btn" (click)="goToHome()">
+    <ion-icon name="home-outline"></ion-icon>
+    <span>Home</span>
+  </div>
+
   <div class="main-sections-container">
     
     <section class="content-wrapper" *ngFor="let genre of genres">
@@ -12,15 +18,23 @@
       <div class="horizontal-scroll">
         <div class="movie-card" 
              *ngFor="let movie of genre.movies" 
-             (click)="onCardClick($event, movie.id)">
+             (click)="goToMovieDetails($event, movie.id)">
           <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+            <img 
+              [src]="imageBaseUrl + movie.poster_path" 
+              [alt]="movie.title" 
+              draggable="false"
+              (error)="movie.poster_path = null" />
+            <div class="no-image" *ngIf="!movie.poster_path">
+              <ion-icon name="image-outline"></ion-icon>
+              <span>Sem imagem</span>
+            </div>
             <div class="card-badge" *ngIf="movie.vote_average > 0">
               ★ {{ movie.vote_average.toFixed(1) }}
             </div>
           </div>
+          <p class="movie-title">{{ movie.title }}</p>
         </div>
-
       </div>
     </section>
 
