@@ -24,11 +24,15 @@ p {
 }
 
 .login-btn {
-  margin-top: 20px;
+  margin-top: 10px;
   --background: #e50914;       
   --background-hover: #e50914;
-  --background-activated: #e50914;
-  --color: black;  
+  --border-radius: 50px;
+  --color: white;  
+  margin-top: 20px;
+  height: 50px;
+
+  font-weight: bold;
 }
 
 .register-text {
