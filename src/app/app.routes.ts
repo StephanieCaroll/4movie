@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+
     // Caminho vazio (raiz do app)
     path: '',
     // Redireciona para a página home
