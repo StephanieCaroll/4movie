@@ -14,3 +14,57 @@ ion-toolbar {
   font-size: 20px;
   font-weight: bold;
 }
+
+.perfil-container {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  margin-top: 40px;
+}
+
+.foto-perfil {
+  width: 120px;
+  height: 120px;
+
+  border-radius: 50%;
+
+  border: 3px solid red;
+
+  margin-bottom: 15px;
+}
+
+.nome-usuario {
+  color: white;
+
+  font-size: 24px;
+
+  margin-bottom: 5px;
+}
+
+.email-usuario {
+  color: #bdbdbd;
+
+  font-size: 16px;
+
+  margin-bottom: 30px;
+}
+
+ion-list {
+  background: transparent;
+}
+
+ion-item {
+  --background: #1a1a1a;
+
+  color: white;
+
+  margin: 10px;
+
+  border-radius: 12px;
+}
+
+ion-icon {
+  color: red;
+}
