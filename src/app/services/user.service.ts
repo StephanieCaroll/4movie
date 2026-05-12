@@ -3,17 +3,18 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class UserService {
 
   private userData: any;
 
   constructor() { }
 
-  setUserData(data: any) {
+  setUser(data: any) {
     this.userData = data;
   }
 
-  getUserData() {
+  getUser() {
     return this.userData;
   }
+
 }

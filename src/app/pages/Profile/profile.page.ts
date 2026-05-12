@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../services/user.service';
 import {
   IonHeader,
   IonToolbar,
   IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton
+  IonButton,
+  IonLabel,
+  IonItem
+
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -18,12 +21,22 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonButtons,
-    IonBackButton
+    IonButton,
+    IonLabel,
+    IonItem
   ]
 })
 
 export class ProfilePage implements OnInit {
-  constructor() { }
-  ngOnInit() { }
+
+  usuario: any;
+
+  constructor(
+    private userService: UserService
+  ) { }
+
+  ngOnInit() {
+    this.usuario = this.userService.getUser();
+  }
+
 }

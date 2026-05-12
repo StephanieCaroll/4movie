@@ -8,6 +8,44 @@
 </ion-header>
 
   <ion-content>
+<div class="profile-container">
+
+    <!-- FOTO -->
+    <div class="foto-area">
+      <img
+        src="https://ionicframework.com/docs/img/demos/avatar.svg"
+        alt="Foto de perfil"
+        class="foto-perfil"
+      >
+    </div>
+
+    <!-- DADOS -->
+    <div class="dados-usuario">
+
+      <h1>{{ usuario?.usuario }}</h1>
+
+      <p>{{ usuario?.email }}</p>
+
+      <ion-button expand="block">
+        Editar Dados
+      </ion-button>
+
+    </div>
+
+  </div>
+
+  <!-- FAVORITOS -->
+  <div class="menu-area">
+
+    <ion-item button>
+      <ion-label>Favoritos</ion-label>
+    </ion-item>
+
+    <ion-item button>
+      <ion-label>Assistir Mais Tarde</ion-label>
+    </ion-item>
+
+  </div>
  
 </ion-content>
 

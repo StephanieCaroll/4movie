@@ -18,17 +18,17 @@
 
     <ion-item> 
       <ion-label position="floating">Usuário</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" [(ngModel)]="usuario"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email"></ion-input>
+      <ion-input type="email" [(ngModel)]="email"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Senha</ion-label>
-      <ion-input type="password"></ion-input>
+      <ion-input type="password" [(ngModel)]="senha"></ion-input>
     </ion-item>
 
     
@@ -45,5 +45,6 @@
     </div>
 
   </div>
+
 
 </ion-content>
