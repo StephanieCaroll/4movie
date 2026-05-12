@@ -14,4 +14,107 @@ ion-toolbar {
   font-size: 20px;
   font-weight: bold;
 }
+/* FUNDO DA PÁGINA */
+ion-content {
+  --background: linear-gradient(to bottom, #000000, #0f0f0f, #1a0000);
+}
 
+/* CONTAINER PRINCIPAL */
+.profile-container {
+  padding: 20px;
+  color: white;
+}
+
+/* ÁREA DA FOTO */
+.foto-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+/* FOTO DE PERFIL */
+.foto-perfil {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 4px solid #e50914;
+  object-fit: cover;
+  box-shadow:
+    0 0 10px red,
+    0 0 20px red,
+    0 0 40px rgba(255, 0, 0, 0.5);
+}
+
+/* DADOS DO USUÁRIO */
+.dados-usuario {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.dados-usuario h1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #e50914;
+  margin-bottom: 8px;
+}
+
+.dados-usuario p {
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+/* BOTÃO */
+ion-button {
+  --background: linear-gradient(45deg, #ff0000, #990000);
+  letter-spacing: 1px;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+  --background-hover: #cc0000;
+  --border-radius: 12px;
+  --color: white;
+  font-weight: bold;
+  height: 45px;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+ion-button:hover {
+  transform: scale(1.1)
+}
+
+/* ÁREA DOS MENUS */
+.menu-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+
+  margin-top: 40px;
+}
+
+/* ITENS */
+ion-item {
+  width: 700px;
+  height: 50px;
+  --background: #111;
+  --color: white;
+  border: 1px solid red;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: 0.2s;
+}
+
+/* TEXTO DOS ITENS */
+ion-label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* EFEITO AO CLICAR */
+ion-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
