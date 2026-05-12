@@ -7,6 +7,11 @@
   gap: 18px;
   padding: 20px;
 }
+ion-header,
+ion-toolbar {
+  --background: black;
+  background: black;
+}
 
 .login-icon {
   font-size: 90px;
