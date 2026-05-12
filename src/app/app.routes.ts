@@ -1,4 +1,3 @@
-// Importa o tipo de dados para rotas do Angular
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -23,16 +22,9 @@ export const routes: Routes = [
     // Carrega a página de detalhes
     loadComponent: () => import('./pages/details/details.page').then((m) => m.DetailsPage),
   },
-  {
-  path: 'profile',
-  loadComponent: () => import('./pages/Profile/profile.page').then(m => m.ProfilePage)
-  },
-  {
-  path: 'categories',
-    loadComponent: () => import('./pages/categories/categories.page').then(m => m.CategoriesPage)
-  },  {
-    path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
-  }
+  {path: 'profile', loadComponent: () => import('./pages/Profile/profile.page').then(m => m.ProfilePage)},
+  {path: 'categories', loadComponent: () => import('./pages/categories/categories.page').then(m => m.CategoriesPage)},
+  { path: 'login', loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage) },
+  { path: 'sign-up', loadComponent: () => import('./pages/sign-up/sign-up.page').then(m => m.SignUpPage) }
 
 ];

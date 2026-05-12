@@ -1,41 +1,77 @@
-<ion-header>
-  <ion-toolbar color="white" background="black">
-    <ion-title>4MOVIE</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header [itemCount]="itemCount"></app-header>
 
-<ion-content class="ion-padding">
-
+<ion-content class="ion-padding crimson-bg">
   <div class="login-container">
+    <div class="login-card">
+      
+      <!-- Cabeçalho com Destaque Vermelho -->
+      <div class="card-header">
+        <h1 class="title">4<span class="crimson-text">MOVIE</span></h1>
+        <p class="subtitle">Bem-vindo de volta ao melhor cinema</p>
+        <div class="red-divider"></div>
+      </div>
 
-    <ion-icon name="person-circle-outline" class="login-icon"></ion-icon>
+      <!-- Formulário de Login -->
+      <form (ngSubmit)="entrar()">
+        <ion-grid class="ion-no-padding">
+          <!-- Email -->
+          <ion-row>
+            <ion-col size="12">
+              <div class="input-wrapper">
+                <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                <ion-input
+                  type="email"
+                  [(ngModel)]="email"
+                  name="email"
+                  placeholder="E-mail"
+                  class="crimson-input">
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
 
-    <h1>Bem-vindo</h1>
-    <p>Entre na sua conta</p>
+          <!-- Senha -->
+          <ion-row>
+            <ion-col size="12">
+              <div class="input-wrapper">
+                <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                <ion-input
+                  type="password"
+                  [(ngModel)]="password"
+                  name="password"
+                  placeholder="Palavra-passe"
+                  class="crimson-input">
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
 
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input type="email"></ion-input>
-    </ion-item>
+        <!-- Esqueceu a Senha -->
+        <div class="forgot-password">
+          <ion-button fill="clear" (click)="recuperarSenha()" class="forgot-link">
+            Esqueceu a palavra-passe?
+          </ion-button>
+        </div>
 
-    <ion-item>
-      <ion-label position="floating">Senha</ion-label>
-      <ion-input type="password"></ion-input>
-    </ion-item>
+        <!-- Botão Entrar -->
+        <ion-button 
+          expand="block" 
+          type="submit"
+          class="login-btn"
+          [disabled]="!email || !password">
+          <span>ENTRAR</span>
+          <ion-icon name="log-in-outline" slot="end"></ion-icon>
+        </ion-button>
 
-    
-    <ion-button expand="block" class="login-btn" (click)="entrar()">
-  Entrar
-    </ion-button>
-
-    <div class="register-text">
-      <p>Não possui conta?</p>
-
-      <ion-button fill="clear">
-        Criar conta
-      </ion-button>
+        <!-- Link para Cadastro -->
+        <div class="footer-links">
+          <span class="gray-text">Não possui uma conta?</span>
+          <ion-button fill="clear" (click)="irParaSignUp()" class="register-link">
+            Cadastrar-se <ion-icon name="person-add-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </form>
     </div>
-
   </div>
-
 </ion-content>

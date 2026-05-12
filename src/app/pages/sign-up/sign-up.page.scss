@@ -1,11 +1,11 @@
-/* Fundo Principal com Gradiente - MESMO ESTILO DO SIGN-UP */
+/* Fundo Principal com Gradiente */
 .crimson-bg {
   --background: radial-gradient(circle at 30% 10%, #1a1a1a 0%, #000000 100%);
   --padding-top: 20px;
   --padding-bottom: 20px;
 }
 
-.login-container {
+.signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,8 +13,8 @@
   width: 100%;
 }
 
-/* Cartão Principal - MESMO ESTILO DO SIGN-UP */
-.login-card {
+/* Cartão Principal */
+.signup-card {
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
   backdrop-filter: blur(10px);
   border-radius: 24px;
@@ -32,7 +32,7 @@
   }
 }
 
-/* Cabeçalho - MESMO ESTILO DO SIGN-UP */
+/* Cabeçalho */
 .card-header {
   text-align: center;
   margin-bottom: 35px;
@@ -84,7 +84,7 @@
   border-radius: 2px;
 }
 
-/* Wrapper dos Inputs - MESMO ESTILO DO SIGN-UP */
+/* Wrapper dos Inputs */
 .input-wrapper {
   position: relative;
   margin-bottom: 20px;
@@ -94,7 +94,7 @@
   border-radius: 12px;
   border: 1px solid #2a2a2a;
   transition: all 0.3s ease;
-  padding-left: 15px;
+  overflow: hidden;
 
   &:focus-within {
     border-color: #dc2626;
@@ -103,18 +103,24 @@
   }
 }
 
-.input-icon {
+/* Estilo para os ícones dentro do input-wrapper */
+.input-wrapper .input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
   color: #6b7280;
   font-size: 20px;
-  margin-right: 12px;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .input-wrapper:focus-within .input-icon {
   color: #dc2626;
 }
 
-/* Campo de Input - MESMO ESTILO DO SIGN-UP */
+/* Campo de Input */
 .crimson-input {
   --background: transparent;
   --color: #ffffff;
@@ -133,34 +139,36 @@
   &::part(native) {
     background: transparent;
   }
-}
 
-/* Link Esqueceu Senha */
-.forgot-password {
-  text-align: right;
-  margin: -10px 0 20px 0;
-}
-
-.forgot-link {
-  --color: #6b7280;
-  --color-hover: #dc2626;
-  --padding-start: 0;
-  --padding-end: 0;
-  --padding-top: 5px;
-  --padding-bottom: 5px;
-  font-size: 0.85rem;
-  text-transform: none;
-  font-weight: 500;
-  height: auto;
-  margin: 0;
-
-  &:hover {
-    --color: #dc2626;
+  &.has-focus {
+    --color: #ffffff;
   }
 }
 
-/* Botão Entrar - MESMO ESTILO DO SIGN-UP */
-.login-btn {
+/* Mensagem de Erro */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(220, 38, 38, 0.1);
+  border-left: 3px solid #dc2626;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: -10px 0 15px 0;
+
+  ion-icon {
+    color: #dc2626;
+    font-size: 18px;
+  }
+
+  span {
+    color: #fca5a5;
+    font-size: 0.85rem;
+  }
+}
+
+/* Botão Registrar */
+.register-btn {
   --background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
   --background-hover: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   --background-activated: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
@@ -176,7 +184,6 @@
   text-transform: uppercase;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  width: 100%;
 
   &:hover:not(:disabled) {
     --box-shadow: 0 15px 30px -5px rgba(220, 38, 38, 0.6);
@@ -189,7 +196,7 @@
   }
 }
 
-/* Footer Links - MESMO ESTILO DO SIGN-UP */
+/* Links do Rodapé */
 .footer-links {
   text-align: center;
   margin-top: 30px;
@@ -206,7 +213,7 @@
   font-size: 0.9rem;
 }
 
-.register-link {
+.login-link {
   --color: #dc2626;
   --color-hover: #ef4444;
   --padding-start: 0;
@@ -230,7 +237,7 @@
   }
 }
 
-/* Animações - MESMO ESTILO DO SIGN-UP */
+/* Animações */
 @keyframes pulse {
   0%, 100% {
     box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
@@ -240,9 +247,9 @@
   }
 }
 
-/* Responsividade Mobile - MESMO ESTILO DO SIGN-UP */
+/* Responsividade Mobile */
 @media (max-width: 768px) {
-  .login-card {
+  .signup-card {
     padding: 30px 20px;
     margin: 20px;
   }
@@ -258,5 +265,10 @@
 
   .crimson-icon {
     font-size: 32px;
+  }
+
+  .input-wrapper .input-icon {
+    width: 45px;
+    font-size: 18px;
   }
 }
