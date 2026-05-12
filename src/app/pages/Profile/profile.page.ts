@@ -22,6 +22,7 @@ import {
     IonBackButton
   ]
 })
+
 export class ProfilePage implements OnInit {
   constructor() { }
   ngOnInit() { }

@@ -16,7 +16,7 @@ export const routes: Routes = [
   },
   {
   path: 'profile',
-    loadComponent: () => import('./pages/Profile/profile.page').then(m => m.ProfilePage)
+    loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePage)
   },
   {
   path: 'categories',
@@ -26,8 +26,5 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
   },
-  {
-  path: 'profile/:email',
-    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
-  }
+  
 ];
