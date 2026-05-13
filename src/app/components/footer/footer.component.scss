@@ -4,18 +4,18 @@
   width: 100%;
 }
 
-@media (min-width: 768px) {
-  .mobile-only-footer {
+ion-footer.mobile-only-footer {
+  display: block !important; 
+
+  @media (min-width: 768px) {
     display: none !important; 
   }
 }
 
 ion-tab-bar {
-  --background: #1a1a1a; 
-  background: #1a1a1a;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  height: 65px; 
-  --border: 0;
+  --background: #1a1a1a !important; 
+  background: #1a1a1a !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 ion-tab-button {
