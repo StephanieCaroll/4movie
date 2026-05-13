@@ -6,5 +6,5 @@ export interface CartItem {
   posterPath: string;   // Caminho da imagem
   type: 'rent' | 'buy'; // Diferenciação entre aluguer e compra
   price: number;        // Preço fixado
-  rentalDays?: number;  // Dias de aluguer (se aplicável)
+  rentalDays?: string; // Dias de aluguer (se aplicável)
 }

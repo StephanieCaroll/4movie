@@ -167,6 +167,164 @@ $text-muted: #a3a3a3;
     }
   }
 
+  .price-selector {
+    margin-bottom: 24px;
+    
+    .price-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+      
+      .price-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateY(-2px);
+        }
+        
+        &.selected {
+          background: rgba($primary-red, 0.15);
+          border-color: $primary-red;
+          
+          .price-header {
+            .price-type {
+              color: $primary-red;
+            }
+            
+            ion-icon {
+              color: $primary-red;
+            }
+          }
+        }
+        
+        .price-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          
+          ion-icon {
+            font-size: 20px;
+            color: $text-muted;
+            transition: color 0.3s ease;
+          }
+          
+          .price-type {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: $text-muted;
+            transition: color 0.3s ease;
+          }
+        }
+        
+        .price-value {
+          text-align: center;
+          
+          strong {
+            font-size: 24px;
+            font-weight: 800;
+            color: $text-light;
+            display: block;
+            margin: 4px 0;
+          }
+          
+          small {
+            font-size: 11px;
+            color: $text-muted;
+            display: inline-block;
+          }
+        }
+        
+        .rental-days {
+          margin-top: 12px;
+          
+          ion-item {
+            --background: transparent;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --color: $text-light;
+            font-size: 12px;
+            --padding-start: 0;
+            --inner-padding-end: 0;
+            --border-radius: 8px;
+            
+            ion-label {
+              font-size: 12px;
+              color: $text-muted;
+              font-weight: 500;
+            }
+            
+            ion-select {
+              --placeholder-color: $text-light;
+              --placeholder-opacity: 1;
+              font-size: 12px;
+              max-width: 100%;
+              --padding-start: 8px;
+            }
+          }
+        }
+      }
+    }
+    
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+      
+      .btn-primary {
+        --background: #{$primary-red};
+        --color: #{$text-light};
+        --border-radius: 8px;
+        height: 52px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba($primary-red, 0.3);
+        --box-shadow: 0 4px 15px rgba($primary-red, 0.3);
+        
+        .price-tag {
+          margin-left: 12px;
+          background: rgba(255, 255, 255, 0.2);
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+      
+      .btn-list {
+        --color: #{$text-light};
+        --background: rgba(255, 255, 255, 0.15);
+        --border-radius: 8px;
+        --border-color: rgba(255, 255, 255, 0.4);
+        --border-style: solid;
+        --border-width: 1px;
+        height: 52px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        margin: 0;
+        
+        ion-icon {
+          color: #{$text-light};
+          font-size: 20px;
+          opacity: 1;
+        }
+        
+        &:hover {
+          --background: rgba(255, 255, 255, 0.25);
+        }
+      }
+    }
+  }
+
   .genre-list {
     display: flex;
     flex-wrap: wrap;
@@ -179,47 +337,6 @@ $text-muted: #a3a3a3;
       border: 1px solid rgba(255,255,255,0.2);
       padding: 6px 16px;
       border-radius: 30px;
-    }
-  }
-
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 32px;
-
-    .btn-primary {
-      --background: #{$primary-red};
-      --color: #{$text-light};
-      --border-radius: 8px;
-      height: 52px; 
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba($primary-red, 0.3);
-    }
-
-    .btn-list {
-      --color: #{$text-light};
-      --background: rgba(255, 255, 255, 0.15); 
-      --border-radius: 8px;
-      --border-color: rgba(255, 255, 255, 0.4);
-      --border-style: solid;
-      --border-width: 1px;
-      height: 52px;
-      font-weight: 600;
-      backdrop-filter: blur(10px); 
-      margin: 0;
-
-      ion-icon {
-        color: #{$text-light};
-        font-size: 20px;
-        opacity: 1; 
-      }
-
-      &:hover {
-        --background: rgba(255, 255, 255, 0.25);
-      }
     }
   }
 
@@ -257,7 +374,104 @@ $text-muted: #a3a3a3;
   }
 }
 
-// --- ESTILOS DO TRAILER  ---
+// Estilos do Elenco
+.cast-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 8px;
+  margin: 0 -4px;
+  
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $primary-red;
+    border-radius: 4px;
+  }
+  
+  .cast-card {
+    flex-shrink: 0;
+    width: 100px;
+    text-align: center;
+    
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .actor-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: $text-light;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .character {
+      font-size: 10px;
+      color: $text-muted;
+      margin: 4px 0 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// Estilos Técnicos
+.technical-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  
+  .tech-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    ion-icon {
+      font-size: 24px;
+      color: $primary-red;
+    }
+    
+    div {
+      display: flex;
+      flex-direction: column;
+      
+      label {
+        font-size: 11px;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      span {
+        font-size: 14px;
+        color: $text-light;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
+// --- ESTILOS DO TRAILER ---
 .trailer-wrapper-large {
   width: 100%;
   max-width: 1000px;
@@ -323,12 +537,38 @@ $text-muted: #a3a3a3;
     .title-wrapper .movie-title { font-size: 38px; }
   }
 
-  .action-buttons {
-    flex-direction: row;
-    ion-button { flex: 1; }
+  .price-selector {
+    .price-options {
+      gap: 20px;
+      
+      .price-card {
+        padding: 20px;
+        
+        .price-value strong {
+          font-size: 28px;
+        }
+      }
+    }
+    
+    .action-buttons {
+      flex-direction: row;
+      
+      ion-button {
+        flex: 1;
+      }
+    }
   }
 
   .trailer-wrapper-large {
     padding: 10px 0;
+  }
+  
+  .cast-scroll .cast-card {
+    width: 120px;
+    
+    img {
+      width: 120px;
+      height: 120px;
+    }
   }
 }

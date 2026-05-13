@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AppwriteService } from '../../services/appwrite.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,6 +15,7 @@ import { AppwriteService } from '../../services/appwrite.service';
 export class ProfilePage implements OnInit {
   private appwrite = inject(AppwriteService);
   private router = inject(Router);
+  private cartService = inject(CartService);
 
   usuario: any = null;
   carregando = true;
@@ -34,6 +36,7 @@ export class ProfilePage implements OnInit {
 
   async sair() {
     await this.appwrite.logout();
-    this.router.navigate(['/login'], { replaceUrl: true });
+    this.cartService.clearLocalCart(); 
+    this.router.navigate(['/login']);
   }
 }

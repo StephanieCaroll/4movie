@@ -47,23 +47,63 @@
           </div>
         </div>
 
+        <div class="price-selector">
+          <div class="price-options">
+            <!-- Opção de Aluguel -->
+            <div class="price-card" [class.selected]="selectedType === 'rent'" (click)="selectedType = 'rent'">
+              <div class="price-header">
+                <ion-icon name="time-outline"></ion-icon>
+                <span class="price-type">ALUGAR POR DIA</span>
+              </div>
+              <div class="price-value">
+                <small>a partir de</small>
+                <strong>{{ formattedRentPricePerDay }}</strong>
+                <small>/dia</small>
+              </div>
+              <div class="rental-days" *ngIf="selectedType === 'rent'">
+                <ion-item lines="none">
+                  <ion-label>Quantos dias?</ion-label>
+                  <ion-select [(ngModel)]="selectedDays" (ionChange)="selectedDays = $event.detail.value">
+                    <ion-select-option *ngFor="let option of daysOptions" [value]="option.value">
+                      {{ option.label }} - R$ {{ (rentPricePerDay * option.value).toFixed(2) }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </div>
+            </div>
+
+            <!-- Opção de Compra -->
+            <div class="price-card" [class.selected]="selectedType === 'buy'" (click)="selectedType = 'buy'">
+              <div class="price-header">
+                <ion-icon name="infinite-outline"></ion-icon>
+                <span class="price-type">COMPRAR</span>
+              </div>
+              <div class="price-value">
+                <strong>R$ {{ buyPrice.toFixed(2) }}</strong>
+                <small>acesso permanente</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <ion-button class="btn-primary" expand="block" (click)="addToCart()">
+              <ion-icon slot="start" name="cart-outline"></ion-icon>
+              {{ selectedType === 'rent' ? 'ALUGAR AGORA' : 'COMPRAR AGORA' }}
+              <span class="price-tag">{{ formattedPrice }}</span>
+            </ion-button>
+            <ion-button fill="solid" color="light" class="btn-list">
+              <ion-icon slot="start" name="heart-outline"></ion-icon>
+              Minha Lista
+            </ion-button>
+          </div>
+        </div>
+
         <div class="genre-list">
           @if (filme.genres) {
             @for (genre of filme.genres; track genre.id) {
               <span class="genre-pill">{{ genre.name }}</span>
             }
           }
-        </div>
-
-        <div class="action-buttons">
-          <ion-button class="btn-primary" expand="block" (click)="addToCart()">
-            <ion-icon slot="start" name="cart-outline"></ion-icon>
-            ADQUIRIR FILME
-          </ion-button>
-          <ion-button fill="solid" color="light" class="btn-list">
-            <ion-icon slot="start" name="heart-outline"></ion-icon>
-            Minha Lista
-          </ion-button>
         </div>
 
         <div class="detail-section">

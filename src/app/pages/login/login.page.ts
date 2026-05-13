@@ -80,7 +80,8 @@ export class LoginPage implements OnInit {
       // Tenta realizar o login
       await this.appwrite.login(this.email, this.password);
       await loading.dismiss();
-      
+      await this.cartService.loadCart()
+    
       // Exibe toast de sucesso
       await this.exibirToast('Login realizado com sucesso!', 'success');
       

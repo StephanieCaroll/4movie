@@ -67,7 +67,10 @@ export class CartService {
       return;
     }
 
-    const basePrice = type === 'buy' ? 49.90 : 14.90;
+    const rentPricePerDay = 9.90;  
+    const buyPrice = 14.90;        
+    
+    const basePrice = type === 'buy' ? buyPrice : rentPricePerDay;
     const finalPrice = type === 'rent' ? basePrice * days : basePrice;
 
     const newItem: CartItem = {
@@ -77,7 +80,7 @@ export class CartService {
       posterPath: movie.poster_path,
       type: type,
       price: finalPrice,
-      rentalDays: type === 'rent' ? days : undefined
+      rentalDays: type === 'rent' ? days.toString() : undefined
     };
 
     try {
@@ -89,12 +92,18 @@ export class CartService {
       );
       
       this.cartSignal.update(items => [...items, doc as unknown as CartItem]);
-      this.showToast(`${movie.title} adicionado!`, 'toast-success');
+      
+      // Mensagem personalizada baseada no tipo
+      const message = type === 'buy' 
+        ? `${movie.title} adicionado para compra!` 
+        : `${movie.title} alugado por ${days} dia(s)!`;
+      
+      this.showToast(message, 'toast-success');
       
       this.navCtrl.navigateForward('/cart');
     } catch (error) {
       console.error('Erro ao salvar no Appwrite:', error);
-      this.showToast('Erro ao salvar. Verifique se as Permissões e Atributos foram criados.', 'toast-danger');
+      this.showToast('Erro ao salvar no banco de dados.', 'toast-danger');
     }
   }
 
@@ -113,6 +122,11 @@ export class CartService {
     for (const item of items) {
       if (item.$id) await this.appwrite.databases.deleteDocument(this.DB_ID, this.COLLECTION_ID, item.$id);
     }
+    this.cartSignal.set([]);
+    this.showToast('Carrinho limpo com sucesso', 'toast-success');
+  }
+
+  clearLocalCart() {
     this.cartSignal.set([]);
   }
 
