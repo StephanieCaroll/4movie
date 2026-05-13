@@ -1,93 +1,97 @@
 <ion-content class="ion-padding crimson-bg">
   <div class="signup-container">
     
-    <div class="signup-card profile-card" *ngIf="usuarioLogado">
-      <div class="card-header">
-        <div class="profile-avatar-container">
-          <ion-icon name="person-circle" class="profile-icon"></ion-icon>
+    @if (usuarioLogado) {
+      <div class="signup-card profile-card">
+        <div class="card-header">
+          <div class="profile-avatar-container">
+            <ion-icon name="person-circle" class="profile-icon"></ion-icon>
+          </div>
+          <h1 class="title">MEU <span class="crimson-text">PERFIL</span></h1>
+          <div class="red-divider"></div>
         </div>
-        <h1 class="title">MEU <span class="crimson-text">PERFIL</span></h1>
-        <div class="red-divider"></div>
-      </div>
 
-      <div class="profile-content">
-        <div class="info-box">
-          <ion-label>NOME DE CINÉFILO</ion-label>
-          <p>{{ usuarioLogado.name }}</p>
+        <div class="profile-content">
+          @for (info of [
+            { label: 'NOME DE CINÉFILO', value: usuarioLogado.name },
+            { label: 'E-MAIL CADASTRADO', value: usuarioLogado.email },
+            { label: 'STATUS DA CONTA', value: 'Ativa', isBadge: true }
+          ]; track info.label) {
+            <div class="info-box">
+              <ion-label>{{ info.label }}</ion-label>
+              @if (info.isBadge) {
+                <p><ion-badge color="success">{{ info.value }}</ion-badge></p>
+              } @else {
+                <p>{{ info.value }}</p>
+              }
+            </div>
+          }
         </div>
-        <div class="info-box">
-          <ion-label>E-MAIL CADASTRADO</ion-label>
-          <p>{{ usuarioLogado.email }}</p>
-        </div>
-        <div class="info-box">
-          <ion-label>STATUS DA CONTA</ion-label>
-          <p><ion-badge color="success">Ativa</ion-badge></p>
-        </div>
-      </div>
 
-      <ion-button expand="block" class="logout-btn" (click)="logout()">
-        <span>SAIR DO APP</span>
-        <ion-icon name="log-out-outline" slot="end"></ion-icon>
-      </ion-button>
-    </div>
-
-    <div class="signup-card" *ngIf="!usuarioLogado">
-      <div class="card-header">
-        <h1 class="title">4<span class="crimson-text">MOVIE</span></h1>
-        <p class="subtitle">Crie sua conta para acessar os melhores títulos</p>
-        <div class="red-divider"></div>
-      </div>
-
-      <form (ngSubmit)="cadastrar()">
-        <ion-grid class="ion-no-padding">
-          <ion-row>
-            <ion-col size="12">
-              <div class="input-wrapper">
-                <ion-icon name="person-outline" class="input-icon"></ion-icon>
-                <ion-input type="text" [(ngModel)]="nome" name="nome" placeholder="Nome Completo" class="crimson-input"></ion-input>
-              </div>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size="12">
-              <div class="input-wrapper">
-                <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-                <ion-input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" class="crimson-input"></ion-input>
-              </div>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size="12">
-              <div class="input-wrapper">
-                <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-                <ion-input type="password" [(ngModel)]="senha" name="senha" placeholder="Senha" class="crimson-input"></ion-input>
-              </div>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size="12">
-              <div class="input-wrapper">
-                <ion-icon name="checkmark-done-circle-outline" class="input-icon"></ion-icon>
-                <ion-input type="password" [(ngModel)]="confirmarSenha" name="confirmarSenha" placeholder="Confirmar Senha" class="crimson-input"></ion-input>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-        <ion-button expand="block" type="submit" class="register-btn" [disabled]="!nome || !email || !senha || (senha !== confirmarSenha)">
-          <span>CRIAR CONTA</span>
-          <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        <ion-button expand="block" class="logout-btn" (click)="logout()">
+          <span>SAIR DO APP</span>
+          <ion-icon name="log-out-outline" slot="end"></ion-icon>
         </ion-button>
-
-        <div class="footer-links">
-          <span class="gray-text">Já possui acesso?</span>
-          <ion-button fill="clear" (click)="voltarParaLogin()" class="login-link">Entrar</ion-button>
+      </div>
+    } @else {
+      <div class="signup-card">
+        <div class="card-header">
+          <h1 class="title">4<span class="crimson-text">MOVIE</span></h1>
+          <p class="subtitle">Crie sua conta para acessar os melhores títulos</p>
+          <div class="red-divider"></div>
         </div>
-      </form>
-    </div>
+
+        <form (ngSubmit)="cadastrar()">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col size="12">
+                <div class="input-wrapper">
+                  <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                  <ion-input type="text" [(ngModel)]="nome" name="nome" placeholder="Nome Completo" class="crimson-input"></ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="12">
+                <div class="input-wrapper">
+                  <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                  <ion-input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" class="crimson-input"></ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="12">
+                <div class="input-wrapper">
+                  <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                  <ion-input type="password" [(ngModel)]="senha" name="senha" placeholder="Senha" class="crimson-input"></ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="12">
+                <div class="input-wrapper">
+                  <ion-icon name="checkmark-done-circle-outline" class="input-icon"></ion-icon>
+                  <ion-input type="password" [(ngModel)]="confirmarSenha" name="confirmarSenha" placeholder="Confirmar Senha" class="crimson-input"></ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-button expand="block" type="submit" class="register-btn" [disabled]="!nome || !email || !senha || (senha !== confirmarSenha)">
+            <span>CRIAR CONTA</span>
+            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+          </ion-button>
+
+          <div class="footer-links">
+            <span class="gray-text">Já possui acesso?</span>
+            <ion-button fill="clear" (click)="voltarParaLogin()" class="login-link">Entrar</ion-button>
+          </div>
+        </form>
+      </div>
+    }
 
   </div>
 </ion-content>

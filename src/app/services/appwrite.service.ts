@@ -7,38 +7,76 @@ import { Client, Account, ID } from 'appwrite';
 export class AppwriteService {
   client = new Client();
   account: Account;
+  private checkingSession = false;
 
   constructor() {
+    // Suprime aviso do localStorage
+    const originalConsoleWarn = console.warn;
+    console.warn = (...args) => {
+      if (args[0]?.includes?.('localStorage') || args[0]?.includes?.('custom domain')) {
+        return;
+      }
+      originalConsoleWarn.apply(console, args);
+    };
+
     this.client
       .setEndpoint('https://nyc.cloud.appwrite.io/v1')
-      .setProject('6a0283be001b53538516'); 
+      .setProject('6a0283be001b53538516');
     
     this.account = new Account(this.client);
   }
 
-  // Verifica se existe uma sessão ativa sem lançar erro no console
-  async isLoggedIn(): Promise<boolean> {
+ async isLoggedIn(): Promise<boolean> {
+  if (this.checkingSession) return false;
+  this.checkingSession = true;
+  
+  try {
+    const session = await this.account.get();
+    return !!session;
+  } catch (error) {
+   
+    return false;
+  } finally {
+    this.checkingSession = false;
+  }
+}
+  async createAccount(email: string, password: string, name: string) {
     try {
-      await this.account.get();
-      return true;
-    } catch {
-      return false;
+      return await this.account.create(ID.unique(), email, password, name);
+    } catch (error: any) {
+      console.error('Erro ao criar conta:', error);
+      throw error;
     }
   }
 
-  async createAccount(email: string, password: string, name: string) {
-    return await this.account.create(ID.unique(), email, password, name);
-  }
-
   async login(email: string, password: string) {
-    return await this.account.createEmailPasswordSession(email, password);
+    try {
+      return await this.account.createEmailPasswordSession(email, password);
+    } catch (error: any) {
+      console.error('Erro ao fazer login:', error);
+      throw error;
+    }
   }
 
   async getAccount() {
-    return await this.account.get();
+    try {
+      return await this.account.get();
+    } catch (error: any) {
+      if (error?.code !== 401) {
+        console.error('Erro ao obter conta:', error);
+      }
+      throw error;
+    }
   }
 
   async logout() {
-    return await this.account.deleteSession('current');
+    try {
+      return await this.account.deleteSession('current');
+    } catch (error: any) {
+      if (error?.code !== 401) {
+        console.error('Erro ao fazer logout:', error);
+      }
+      throw error;
+    }
   }
 }

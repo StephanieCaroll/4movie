@@ -95,13 +95,14 @@ export class SignUpPage implements OnInit {
   }
 
   async exibirToast(msg: string, cor: 'success' | 'danger' | 'warning') {
-    const toast = await this.toastCtrl.create({
-      message: msg,
-      duration: 3000,
-      color: cor,
-      position: 'bottom',
-      buttons: [{ icon: 'close', role: 'cancel' }]
-    });
-    await toast.present();
-  }
+  const toast = await this.toastCtrl.create({
+    message: msg,
+    duration: 3000,
+    color: cor,
+    position: 'bottom', 
+    buttons: [{ icon: 'close', role: 'cancel' }],
+    cssClass: 'custom-toast'
+  });
+  await toast.present();
+}
 }

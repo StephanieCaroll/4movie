@@ -35,3 +35,31 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* global.scss - Adicione no final do arquivo */
+
+.custom-toast {
+  --background: rgba(0, 0, 0, 0.9);
+  --border-radius: 12px;
+  --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  --button-color: #dc2626;
+  margin-bottom: 20px;
+  
+  &::part(message) {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+  }
+  
+  &.toast-success {
+    --background: rgba(34, 197, 94, 0.9);
+  }
+  
+  &.toast-danger {
+    --background: rgba(220, 38, 38, 0.9);
+  }
+  
+  &.toast-warning {
+    --background: rgba(245, 158, 11, 0.9);
+  }
+}

@@ -1,54 +1,56 @@
-
-
 <ion-content class="app-background">
   
-  <div class="hero-carousel-container" *ngIf="carouselMovies.length > 0">
-    <swiper-container 
-      init="true"
-      autoplay="true"
-      autoplay-delay="5000"
-      loop="true"
-      speed="800"
-      class="hero-swiper">
-      
-      <swiper-slide *ngFor="let movie of carouselMovies">
-        <div class="hero-section">
-          <div class="hero-img-container">
-            <img [src]="imageBaseUrlOriginal + movie.backdrop_path" [alt]="movie.title" />
-            <div class="hero-overlay"></div>
-          </div>
-          
-          <div class="hero-info">
-            <h1 class="movie-title">{{ movie.title }}</h1>
-            
-            <div class="movie-meta">
-              <div class="rating-box">
-                <ion-icon name="star" class="star-icon"></ion-icon>
-                <span>{{ movie.vote_average?.toFixed(1) }}</span>
+  @if (carouselMovies.length > 0) {
+    <div class="hero-carousel-container">
+      <swiper-container 
+        init="true"
+        autoplay="true"
+        autoplay-delay="5000"
+        loop="true"
+        speed="800"
+        class="hero-swiper">
+        
+        @for (movie of carouselMovies; track movie.id) {
+          <swiper-slide>
+            <div class="hero-section">
+              <div class="hero-img-container">
+                <img [src]="imageBaseUrlOriginal + movie.backdrop_path" [alt]="movie.title" />
+                <div class="hero-overlay"></div>
               </div>
-              <span class="separator">•</span>
-              <span class="runtime">{{ movie.runtime }} min</span>
-              <span class="separator">•</span>
-              <span>{{ movie.release_date | date:'yyyy' }}</span>
-              <span class="quality-tag">4K</span>
+              
+              <div class="hero-info">
+                <h1 class="movie-title">{{ movie.title }}</h1>
+                
+                <div class="movie-meta">
+                  <div class="rating-box">
+                    <ion-icon name="star" class="star-icon"></ion-icon>
+                    <span>{{ movie.vote_average?.toFixed(1) }}</span>
+                  </div>
+                  <span class="separator">•</span>
+                  <span class="runtime">{{ movie.runtime }} min</span>
+                  <span class="separator">•</span>
+                  <span>{{ movie.release_date | date:'yyyy' }}</span>
+                  <span class="quality-tag">4K</span>
+                </div>
+                
+                <p class="hero-description">{{ movie.overview }}</p>
+                
+                <div class="hero-actions">
+                  <ion-button class="btn-play" (click)="onCardClick($event, movie.id)">
+                    <ion-icon slot="start" name="play"></ion-icon>
+                    ALUGAR
+                  </ion-button>
+                  <ion-button class="btn-info" mode="md">
+                    <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
             </div>
-            
-            <p class="hero-description">{{ movie.overview }}</p>
-            
-            <div class="hero-actions">
-              <ion-button class="btn-play" (click)="onCardClick($event, movie.id)">
-                <ion-icon slot="start" name="play"></ion-icon>
-                ALUGAR
-              </ion-button>
-              <ion-button class="btn-info" mode="md">
-                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-              </ion-button>
-            </div>
-          </div>
-        </div>
-      </swiper-slide>
-    </swiper-container>
-  </div>
+          </swiper-slide>
+        }
+      </swiper-container>
+    </div>
+  }
 
   <div class="main-sections-container">
     
@@ -58,89 +60,123 @@
         <span class="see-all" routerLink="/category/popular">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of popularMovies" (click)="onCardClick($event, movie.id)">
-          <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-            <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
+        @for (movie of popularMovies; track movie.id) {
+          <div class="movie-card" (click)="onCardClick($event, movie.id)">
+            <div class="poster-container">
+              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+              @if (movie.vote_average > 0) {
+                <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
+              }
+            </div>
           </div>
-        </div>
+        }
       </div>
     </section>
 
-    <section class="content-wrapper" *ngIf="actionMovies.length > 0">
-      <div class="section-title">
-        <h2>💥 Ação</h2>
-        <span class="see-all" routerLink="/genre/28">Ver tudo</span>
-      </div>
-      <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of actionMovies" (click)="onCardClick($event, movie.id)">
-          <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-            <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
-          </div>
+    @if (actionMovies.length > 0) {
+      <section class="content-wrapper">
+        <div class="section-title">
+          <h2>💥 Ação</h2>
+          <span class="see-all" routerLink="/genre/28">Ver tudo</span>
         </div>
-      </div>
-    </section>
+        <div class="horizontal-scroll">
+          @for (movie of actionMovies; track movie.id) {
+            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+              <div class="poster-container">
+                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                @if (movie.vote_average > 0) {
+                  <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
-    <section class="content-wrapper" *ngIf="comedyMovies.length > 0">
-      <div class="section-title">
-        <h2>😂 Comédia </h2>
-        <span class="see-all" routerLink="/genre/35">Ver tudo</span>
-      </div>
-      <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of comedyMovies" (click)="onCardClick($event, movie.id)">
-          <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-            <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
-          </div>
+    @if (comedyMovies.length > 0) {
+      <section class="content-wrapper">
+        <div class="section-title">
+          <h2>😂 Comédia </h2>
+          <span class="see-all" routerLink="/genre/35">Ver tudo</span>
         </div>
-      </div>
-    </section>
+        <div class="horizontal-scroll">
+          @for (movie of comedyMovies; track movie.id) {
+            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+              <div class="poster-container">
+                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                @if (movie.vote_average > 0) {
+                  <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
-    <section class="content-wrapper" *ngIf="horrorMovies.length > 0">
-      <div class="section-title">
-        <h2>👻 Terror</h2>
-        <span class="see-all" routerLink="/genre/27">Ver tudo</span>
-      </div>
-      <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of horrorMovies" (click)="onCardClick($event, movie.id)">
-          <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-            <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
-          </div>
+    @if (horrorMovies.length > 0) {
+      <section class="content-wrapper">
+        <div class="section-title">
+          <h2>👻 Terror</h2>
+          <span class="see-all" routerLink="/genre/27">Ver tudo</span>
         </div>
-      </div>
-    </section>
+        <div class="horizontal-scroll">
+          @for (movie of horrorMovies; track movie.id) {
+            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+              <div class="poster-container">
+                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                @if (movie.vote_average > 0) {
+                  <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
-    <section class="content-wrapper" *ngIf="romanceMovies.length > 0">
-      <div class="section-title">
-        <h2>💖 Romance</h2>
-        <span class="see-all" routerLink="/genre/10749">Ver tudo</span>
-      </div>
-      <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of romanceMovies" (click)="onCardClick($event, movie.id)">
-          <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-            <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
-          </div>
+    @if (romanceMovies.length > 0) {
+      <section class="content-wrapper">
+        <div class="section-title">
+          <h2>💖 Romance</h2>
+          <span class="see-all" routerLink="/genre/10749">Ver tudo</span>
         </div>
-      </div>
-    </section>
+        <div class="horizontal-scroll">
+          @for (movie of romanceMovies; track movie.id) {
+            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+              <div class="poster-container">
+                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                @if (movie.vote_average > 0) {
+                  <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
-    <section class="content-wrapper" *ngIf="animationMovies.length > 0">
-      <div class="section-title">
-        <h2>🧸 Animação</h2>
-        <span class="see-all" routerLink="/genre/16">Ver tudo</span>
-      </div>
-      <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of animationMovies" (click)="onCardClick($event, movie.id)">
-          <div class="poster-container">
-            <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
-            <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
-          </div>
+    @if (animationMovies.length > 0) {
+      <section class="content-wrapper">
+        <div class="section-title">
+          <h2>🧸 Animação</h2>
+          <span class="see-all" routerLink="/genre/16">Ver tudo</span>
         </div>
-      </div>
-    </section>
+        <div class="horizontal-scroll">
+          @for (movie of animationMovies; track movie.id) {
+            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+              <div class="poster-container">
+                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                @if (movie.vote_average > 0) {
+                  <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
   </div>
 </ion-content>

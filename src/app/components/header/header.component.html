@@ -28,7 +28,9 @@
 
       <ion-button class="header-icon-btn cart-btn" routerLink="/cart">
         <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
-        <span class="badge-dot" *ngIf="itemCount > 0">{{ itemCount }}</span>
+        @if (itemCount > 0) {
+          <span class="badge-dot">{{ itemCount }}</span>
+        }
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -44,24 +46,36 @@
   </ion-toolbar>
 </ion-header>
 
-<div class="search-results-overlay" *ngIf="isSearching && searchQuery.length > 0">
-  <div class="search-header">
-    <h2 class="search-title">Resultados para "{{ searchQuery }}"</h2>
-    <ion-button fill="clear" color="light" (click)="closeSearch()">Fechar</ion-button>
-  </div>
-
-  <div class="search-grid" *ngIf="searchResults.length > 0">
-    <div class="movie-card" *ngFor="let movie of searchResults" (click)="navigateToMovie(movie.id)">
-      <div class="poster-container">
-        <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" *ngIf="movie.poster_path" draggable="false">
-        <div class="no-image" *ngIf="!movie.poster_path">Sem Imagem</div>
-        <div class="card-badge">★ {{ movie.vote_average?.toFixed(1) }}</div>
-      </div>
-      <p class="movie-grid-title">{{ movie.title }}</p>
+@if (isSearching && searchQuery.length > 0) {
+  <div class="search-results-overlay">
+    <div class="search-header">
+      <h2 class="search-title">Resultados para "{{ searchQuery }}"</h2>
+      <ion-button fill="clear" color="light" (click)="closeSearch()">Fechar</ion-button>
     </div>
-  </div>
 
-  <div class="no-results" *ngIf="searchResults.length === 0 && searchQuery.length > 0">
-    <p>Nenhum título encontrado para "{{ searchQuery }}"</p>
+    @if (searchResults.length > 0) {
+      <div class="search-grid">
+        @for (movie of searchResults; track movie.id) {
+          <div class="movie-card" (click)="navigateToMovie(movie.id)">
+            <div class="poster-container">
+              @if (movie.poster_path) {
+                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false">
+              } @else {
+               <img src="assets/icon/favicon.png" [alt]="movie.title" class="placeholder-img">
+                <div class="no-image-overlay">Sem Imagem</div>
+              }
+              <div class="card-badge">★ {{ movie.vote_average?.toFixed(1) }}</div>
+            </div>
+            <p class="movie-grid-title">{{ movie.title }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    @if (searchResults.length === 0 && searchQuery.length > 0) {
+      <div class="no-results">
+        <p>Nenhum título encontrado para "{{ searchQuery }}"</p>
+      </div>
+    }
   </div>
-</div>
+}

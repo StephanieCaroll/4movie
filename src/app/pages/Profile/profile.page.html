@@ -1,49 +1,56 @@
-
 <ion-content class="crimson-bg">
   
-  <div *ngIf="carregando" class="profile-container">
-    <div class="foto-area">
-      <ion-skeleton-text animated style="width: 130px; height: 130px; border-radius: 50%"></ion-skeleton-text>
-    </div>
-    <div class="dados-usuario">
-      <ion-skeleton-text animated style="width: 60%; height: 30px; margin: 10px auto;"></ion-skeleton-text>
-      <ion-skeleton-text animated style="width: 40%; height: 20px; margin: 0 auto;"></ion-skeleton-text>
-    </div>
-  </div>
-
-  <div class="profile-container" *ngIf="!carregando && usuario">
-    <div class="foto-area">
-      <div class="avatar-wrapper">
-        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" class="foto-perfil">
-        <div class="edit-badge"><ion-icon name="camera"></ion-icon></div>
+  @if (carregando) {
+    <div class="profile-container">
+      <div class="foto-area">
+        <ion-skeleton-text animated style="width: 130px; height: 130px; border-radius: 50%"></ion-skeleton-text>
+      </div>
+      <div class="dados-usuario">
+        <ion-skeleton-text animated style="width: 60%; height: 30px; margin: 10px auto;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%; height: 20px; margin: 0 auto;"></ion-skeleton-text>
       </div>
     </div>
+  }
 
-    <div class="dados-usuario">
-      <h1 class="user-name">{{ usuario.name }}</h1>
-      <p class="user-email">{{ usuario.email }}</p>
+  @if (!carregando && usuario) {
+    <div class="profile-container">
+      <div class="foto-area">
+        <div class="avatar-wrapper">
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg" class="foto-perfil">
+          <div class="edit-badge"><ion-icon name="camera"></ion-icon></div>
+        </div>
+      </div>
 
-      <div class="action-buttons">
-        <ion-button id="open-edit-modal" fill="solid" class="edit-btn">
-          <ion-icon name="create-outline" slot="start"></ion-icon> Editar
-        </ion-button>
-        <ion-button fill="outline" color="danger" (click)="sair()">Sair</ion-button>
+      <div class="dados-usuario">
+        <h1 class="user-name">{{ usuario.name }}</h1>
+        <p class="user-email">{{ usuario.email }}</p>
+
+        <div class="action-buttons">
+          <ion-button id="open-edit-modal" fill="solid" class="edit-btn">
+            <ion-icon name="create-outline" slot="start"></ion-icon> Editar
+          </ion-button>
+          <ion-button fill="outline" color="danger" (click)="sair()">Sair</ion-button>
+        </div>
+      </div>
+
+      <div class="menu-area">
+        <ion-list lines="none" class="transparent-list">
+          
+          @for (item of [
+            { icon: 'play-circle-outline', label: 'Continuar a assistir' },
+            { icon: 'heart', label: 'Favoritos' },
+            { icon: 'settings-outline', label: 'Configurações' }
+          ]; track item.label) {
+            <ion-item button detail="true">
+              <ion-icon [name]="item.icon" slot="start"></ion-icon>
+              <ion-label>{{ item.label }}</ion-label>
+            </ion-item>
+          }
+          
+        </ion-list>
       </div>
     </div>
-
-    <div class="menu-area">
-      <ion-list lines="none" class="transparent-list">
-        <ion-item button detail="true">
-          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
-          <ion-label>Continuar a assistir</ion-label>
-        </ion-item>
-        <ion-item button detail="true">
-          <ion-icon name="heart" slot="start"></ion-icon>
-          <ion-label>Favoritos</ion-label>
-        </ion-item>
-      </ion-list>
-    </div>
-  </div>
+  }
 
   <ion-modal trigger="open-edit-modal" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.8]">
     <ng-template>
@@ -56,7 +63,7 @@
         <div class="input-wrapper">
           <ion-item fill="outline" mode="md" class="crimson-item">
             <ion-label position="floating">Nome Completo</ion-label>
-            <ion-input type="text"></ion-input>
+            <ion-input type="text" [value]="usuario?.name"></ion-input>
           </ion-item>
         </div>
         <ion-button expand="block" color="danger" style="margin-top: 20px;">
