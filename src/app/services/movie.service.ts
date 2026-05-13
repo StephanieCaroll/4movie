@@ -47,8 +47,8 @@ export class MovieService {
     return this.http.get(`${this.baseUrl}/movie/top_rated?api_key=${this.apiKey}&language=pt-BR&page=1`);
   }
 
-  getMoviesByGenre(genreId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=pt-BR&page=1`);
+  getMoviesByGenre(genreId: number, page: number = 1): Observable<any> {
+  return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=pt-BR&page=${page}`);
   }
 
   getGenres(): Observable<any> {

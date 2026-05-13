@@ -1,0 +1,184 @@
+// 1. FUNDO GERAL
+.app-background {
+  --background: #121212;
+}
+
+// 2. BOTÃO DE VOLTAR FLUTUANTE
+.custom-back-button {
+  position: fixed;
+  top: 16px;
+  left: 8px;
+  z-index: 10;
+  
+  ion-button {
+    --color: #ffffff;
+    --background: rgba(0, 0, 0, 0.5);
+    --border-radius: 30px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0;
+    height: 40px;
+    width: 40px;
+    
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+// 3. TÍTULO DO GÊNERO - ESTILO CINEMA VERMELHO ESCURO
+.genre-header {
+  text-align: center;
+  padding: 20px;
+  margin: 60px 0 30px 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(139, 0, 0, 0.15) 20%,
+    rgba(139, 0, 0, 0.15) 80%,
+    transparent 100%
+  );
+  position: relative;
+  
+  // Linhas de filme (perfuradas) - vermelho escuro
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, 
+      #8b0000, 
+      #8b0000 10px, 
+      transparent 10px, 
+      transparent 20px
+    );
+  }
+  
+  &::before {
+    top: 0;
+  }
+  
+  &::after {
+    bottom: 0;
+  }
+  
+  .genre-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: rgb(196, 196, 196); 
+    font-family: 'Montserrat', 'Oswald', 'Bebas Neue', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    word-break: keep-all;
+  }
+}
+
+@media (min-width: 768px) {
+  .genre-header .genre-title {
+    font-size: 2.5rem;
+    letter-spacing: 12px;
+  }
+}
+
+// 4. CONTAINER E GRID RESPONSIVO
+.container {
+  padding: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .poster-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .rating-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      
+      ion-icon { color: #ffc107; font-size: 10px; }
+      span { color: #fff; font-size: 10px; font-weight: 700; }
+    }
+  }
+
+  .movie-info {
+    padding: 8px 2px;
+    .movie-title {
+      margin: 0;
+      color: #e0e0e0;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+  }
+}
+
+// 5. BOTÃO VER MAIS
+.load-more-section {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  
+  .load-more-btn {
+    --color: #ffffff;
+    --border-color: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+  }
+}
+
+// 6. AJUSTES PARA TELAS GRANDES
+@media (min-width: 768px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+  }
+  .movie-info .movie-title { font-size: 0.9rem; }
+  
+  .genre-header .genre-title {
+    font-size: 2.5rem;
+    
+    &::before, &::after {
+      font-size: 2rem;
+    }
+  }
+}
