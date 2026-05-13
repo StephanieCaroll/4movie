@@ -53,7 +53,7 @@
   <div class="search-grid" *ngIf="searchResults.length > 0">
     <div class="movie-card" *ngFor="let movie of searchResults" (click)="navigateToMovie(movie.id)">
       <div class="poster-container">
-        <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" *ngIf="movie.poster_path" draggable="false" />
+        <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" *ngIf="movie.poster_path" draggable="false">
         <div class="no-image" *ngIf="!movie.poster_path">Sem Imagem</div>
         <div class="card-badge">★ {{ movie.vote_average?.toFixed(1) }}</div>
       </div>
