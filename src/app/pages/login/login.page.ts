@@ -1,11 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule, ToastController, AlertController } from '@ionic/angular';
+import { IonicModule, ToastController, LoadingController, AlertController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { mailOutline, lockClosedOutline, logInOutline, personAddOutline, closeOutline } from 'ionicons/icons';
 import { HeaderComponent } from '../../components/header/header.component';
-import { CartService } from '../../services/cart.service';
 import { AppwriteService } from '../../services/appwrite.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -14,101 +16,75 @@ import { AppwriteService } from '../../services/appwrite.service';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
 })
-export class LoginPage {
-  private cartService = inject(CartService);
+export class LoginPage implements OnInit {
   private appwrite = inject(AppwriteService);
+  private cartService = inject(CartService);
   private router = inject(Router);
   private toastCtrl = inject(ToastController);
+  private loadingCtrl = inject(LoadingController);
   private alertCtrl = inject(AlertController);
 
   email = '';
   password = '';
 
+  constructor() {
+    addIcons({ mailOutline, lockClosedOutline, logInOutline, personAddOutline, closeOutline });
+  }
+
   public get itemCount(): number {
     return this.cartService.getItemCount();
   }
 
-  async entrar() {
-    if (!this.email || !this.password) {
-      this.exibirToast('Por favor, preencha todos os campos.', 'warning');
-      return;
-    }
-
-    if (!this.validarEmail(this.email)) {
-      this.exibirToast('Por favor, insira um e-mail válido', 'warning');
-      return;
-    }
-
+  async ngOnInit() {
     try {
-      await this.appwrite.login(this.email, this.password);
-      this.exibirToast('Login realizado com sucesso!', 'success');
-      this.router.navigate(['/profile']);
-    } catch (e: any) {
-      this.exibirToast('Erro ao entrar: ' + e.message, 'danger');
+      const session = await this.appwrite.getAccount();
+      if (session) {
+        this.router.navigate(['/profile']);
+      }
+    } catch (e) {
+      // Usuário não está logado, permanece na tela
     }
   }
 
-  async recuperarSenha() {
-    const alert = await this.alertCtrl.create({
-      header: 'Recuperar Palavra-passe',
-      message: 'Digite seu e-mail para receber as instruções de recuperação',
-      inputs: [
-        {
-          name: 'email',
-          type: 'email',
-          placeholder: 'seu@email.com',
-          attributes: {
-            inputmode: 'email'
-          }
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary'
-        },
-        {
-          text: 'Enviar',
-          handler: (data) => {
-            if (data.email && this.validarEmail(data.email)) {
-              this.exibirToast('E-mail de recuperação enviado! Verifique sua caixa de entrada.', 'success');
-            } else {
-              this.exibirToast('Por favor, insira um e-mail válido.', 'warning');
-              return false;
-            }
-            return true;
-          }
-        }
-      ],
-      cssClass: 'custom-alert'
-    });
-    await alert.present();
+  async entrar() {
+    const loading = await this.loadingCtrl.create({ message: 'Autenticando...' });
+    await loading.present();
+
+    try {
+      await this.appwrite.login(this.email, this.password);
+      await loading.dismiss();
+      this.router.navigate(['/profile']);
+    } catch (e: any) {
+      await loading.dismiss();
+      
+      // Se já houver sessão ativa, manda pro perfil
+      if (e.message.includes('session is active')) {
+        this.router.navigate(['/profile']);
+        return;
+      }
+
+      let msg = 'E-mail ou senha incorretos.';
+      if (e.code === 401) msg = 'Credenciais inválidas.';
+      
+      this.exibirToast(msg, 'danger');
+    }
   }
 
   irParaSignUp() {
     this.router.navigate(['/sign-up']);
   }
 
-  async exibirToast(msg: string, tipo: 'success' | 'danger' | 'warning' = 'danger') {
+  async recuperarSenha() {
+    this.exibirToast('Funcionalidade em desenvolvimento.', 'warning');
+  }
+
+  async exibirToast(msg: string, cor: string) {
     const toast = await this.toastCtrl.create({
       message: msg,
       duration: 3000,
-      position: 'top',
-      color: tipo,
-      buttons: [
-        {
-          icon: 'close-outline',
-          role: 'cancel',
-          handler: () => {}
-        }
-      ]
+      color: cor as any,
+      position: 'top'
     });
     await toast.present();
-  }
-
-  private validarEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   }
 }

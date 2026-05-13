@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,56 +14,80 @@ import { AppwriteService } from '../../services/appwrite.service';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
 })
-export class SignUpPage {
+export class SignUpPage implements OnInit {
   private cartService = inject(CartService);
   private appwrite = inject(AppwriteService);
   private router = inject(Router);
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
 
-  // Variáveis ligadas ao seu formulário
+  // Dados do formulário
   nome = '';
   email = '';
   telefone = '';
   senha = '';
   confirmarSenha = '';
 
+  // Estado do Usuário
+  usuarioLogado: any = null;
+
   public get itemCount(): number {
     return this.cartService.getItemCount();
   }
 
+  async ngOnInit() {
+    await this.verificarSessao();
+  }
+
+  async verificarSessao() {
+    try {
+      this.usuarioLogado = await this.appwrite.getAccount();
+    } catch (e) {
+      this.usuarioLogado = null;
+    }
+  }
+
   async cadastrar() {
-    // Validação básica
-    if (!this.nome || !this.email || !this.senha) {
-      this.exibirToast('Preencha os campos obrigatórios para comprar seus filmes.', 'warning');
+    if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
+      this.exibirToast('Preencha os campos para garantir seu ingresso!', 'warning');
       return;
     }
 
     if (this.senha !== this.confirmarSenha) {
-      this.exibirToast('As senhas digitadas não são iguais.', 'warning');
+      this.exibirToast('As senhas não coincidem.', 'warning');
       return;
     }
 
     const loading = await this.loadingCtrl.create({
       message: 'Criando sua conta de cinema...',
-      spinner: 'crescent',
-      cssClass: 'custom-loading' // Estilizaremos no SCSS
+      spinner: 'crescent'
     });
     await loading.present();
 
     try {
-      // Chamada ao Appwrite
-      // IMPORTANTE: O erro 401 costuma ser falta de configuração de "Platform" no console do Appwrite
       await this.appwrite.createAccount(this.email, this.senha, this.nome);
-      
       await loading.dismiss();
-      this.exibirToast('Conta criada! Agora você já pode comprar seus filmes.', 'success');
+      this.exibirToast('Conta criada! Faça login para começar.', 'success');
       this.router.navigate(['/login']);
     } catch (e: any) {
       await loading.dismiss();
-      // Se o erro 401 persistir, verifique o Project ID no AppwriteService
-      this.exibirToast('Erro de autorização: Verifique as configurações do Appwrite.', 'danger');
-      console.error('Erro Appwrite:', e);
+      let msg = 'Erro ao criar conta. Tente novamente.';
+      if (e.code === 409) msg = 'Este e-mail já está em uso em nossa base.';
+      this.exibirToast(msg, 'danger');
+    }
+  }
+
+  async logout() {
+    const loading = await this.loadingCtrl.create({ message: 'Encerrando sessão...' });
+    await loading.present();
+    try {
+      await this.appwrite.logout();
+      this.usuarioLogado = null;
+      this.exibirToast('Até logo! Sessão encerrada.', 'success');
+    } catch (e) {
+      this.exibirToast('Erro ao sair.', 'danger');
+    } finally {
+      await loading.dismiss();
     }
   }
 

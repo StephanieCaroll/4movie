@@ -1,120 +1,126 @@
-ion-toolbar {
-    --background: black;
-}
-.titulo-branco {
-  color: white;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
+.crimson-bg {
+  --background: radial-gradient(circle at top, #1a1a1a 0%, #000000 100%);
 }
 
-.titulo-vermelho {
-  color: red;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-}
-/* FUNDO DA PÁGINA */
-ion-content {
-  --background: linear-gradient(to bottom, #000000, #0f0f0f, #1a0000);
-}
-
-/* CONTAINER PRINCIPAL */
 .profile-container {
-  padding: 20px;
-  color: white;
-}
-
-/* ÁREA DA FOTO */
-.foto-area {
   display: flex;
-  justify-content: center;
-  margin-top: 30px;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
   margin-bottom: 20px;
+
+  .foto-perfil {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #dc2626;
+    background: #121212;
+    padding: 5px;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+  }
+
+  .edit-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #dc2626;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #000;
+    font-size: 18px;
+  }
 }
 
-/* FOTO DE PERFIL */
-.foto-perfil {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  border: 4px solid #e50914;
-  object-fit: cover;
-  box-shadow:
-    0 0 10px red,
-    0 0 20px red,
-    0 0 40px rgba(255, 0, 0, 0.5);
-}
-
-/* DADOS DO USUÁRIO */
 .dados-usuario {
   text-align: center;
-  margin-bottom: 30px;
+  width: 100%;
+
+  .user-name {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .user-email {
+    color: #9ca3af;
+    font-size: 0.95rem;
+    margin: 5px 0 25px;
+  }
 }
 
-.dados-usuario h1 {
-  font-size: 28px;
-  font-weight: bold;
-  color: #e50914;
-  margin-bottom: 8px;
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+
+  .edit-btn {
+    --background: rgba(255, 255, 255, 0.1);
+    --background-hover: rgba(255, 255, 255, 0.2);
+    --color: white;
+    --border-radius: 12px;
+    --border-color: rgba(255, 255, 255, 0.3);
+    --border-style: solid;
+    --border-width: 1px;
+    font-weight: 600;
+    height: 45px;
+    flex: 1;
+    backdrop-filter: blur(10px);
+  }
+
+  .logout-btn {
+    --border-radius: 12px;
+    --border-width: 1px;
+    font-weight: 600;
+    height: 45px;
+    flex: 0.5;
+  }
 }
 
-.dados-usuario p {
-  font-size: 16px;
-  color: #ccc;
-  margin-bottom: 20px;
-}
-
-/* BOTÃO */
-ion-button {
-  --background: linear-gradient(45deg, #ff0000, #990000);
-  letter-spacing: 1px;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-  --background-hover: #cc0000;
-  --border-radius: 12px;
-  --color: white;
-  font-weight: bold;
-  height: 45px;
-  margin-top: 10px;
-  transition: 0.2s;
-}
-ion-button:hover {
-  transform: scale(1.1)
-}
-
-/* ÁREA DOS MENUS */
 .menu-area {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-
+  width: 100%;
+  max-width: 500px;
   margin-top: 40px;
-}
 
-/* ITENS */
-ion-item {
-  width: 700px;
-  height: 50px;
-  --background: #111;
-  --color: white;
-  border: 1px solid red;
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: 0.2s;
-}
+  .transparent-list {
+    background: transparent;
+    padding: 0;
 
-/* TEXTO DOS ITENS */
-ion-label {
-  font-size: 16px;
-  font-weight: 500;
-}
+    ion-item {
+      --background: rgba(255, 255, 255, 0.03);
+      --color: white;
+      --padding-start: 16px;
+      --inner-padding-end: 16px;
+      margin-bottom: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s;
 
-/* EFEITO AO CLICAR */
-ion-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+      &:hover {
+        transform: translateX(5px);
+        --background: rgba(220, 38, 38, 0.05);
+      }
+
+      ion-icon {
+        color: #dc2626;
+        font-size: 22px;
+      }
+    }
+  }
 }

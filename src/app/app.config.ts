@@ -12,10 +12,17 @@ import {
   checkmarkDoneCircleOutline,
   arrowForwardOutline,
   logInOutline,
-  alertCircleOutline
+  alertCircleOutline,
+  camera,          
+  createOutline,  
+  logOutOutline,   
+  playCircleOutline, 
+  timeOutline,     
+  heart,           
+  personCircle     
 } from 'ionicons/icons';
 
-// Registrar todos os ícones globalmente
+// Registrar todos os ícones globalmente para que o HTML os encontre pelo "name"
 addIcons({
   'person-outline': personOutline,
   'mail-outline': mailOutline,
@@ -24,7 +31,14 @@ addIcons({
   'checkmark-done-circle-outline': checkmarkDoneCircleOutline,
   'arrow-forward-outline': arrowForwardOutline,
   'log-in-outline': logInOutline,
-  'alert-circle-outline': alertCircleOutline
+  'alert-circle-outline': alertCircleOutline,
+  'camera': camera,
+  'create-outline': createOutline,
+  'log-out-outline': logOutOutline,
+  'play-circle-outline': playCircleOutline,
+  'time-outline': timeOutline,
+  'heart': heart,
+  'person-circle': personCircle
 });
 
 export const appConfig: ApplicationConfig = {

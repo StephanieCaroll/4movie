@@ -9,42 +9,31 @@ export class AppwriteService {
   account: Account;
 
   constructor() {
-    // REGIÃO: Nova York (NYC)
     this.client
       .setEndpoint('https://nyc.cloud.appwrite.io/v1')
       .setProject('6a0283be001b53538516'); 
     
     this.account = new Account(this.client);
-    
-    // Verificação
-    console.log('✅ Appwrite Service Configurado:', {
-      endpoint: 'https://nyc.cloud.appwrite.io/v1',
-      projectId: '6a0283be001b53538516'
-    });
   }
 
+  // Criar conta (Sign Up)
   async createAccount(email: string, password: string, name: string) {
-    try {
-      const response = await this.account.create(
-        ID.unique(), 
-        email, 
-        password, 
-        name
-      );
-      console.log('✅ Conta criada:', response);
-      return response;
-    } catch (error) {
-      console.error('❌ Erro Appwrite:', error);
-      throw error;
-    }
+    return await this.account.create(ID.unique(), email, password, name);
   }
 
+  // Criar sessão (Login)
   async login(email: string, password: string) {
-    try {
-      return await this.account.createEmailPasswordSession(email, password);
-    } catch (error) {
-      console.error('❌ Erro no login:', error);
-      throw error;
-    }
+    return await this.account.createEmailPasswordSession(email, password);
+  }
+
+  // Obter dados do usuário logado
+  async getAccount() {
+    return await this.account.get();
+  }
+
+  // Encerrar sessão (Logout)
+  async logout() {
+    // 'current' deleta a sessão ativa neste dispositivo
+    return await this.account.deleteSession('current');
   }
 }

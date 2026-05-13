@@ -1,59 +1,52 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      <span class="titulo-branco">4</span>
-      <span class="titulo-vermelho">MOVIE</span>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header [itemCount]="itemCount"></app-header>
 
-  <ion-content>
-<div class="profile-container">
+<ion-content class="crimson-bg">
+  <div class="profile-container" *ngIf="usuario">
 
-    <!-- FOTO -->
     <div class="foto-area">
-      <img
-        src="https://ionicframework.com/docs/img/demos/avatar.svg"
-        alt="Foto de perfil"
-        class="foto-perfil"
-      >
+      <div class="avatar-wrapper">
+        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Foto de perfil" class="foto-perfil">
+        <div class="edit-badge">
+          <ion-icon name="camera"></ion-icon>
+        </div>
+      </div>
     </div>
 
-    <!-- DADOS -->
     <div class="dados-usuario">
+      <h1 class="user-name">{{ usuario.name }}</h1>
+      <p class="user-email">{{ usuario.email }}</p>
 
-      <h1>{{ usuario?.usuario }}</h1>
+      <div class="action-buttons">
+        <ion-button fill="solid" class="edit-btn">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Editar Dados
+        </ion-button>
+        
+        <ion-button fill="outline" color="danger" class="logout-btn" (click)="sair()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Sair
+        </ion-button>
+      </div>
+    </div>
 
-      <p>{{ usuario?.email }}</p>
-
-      <ion-button>
-        Editar Dados
-      </ion-button>
-
+    <div class="menu-area">
+      <ion-list lines="none" class="transparent-list">
+        <ion-item button detail="true">
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          <ion-label>Continuar a assistir</ion-label>
+        </ion-item>
+        
+        <ion-item button detail="true">
+          <ion-icon name="time-outline" slot="start"></ion-icon>
+          <ion-label>Assistir mais tarde</ion-label>
+        </ion-item>
+        
+        <ion-item button detail="true">
+          <ion-icon name="heart" slot="start" color="danger"></ion-icon>
+          <ion-label>Meus Favoritos</ion-label>
+        </ion-item>
+      </ion-list>
     </div>
 
   </div>
-
-  <!-- FAVORITOS -->
-  <div class="menu-area">
-
-    <ion-item button>
-      <ion-label>Continuar assistindo</ion-label>
-    </ion-item>
-
-    <ion-item button>
-      <ion-label>Assistir mais tarde</ion-label>
-    </ion-item>
-
-    <ion-item button>
-      <ion-label>Assistidos</ion-label>
-    </ion-item>
-
-    <ion-item button>
-      <ion-label>Favoritos</ion-label>
-    </ion-item>
-
-  </div>
- 
 </ion-content>
-
