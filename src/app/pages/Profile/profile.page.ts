@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { AppwriteService } from '../../services/appwrite.service';
 import { CartService } from '../../services/cart.service';
@@ -19,6 +19,8 @@ export class ProfilePage implements OnInit, OnDestroy {
   private router = inject(Router);
   private cartService = inject(CartService);
   public userMoviesService = inject(UserMoviesService);
+  private navCtrl = inject(NavController);
+  private toastCtrl = inject(ToastController);
 
   usuario: any = null;
   carregando = true;
@@ -28,7 +30,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   private timerInterval: any;
 
   constructor() {
-    // Efeito para re-filtrar sempre que os dados no serviço mudarem
+    // Efeito para re-filtrar sempre que os dados no serviço mudarem (Signals)
     effect(() => {
       this.userMoviesService.movies();
       this.filterMovies();
@@ -41,7 +43,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       await this.loadUserMovies();
     }
     
-    // Atualiza cronômetros a cada minuto
+    // Atualiza cronômetros a cada minuto para refletir tempo restante de aluguel
     this.timerInterval = setInterval(() => {
       this.filterMovies();
     }, 60000);
@@ -71,12 +73,10 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   async loadUserMovies() {
     if (!this.usuario) return;
-    
     try {
       await this.userMoviesService.loadUserMovies();
     } catch (error) {
       console.error('Erro ao carregar filmes do usuário:', error);
-      // Não mostra erro pro usuário, apenas loga
     }
   }
 
@@ -98,8 +98,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   filterMovies() {
-    // Força a atualização da UI quando necessário
-    // O getter filteredMovies já lida com a lógica
+    // Apenas para forçar detecção de mudanças se necessário
   }
 
   segmentChanged(event: any) {
@@ -111,28 +110,29 @@ export class ProfilePage implements OnInit, OnDestroy {
     return this.userMoviesService.getRemainingTimeDisplay(expiresAt);
   }
 
+  // Função que abre os detalhes do filme clicado
   async watchMovie(movie: UserMovie) {
     try {
-      // Verifica se o filme ainda está disponível
+      // Verifica se o aluguel expirou antes de navegar
       if (movie.type === 'rent' && movie.expiresAt) {
         const now = new Date();
         const expires = new Date(movie.expiresAt);
         
         if (now > expires) {
           await this.userMoviesService.removeExpiredRentals();
-          const toast = document.createElement('ion-toast');
-          toast.message = 'Este aluguel expirou!';
-          toast.duration = 2000;
-          toast.color = 'danger';
-          document.body.appendChild(toast);
+          const toast = await this.toastCtrl.create({
+            message: 'Este aluguel expirou!',
+            duration: 2000,
+            color: 'danger',
+            position: 'bottom'
+          });
           await toast.present();
           return;
         }
       }
       
-      console.log('Assistir filme:', movie);
-      // TODO: Implementar player
-      // this.router.navigate(['/player', movie.movieId]);
+      // Navega para a página de detalhes usando o ID do filme
+      this.navCtrl.navigateForward(`/details/${movie.movieId}`);
       
     } catch (error) {
       console.error('Erro ao acessar filme:', error);
@@ -147,11 +147,10 @@ export class ProfilePage implements OnInit, OnDestroy {
     try {
       await this.appwrite.logout();
       this.cartService.clearLocalCart();
-      this.userMoviesService.movies().length = 0; // Limpa filmes localmente
+      // Limpa dados locais antes de sair
       this.router.navigate(['/login'], { replaceUrl: true });
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
-      // Mesmo com erro, tenta navegar para login
       this.router.navigate(['/login'], { replaceUrl: true });
     }
   }

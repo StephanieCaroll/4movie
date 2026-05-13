@@ -22,15 +22,33 @@ export class CartPage {
   }
 
   async checkout() {
+    const items = this.cartService.items();
+    
+    if (items.length === 0) {
+      const emptyAlert = await this.alertCtrl.create({
+        header: 'Carrinho Vazio',
+        message: 'Adicione filmes antes de finalizar.',
+        buttons: ['OK']
+      });
+      await emptyAlert.present();
+      return;
+    }
+
     const alert = await this.alertCtrl.create({
-      header: 'Pedido Finalizado',
-      message: 'Obrigado por escolher o 4MOVIE!',
-      buttons: [{
-        text: 'OK',
-        handler: () => {
-          this.cartService.clearCart();
+      header: 'Finalizar Pedido',
+      message: `Deseja confirmar a compra de ${items.length} item(ns)?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Confirmar',
+          handler: async () => {
+            await this.cartService.completePurchase(items);
+          }
         }
-      }]
+      ]
     });
     await alert.present();
   }
