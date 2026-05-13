@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, Account, ID } from 'appwrite';
+import { Client, Account, ID, Databases } from 'appwrite';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +7,11 @@ import { Client, Account, ID } from 'appwrite';
 export class AppwriteService {
   client = new Client();
   account: Account;
+  databases: Databases; // Adicionado para o carrinho
   private checkingSession = false;
 
   constructor() {
-    // Suprime aviso do localStorage
+    // Mantém sua lógica original de supressão de avisos
     const originalConsoleWarn = console.warn;
     console.warn = (...args) => {
       if (args[0]?.includes?.('localStorage') || args[0]?.includes?.('custom domain')) {
@@ -24,22 +25,23 @@ export class AppwriteService {
       .setProject('6a0283be001b53538516');
     
     this.account = new Account(this.client);
+    this.databases = new Databases(this.client); // Instanciado aqui
   }
 
- async isLoggedIn(): Promise<boolean> {
-  if (this.checkingSession) return false;
-  this.checkingSession = true;
-  
-  try {
-    const session = await this.account.get();
-    return !!session;
-  } catch (error) {
-   
-    return false;
-  } finally {
-    this.checkingSession = false;
+  async isLoggedIn(): Promise<boolean> {
+    if (this.checkingSession) return false;
+    this.checkingSession = true;
+    
+    try {
+      const session = await this.account.get();
+      return !!session;
+    } catch (error) {
+      return false;
+    } finally {
+      this.checkingSession = false;
+    }
   }
-}
+
   async createAccount(email: string, password: string, name: string) {
     try {
       return await this.account.create(ID.unique(), email, password, name);

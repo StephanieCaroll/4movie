@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { AppwriteService } from './appwrite.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
+  private appwrite = inject(AppwriteService);
   private userData: any;
-
-  constructor() { }
 
   setUser(data: any) {
     this.userData = data;
@@ -17,4 +16,15 @@ export class UserService {
     return this.userData;
   }
 
+  // Método necessário para o funcionamento do carrinho
+  async getCurrentUser() {
+    if (this.userData) return this.userData;
+    try {
+      const account = await this.appwrite.getAccount();
+      this.userData = account;
+      return account;
+    } catch {
+      return null;
+    }
+  }
 }

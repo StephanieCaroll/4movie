@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -9,6 +9,7 @@ import {
 import { addIcons } from 'ionicons';
 import { gridOutline, personOutline, cartOutline, closeOutline, searchOutline, star } from 'ionicons/icons';
 import { MovieService } from '../../services/movie.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -23,12 +24,11 @@ import { MovieService } from '../../services/movie.service';
     IonSearchbar, IonButton, IonIcon
   ]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private movieService = inject(MovieService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
-  
-  @Input() itemCount: number = 0;
+  public cartService = inject(CartService); 
   
   public searchQuery: string = '';
   public isSearching: boolean = false;
@@ -41,6 +41,14 @@ export class HeaderComponent {
 
   constructor() {
     addIcons({ gridOutline, personOutline, cartOutline, closeOutline, searchOutline, star });
+  }
+
+  ngOnInit() {
+    
+  }
+
+  get itemCount(): number {
+    return this.cartService.itemCount();
   }
 
   onSearchChange(event: any) {
@@ -77,9 +85,7 @@ export class HeaderComponent {
   }
 
   navigateToMovie(movieId: number) {
-    // Navegar imediatamente
     this.router.navigate(['/details', movieId]).then(() => {
-      // Fechar overlay após navegação
       this.isSearching = false;
       this.searchQuery = '';
       this.searchResults = [];

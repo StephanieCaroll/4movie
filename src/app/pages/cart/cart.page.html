@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title color="light">Meu Carrinho</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="app-background">
+  <div class="cart-container">
+    @if (cartService.itemCount() === 0) {
+      <div class="empty-cart">
+        <ion-icon name="cart-outline"></ion-icon>
+        <p>Seu carrinho está vazio</p>
+        <ion-button fill="outline" color="primary" routerLink="/home">Explorar Filmes</ion-button>
+      </div>
+    } @else {
+      <ion-list lines="none" class="cart-list">
+        @for (item of cartService.items(); track item.$id) {
+          <ion-item class="cart-item">
+            <ion-thumbnail slot="start">
+              <img [src]="'https://image.tmdb.org/t/p/w200' + item.posterPath" />
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{ item.title }}</h2>
+              <p class="type-tag" [class.rent]="item.type === 'rent'">
+                {{ item.type === 'rent' ? 'Aluguel' : 'Compra' }}
+              </p>
+              <p class="price">{{ item.price | currency:'BRL' }}</p>
+            </ion-label>
+            <ion-button slot="end" fill="clear" color="danger" (click)="cartService.removeFromCart(item.$id!)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        }
+      </ion-list>
+
+      <div class="checkout-footer">
+        <div class="total-row">
+          <span>Total</span>
+          <span class="total-value">{{ cartService.total() | currency:'BRL' }}</span>
+        </div>
+        <ion-button expand="block" class="btn-checkout" (click)="checkout()">
+          FINALIZAR PEDIDO
+        </ion-button>
+      </div>
+    }
+  </div>
+</ion-content>
