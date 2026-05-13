@@ -5,14 +5,13 @@ import { Router } from '@angular/router';
 import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { AppwriteService } from '../../services/appwrite.service';
 import { CartService } from '../../services/cart.service';
-import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
+  imports: [CommonModule, FormsModule, IonicModule]
 })
 export class LoginPage {
   private appwrite = inject(AppwriteService);

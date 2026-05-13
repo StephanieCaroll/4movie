@@ -4,10 +4,6 @@
       <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
 
-    <div class="logo-wrapper mobile-logo-center" routerLink="/">
-      <span class="logo-main">4<span class="logo-accent">MOVIE</span></span>
-    </div>
-
     <div class="mobile-search-container">
       <ion-searchbar 
         [(ngModel)]="searchQuery"
@@ -15,6 +11,10 @@
         placeholder="Buscar..."
         class="mobile-searchbar">
       </ion-searchbar>
+    </div>
+
+    <div class="logo-wrapper mobile-logo-right" routerLink="/">
+      <span class="logo-main">4<span class="logo-accent">MOVIE</span></span>
     </div>
 
     <ion-buttons slot="end" class="header-actions-group hide-on-mobile">

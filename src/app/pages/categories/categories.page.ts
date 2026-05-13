@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
-import { HeaderComponent } from '../../components/header/header.component';
 import { addIcons } from 'ionicons';
 import { homeOutline, arrowBackOutline, cartOutline, heartOutline, sadOutline, playOutline, star, gridOutline, personOutline, closeOutline, searchOutline, imageOutline } from 'ionicons/icons';
 
@@ -12,7 +11,7 @@ import { homeOutline, arrowBackOutline, cartOutline, heartOutline, sadOutline, p
   templateUrl: './categories.page.html',
   styleUrls: ['./categories.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule, HeaderComponent]
+  imports: [CommonModule, IonicModule, RouterModule]
 })
 export class CategoriesPage implements OnInit {
   private movieService = inject(MovieService);
@@ -127,7 +126,5 @@ export class CategoriesPage implements OnInit {
     this.router.navigate(['/details', movieId]);
   }
 
-  goToHome() {
-    this.router.navigate(['/home']);
-  }
+ 
 }

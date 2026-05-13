@@ -123,36 +123,6 @@ $bg-absolute: #000000;
   }
 }
 
-.mobile-home-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: $primary;
-  color: white;
-  border-radius: 40px;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 1000;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  ion-icon {
-    font-size: 20px;
-  }
-  
-  span {
-    font-size: 14px;
-    font-weight: 600;
-  }
-  
-  &:active {
-    transform: scale(0.95);
-  }
-}
-
 @media (min-width: 769px) {
   .mobile-home-btn {
     display: none;

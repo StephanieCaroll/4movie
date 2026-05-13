@@ -7,7 +7,6 @@ import {
 } from '@ionic/angular/standalone';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
-import { HeaderComponent } from '../../components/header/header.component';
 import { addIcons } from 'ionicons';
 import { star, play, addCircleOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
@@ -24,8 +23,7 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
-    IonContent, IonIcon, IonButton,
-    HeaderComponent
+    IonContent, IonIcon, IonButton
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {

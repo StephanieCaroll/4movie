@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
-import { HeaderComponent } from '../../components/header/header.component';
 import { CartService } from '../../services/cart.service';
 import { AppwriteService } from '../../services/appwrite.service';
 
@@ -12,7 +11,7 @@ import { AppwriteService } from '../../services/appwrite.service';
   templateUrl: './sign-up.page.html',
   styleUrls: ['./sign-up.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
+  imports: [CommonModule, FormsModule, IonicModule]
 })
 export class SignUpPage implements OnInit {
   private cartService = inject(CartService);

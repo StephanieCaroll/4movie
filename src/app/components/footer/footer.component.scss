@@ -1,16 +1,14 @@
-
 @media (min-width: 768px) {
   .mobile-only-footer {
-    display: none;
+    display: none; 
   }
 }
 
 ion-tab-bar {
   --background: #1a1a1a; 
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  height: 65px;
+  height: 65px; 
 }
-
 ion-tab-button {
   --color: #999;
   --color-selected: var(--ion-color-primary, #e50914);

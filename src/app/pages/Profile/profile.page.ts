@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AppwriteService } from '../../services/appwrite.service';
-import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, HeaderComponent]
+  imports: [IonicModule, CommonModule]
 })
 export class ProfilePage implements OnInit {
   private appwrite = inject(AppwriteService);
