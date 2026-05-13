@@ -42,8 +42,6 @@ export class HomePage implements OnInit, AfterViewInit {
   public romanceMovies: any[] = [];
   public animationMovies: any[] = [];
   
- 
-  
   public imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
   public imageBaseUrlOriginal = 'https://image.tmdb.org/t/p/original'; 
   

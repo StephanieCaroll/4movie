@@ -1,3 +1,4 @@
+// src/app/components/footer/footer.component.ts
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -10,20 +11,20 @@ import { CartService } from '../../services/cart.service';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  encapsulation: ViewEncapsulation.None ,
+  encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [CommonModule, IonicModule, RouterModule]
 })
 export class FooterComponent {
   private router = inject(Router);
-  private cartService = inject(CartService);
+  public cartService = inject(CartService); 
 
   constructor() {
     addIcons({ homeOutline, gridOutline, personOutline, cartOutline });
   }
 
   get itemCount(): number {
-    return this.cartService.getItemCount();
+    return this.cartService.itemCount();
   }
 
   isActive(route: string): boolean {

@@ -13,14 +13,11 @@ export class CartService {
   private userService = inject(UserService);
   private toastCtrl = inject(ToastController);
 
-  // Certifique-se de que estes IDs existem no seu console Appwrite
   private readonly DB_ID = 'main'; 
   private readonly COLLECTION_ID = 'cart_items';
 
-  // Estado Reativo com Signals
   private cartSignal = signal<CartItem[]>([]);
   
-  // Selectors para a Interface
   public items = computed(() => this.cartSignal());
   public itemCount = computed(() => this.cartSignal().length);
   public total = computed(() => 
@@ -29,6 +26,14 @@ export class CartService {
 
   constructor() {
     this.loadCart();
+  }
+
+  /**
+   * Método para compatibilidade com os componentes que chamam como função.
+   * Resolve o erro TS2551.
+   */
+  getItemCount(): number {
+    return this.itemCount();
   }
 
   async loadCart() {

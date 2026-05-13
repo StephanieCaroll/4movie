@@ -1,15 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { IonContent, IonSpinner, IonIcon, IonButton } from '@ionic/angular/standalone';
-import { NavController, Platform } from '@ionic/angular';
-import { MovieService, Movie } from '../../services/movie.service';
+import { IonContent, IonSpinner, IonIcon, IonButton, IonBadge } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
+import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
+import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
 import { 
   star, arrowBackOutline, cartOutline, heartOutline, 
-  sadOutline, homeOutline, playOutline 
+  sadOutline, homeOutline, playOutline, timeOutline,
+  calendarOutline, globeOutline, cashOutline, peopleOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -17,17 +19,25 @@ import {
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, IonContent, IonSpinner, IonIcon, IonButton]
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    IonContent, 
+    IonSpinner, 
+    IonIcon, 
+    IonButton,
+    IonBadge,
+    GenreNamePipe
+  ]
 })
 export class DetailsPage implements OnInit, OnDestroy {
-  filme: Movie | null = null;
+  filme: any = null;
   loading: boolean = true;
-  erro: boolean = false; 
   trailerUrl: SafeResourceUrl | null = null;
+  imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private navCtrl: NavController, 
     public movieService: MovieService,
     private cartService: CartService,
@@ -35,7 +45,8 @@ export class DetailsPage implements OnInit, OnDestroy {
   ) {
     addIcons({ 
       star, arrowBackOutline, cartOutline, heartOutline, 
-      sadOutline, homeOutline, playOutline 
+      sadOutline, homeOutline, playOutline, timeOutline,
+      calendarOutline, globeOutline, cashOutline, peopleOutline
     });
   }
 
@@ -48,19 +59,8 @@ export class DetailsPage implements OnInit, OnDestroy {
     });
   }
 
-  voltar() {
-    this.trailerUrl = null;
-    // Usa o NavController para voltar na pilha de navegação
-    this.navCtrl.back();
-  }
-
-  ngOnDestroy() {
-    this.trailerUrl = null;
-  }
-
   carregarDetalhes(id: number) {
     this.loading = true;
-    this.erro = false;
     this.movieService.getMovieById(id).subscribe({
       next: (filme) => {
         this.filme = filme;
@@ -68,40 +68,50 @@ export class DetailsPage implements OnInit, OnDestroy {
         this.carregarTrailer(id);
       },
       error: (err) => {
-        console.error('Erro:', err);
+        console.error('Erro ao carregar detalhes:', err);
         this.loading = false;
-        this.erro = true;
       }
     });
   }
 
+  translateStatus(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'Released': 'Lançado',
+      'Post Production': 'Pós-Produção',
+      'In Production': 'Em Produção',
+      'Planned': 'Planejado',
+      'Canceled': 'Cancelado'
+    };
+    return statusMap[status] || status;
+  }
+
+  formatRuntime(runtime: number): string {
+    if (!runtime) return 'N/D';
+    const hours = Math.floor(runtime / 60);
+    const minutes = runtime % 60;
+    return `${hours}h ${minutes}m`;
+  }
+
   carregarTrailer(id: number) {
     this.movieService.getMovieVideos(id).subscribe(res => {
-      const trailer = res.results.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer');
+      const trailer = res.results?.find((v: any) => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
       if (trailer) {
         this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${trailer.key}?rel=0&showinfo=0&controls=1`
+          `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`
         );
       }
     });
   }
 
-  formatDate(date: string): string {
-    return date ? new Date(date).toLocaleDateString('pt-BR') : 'Data N/D';
+  voltar() {
+    this.navCtrl.back();
   }
 
-  getGenreNames(genreIds: number[]): string {
-    const genres: { [key: number]: string } = {
-      28: 'Ação', 12: 'Aventura', 16: 'Animação', 35: 'Comédia',
-      80: 'Crime', 99: 'Documentário', 18: 'Drama', 10751: 'Família',
-      14: 'Fantasia', 36: 'História', 27: 'Terror', 10402: 'Música',
-      9648: 'Mistério', 10749: 'Romance', 878: 'Ficção Científica',
-      10770: 'TV Movie', 53: 'Thriller', 10752: 'Guerra', 37: 'Faroeste'
-    };
-    return genreIds.map(id => genres[id] || 'Geral').join(', ');
+  ngOnDestroy() {
+    this.trailerUrl = null;
   }
 
   addToCart() {
-    if (this.filme) this.cartService.addToCart(this.filme, 1);
+    if (this.filme) this.cartService.addToCart(this.filme, 'buy');
   }
 }
