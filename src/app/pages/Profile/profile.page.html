@@ -33,20 +33,78 @@
         </div>
       </div>
 
+      <!-- SEÇÃO MEUS FILMES -->
+      <div class="my-movies-section">
+        <div class="section-header">
+          <ion-icon name="film-outline" class="section-icon"></ion-icon>
+          <h2 class="section-title">Meus Filmes</h2>
+        </div>
+
+        @if (userMovies.length === 0) {
+          <div class="empty-movies">
+            <ion-icon name="videocam-off-outline" class="empty-icon"></ion-icon>
+            <p>Você ainda não possui filmes</p>
+            <ion-button fill="clear" size="small" routerLink="/home">
+              Explorar Catálogo
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+        } @else {
+          <!-- Abas para Compras e Aluguéis -->
+          <ion-segment [(ngModel)]="selectedTab" (ionChange)="segmentChanged($event)">
+            <ion-segment-button value="all">
+              <ion-label>Todos</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="purchased">
+              <ion-label>Comprados</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="rented">
+              <ion-label>Alugados</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+
+          <!-- Lista de Filmes -->
+          <div class="movies-grid">
+            @for (movie of filteredMovies; track movie.movieId) {
+              <div class="movie-card" (click)="watchMovie(movie)">
+                <div class="poster-wrapper">
+                  <img [src]="'https://image.tmdb.org/t/p/w200' + movie.posterPath" 
+                       [alt]="movie.title"
+                       class="movie-poster">
+                  
+                  @if (movie.type === 'rent') {
+                    <div class="movie-badge rent-badge">
+                      <ion-icon name="time-outline"></ion-icon>
+                      <span>{{ getDaysRemaining(movie.expiresAt!) }} dias</span>
+                    </div>
+                  } @else {
+                    <div class="movie-badge purchase-badge">
+                      <ion-icon name="checkmark-circle-outline"></ion-icon>
+                      <span>Comprado</span>
+                    </div>
+                  }
+                </div>
+                <div class="movie-info">
+                  <h3 class="movie-title">{{ movie.title }}</h3>
+                  <p class="movie-date">{{ movie.purchaseDate | date:'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
       <div class="menu-area">
         <ion-list lines="none" class="transparent-list">
-          
           @for (item of [
             { icon: 'play-circle-outline', label: 'Continuar a assistir' },
-            { icon: 'heart', label: 'Favoritos' },
-            { icon: 'settings-outline', label: 'Configurações' }
+            { icon: 'heart', label: 'Favoritos' }
           ]; track item.label) {
             <ion-item button detail="true">
               <ion-icon [name]="item.icon" slot="start"></ion-icon>
               <ion-label>{{ item.label }}</ion-label>
             </ion-item>
           }
-          
         </ion-list>
       </div>
     </div>

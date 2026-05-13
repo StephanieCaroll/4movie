@@ -1,6 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { AppwriteService } from './appwrite.service';
 import { UserService } from './user.service';
+import { UserMoviesService } from './user-movies.service';
 import { ID, Query } from 'appwrite';
 import { ToastController, NavController } from '@ionic/angular';
 import { CartItem } from './cart.model';
@@ -11,6 +12,7 @@ import { CartItem } from './cart.model';
 export class CartService {
   private appwrite = inject(AppwriteService);
   private userService = inject(UserService);
+  private userMoviesService = inject(UserMoviesService);
   private toastCtrl = inject(ToastController);
   private navCtrl = inject(NavController);
   
@@ -93,7 +95,6 @@ export class CartService {
       
       this.cartSignal.update(items => [...items, doc as unknown as CartItem]);
       
-      // Mensagem personalizada baseada no tipo
       const message = type === 'buy' 
         ? `${movie.title} adicionado para compra!` 
         : `${movie.title} alugado por ${days} dia(s)!`;
@@ -124,6 +125,38 @@ export class CartService {
     }
     this.cartSignal.set([]);
     this.showToast('Carrinho limpo com sucesso', 'toast-success');
+  }
+
+  // Método para finalizar compra/aluguel e mover para biblioteca do usuário
+  async completePurchase(cartItems: CartItem[]) {
+    let successCount = 0;
+    
+    for (const item of cartItems) {
+      const movieData = {
+        id: item.movieId,
+        title: item.title,
+        poster_path: item.posterPath
+      };
+      
+      const success = await this.userMoviesService.addMovie(
+        movieData,
+        item.type,
+        item.price,
+        item.rentalDays ? parseInt(item.rentalDays) : undefined
+      );
+      
+      if (success) {
+        await this.removeFromCart(item.$id!);
+        successCount++;
+      }
+    }
+    
+    if (successCount === cartItems.length) {
+      this.showToast('Compra finalizada com sucesso!', 'toast-success');
+      this.navCtrl.navigateBack('/profile');
+    } else if (successCount > 0) {
+      this.showToast(`${successCount} de ${cartItems.length} itens processados`, 'toast-warning');
+    }
   }
 
   clearLocalCart() {
