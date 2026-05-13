@@ -1,13 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule, ToastController, LoadingController, AlertController } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { mailOutline, lockClosedOutline, logInOutline, personAddOutline, closeOutline } from 'ionicons/icons';
-import { HeaderComponent } from '../../components/header/header.component';
+import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { AppwriteService } from '../../services/appwrite.service';
-import { CartService } from '../../services/cart.service';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
@@ -16,35 +13,14 @@ import { CartService } from '../../services/cart.service';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
   private appwrite = inject(AppwriteService);
-  private cartService = inject(CartService);
   private router = inject(Router);
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
-  private alertCtrl = inject(AlertController);
 
   email = '';
   password = '';
-
-  constructor() {
-    addIcons({ mailOutline, lockClosedOutline, logInOutline, personAddOutline, closeOutline });
-  }
-
-  public get itemCount(): number {
-    return this.cartService.getItemCount();
-  }
-
-  async ngOnInit() {
-    try {
-      const session = await this.appwrite.getAccount();
-      if (session) {
-        this.router.navigate(['/profile']);
-      }
-    } catch (e) {
-      // Usuário não está logado, permanece na tela
-    }
-  }
 
   async entrar() {
     const loading = await this.loadingCtrl.create({ message: 'Autenticando...' });
@@ -53,29 +29,11 @@ export class LoginPage implements OnInit {
     try {
       await this.appwrite.login(this.email, this.password);
       await loading.dismiss();
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/profile'], { replaceUrl: true });
     } catch (e: any) {
       await loading.dismiss();
-      
-      // Se já houver sessão ativa, manda pro perfil
-      if (e.message.includes('session is active')) {
-        this.router.navigate(['/profile']);
-        return;
-      }
-
-      let msg = 'E-mail ou senha incorretos.';
-      if (e.code === 401) msg = 'Credenciais inválidas.';
-      
-      this.exibirToast(msg, 'danger');
+      this.exibirToast('E-mail ou senha incorretos.', 'danger');
     }
-  }
-
-  irParaSignUp() {
-    this.router.navigate(['/sign-up']);
-  }
-
-  async recuperarSenha() {
-    this.exibirToast('Funcionalidade em desenvolvimento.', 'warning');
   }
 
   async exibirToast(msg: string, cor: string) {

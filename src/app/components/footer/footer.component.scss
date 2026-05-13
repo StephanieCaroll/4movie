@@ -1,0 +1,35 @@
+
+@media (min-width: 768px) {
+  .mobile-only-footer {
+    display: none;
+  }
+}
+
+ion-tab-bar {
+  --background: #1a1a1a; 
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  height: 65px;
+}
+
+ion-tab-button {
+  --color: #999;
+  --color-selected: var(--ion-color-primary, #e50914);
+
+  ion-icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+  }
+
+  ion-label {
+    font-size: 11px;
+    font-weight: 500;
+  }
+}
+
+ion-badge {
+  --padding-top: 2px;
+  --padding-bottom: 2px;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  font-size: 10px;
+}

@@ -16,24 +16,29 @@ export class AppwriteService {
     this.account = new Account(this.client);
   }
 
-  // Criar conta (Sign Up)
+  // Verifica se existe uma sessão ativa sem lançar erro no console
+  async isLoggedIn(): Promise<boolean> {
+    try {
+      await this.account.get();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async createAccount(email: string, password: string, name: string) {
     return await this.account.create(ID.unique(), email, password, name);
   }
 
-  // Criar sessão (Login)
   async login(email: string, password: string) {
     return await this.account.createEmailPasswordSession(email, password);
   }
 
-  // Obter dados do usuário logado
   async getAccount() {
     return await this.account.get();
   }
 
-  // Encerrar sessão (Logout)
   async logout() {
-    // 'current' deleta a sessão ativa neste dispositivo
     return await this.account.deleteSession('current');
   }
 }
