@@ -40,7 +40,7 @@ export class DetailsPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navCtrl: NavController, 
     public movieService: MovieService,
-    private cartService: CartService,
+    private cartService: CartService, //
     private sanitizer: DomSanitizer
   ) {
     addIcons({ 
@@ -111,7 +111,10 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.trailerUrl = null;
   }
 
-  addToCart() {
-    if (this.filme) this.cartService.addToCart(this.filme, 'buy');
+  
+  async addToCart() {
+    if (this.filme) {
+      await this.cartService.addToCart(this.filme, 'buy'); //
+    }
   }
 }

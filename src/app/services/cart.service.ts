@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { AppwriteService } from './appwrite.service';
 import { UserService } from './user.service';
 import { ID, Query } from 'appwrite';
-import { ToastController } from '@ionic/angular';
+import { ToastController, NavController } from '@ionic/angular';
 import { CartItem } from './cart.model';
 
 @Injectable({
@@ -12,8 +12,9 @@ export class CartService {
   private appwrite = inject(AppwriteService);
   private userService = inject(UserService);
   private toastCtrl = inject(ToastController);
-
-  private readonly DB_ID = 'main'; 
+  private navCtrl = inject(NavController);
+  
+  private readonly DB_ID = '6a04e0420022f3b7ac95'; 
   private readonly COLLECTION_ID = 'cart_items';
 
   private cartSignal = signal<CartItem[]>([]);
@@ -28,10 +29,6 @@ export class CartService {
     this.loadCart();
   }
 
-  /**
-   * Método para compatibilidade com os componentes que chamam como função.
-   * Resolve o erro TS2551.
-   */
   getItemCount(): number {
     return this.itemCount();
   }
@@ -66,6 +63,7 @@ export class CartService {
 
     if (exists) {
       this.showToast('Este item já está no carrinho', 'toast-warning');
+      this.navCtrl.navigateForward('/cart');
       return;
     }
 
@@ -92,8 +90,11 @@ export class CartService {
       
       this.cartSignal.update(items => [...items, doc as unknown as CartItem]);
       this.showToast(`${movie.title} adicionado!`, 'toast-success');
+      
+      this.navCtrl.navigateForward('/cart');
     } catch (error) {
-      this.showToast('Erro ao salvar no servidor', 'toast-danger');
+      console.error('Erro ao salvar no Appwrite:', error);
+      this.showToast('Erro ao salvar. Verifique se as Permissões e Atributos foram criados.', 'toast-danger');
     }
   }
 
