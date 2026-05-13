@@ -48,9 +48,18 @@
         </div>
 
         <div class="price-selector">
-          <div class="price-options">
-            <!-- Opção de Aluguel -->
-            <div class="price-card" [class.selected]="selectedType === 'rent'" (click)="selectedType = 'rent'">
+          @if (!canPurchase) {
+            <div class="owned-message-banner">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <p>Este filme já faz parte da sua biblioteca.</p>
+            </div>
+          }
+
+          <div class="price-options" [class.disabled-options]="!canPurchase">
+            <div class="price-card" 
+                 [class.selected]="selectedType === 'rent'" 
+                 [class.disabled]="!canPurchase"
+                 (click)="canPurchase ? selectedType = 'rent' : null">
               <div class="price-header">
                 <ion-icon name="time-outline"></ion-icon>
                 <span class="price-type">ALUGAR POR DIA</span>
@@ -60,7 +69,7 @@
                 <strong>{{ formattedRentPricePerDay }}</strong>
                 <small>/dia</small>
               </div>
-              <div class="rental-days" *ngIf="selectedType === 'rent'">
+              <div class="rental-days" *ngIf="selectedType === 'rent' && canPurchase">
                 <ion-item lines="none">
                   <ion-label>Quantos dias?</ion-label>
                   <ion-select [(ngModel)]="selectedDays" (ionChange)="selectedDays = $event.detail.value">
@@ -72,8 +81,10 @@
               </div>
             </div>
 
-            <!-- Opção de Compra -->
-            <div class="price-card" [class.selected]="selectedType === 'buy'" (click)="selectedType = 'buy'">
+            <div class="price-card" 
+                 [class.selected]="selectedType === 'buy'" 
+                 [class.disabled]="!canPurchase"
+                 (click)="canPurchase ? selectedType = 'buy' : null">
               <div class="price-header">
                 <ion-icon name="infinite-outline"></ion-icon>
                 <span class="price-type">COMPRAR</span>
@@ -86,11 +97,12 @@
           </div>
 
           <div class="action-buttons">
-            <ion-button class="btn-primary" expand="block" (click)="addToCart()">
-              <ion-icon slot="start" name="cart-outline"></ion-icon>
-              {{ selectedType === 'rent' ? 'ALUGAR AGORA' : 'COMPRAR AGORA' }}
-              <span class="price-tag">{{ formattedPrice }}</span>
+            <ion-button class="btn-primary" expand="block" [disabled]="!canPurchase" (click)="addToCart()">
+              <ion-icon slot="start" [name]="canPurchase ? 'cart-outline' : 'checkmark-circle-outline'"></ion-icon>
+              {{ buttonText }}
+              <span class="price-tag" *ngIf="canPurchase">{{ formattedPrice }}</span>
             </ion-button>
+            
             <ion-button fill="solid" color="light" class="btn-list">
               <ion-icon slot="start" name="heart-outline"></ion-icon>
               Minha Lista
@@ -140,7 +152,7 @@
               <ion-icon name="globe-outline"></ion-icon>
               <div>
                 <label>Status</label>
-                <span>{{ filme.status === 'Released' ? 'Lançado' : filme.status }}</span>
+                <span>{{ translateStatus(filme.status) }}</span>
               </div>
             </div>
             <div class="tech-item" *ngIf="filme.budget">

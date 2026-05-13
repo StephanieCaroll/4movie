@@ -33,14 +33,13 @@
         </div>
       </div>
 
-      <!-- SEÇÃO MEUS FILMES -->
       <div class="my-movies-section">
         <div class="section-header">
           <ion-icon name="film-outline" class="section-icon"></ion-icon>
           <h2 class="section-title">Meus Filmes</h2>
         </div>
 
-        @if (userMovies.length === 0) {
+        @if (userMoviesService.movies().length === 0) {
           <div class="empty-movies">
             <ion-icon name="videocam-off-outline" class="empty-icon"></ion-icon>
             <p>Você ainda não possui filmes</p>
@@ -50,7 +49,6 @@
             </ion-button>
           </div>
         } @else {
-          <!-- Abas para Compras e Aluguéis -->
           <ion-segment [(ngModel)]="selectedTab" (ionChange)="segmentChanged($event)">
             <ion-segment-button value="all">
               <ion-label>Todos</ion-label>
@@ -63,7 +61,6 @@
             </ion-segment-button>
           </ion-segment>
 
-          <!-- Lista de Filmes -->
           <div class="movies-grid">
             @for (movie of filteredMovies; track movie.movieId) {
               <div class="movie-card" (click)="watchMovie(movie)">
@@ -73,9 +70,9 @@
                        class="movie-poster">
                   
                   @if (movie.type === 'rent') {
-                    <div class="movie-badge rent-badge">
+                    <div class="movie-badge rent-badge" [class.urgent]="getRemainingTimeText(movie.expiresAt).includes('m')">
                       <ion-icon name="time-outline"></ion-icon>
-                      <span>{{ getDaysRemaining(movie.expiresAt!) }} dias</span>
+                      <span>{{ getRemainingTimeText(movie.expiresAt!) }}</span>
                     </div>
                   } @else {
                     <div class="movie-badge purchase-badge">
@@ -86,7 +83,7 @@
                 </div>
                 <div class="movie-info">
                   <h3 class="movie-title">{{ movie.title }}</h3>
-                  <p class="movie-date">{{ movie.purchaseDate | date:'dd/MM/yyyy' }}</p>
+                  <p class="movie-date">Adquirido em: {{ movie.purchaseDate | date:'dd/MM/yyyy' }}</p>
                 </div>
               </div>
             }

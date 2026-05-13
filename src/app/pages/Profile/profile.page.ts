@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -14,73 +14,145 @@ import { UserMoviesService, UserMovie } from '../../services/user-movies.service
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage implements OnInit, OnDestroy {
   private appwrite = inject(AppwriteService);
   private router = inject(Router);
   private cartService = inject(CartService);
-  private userMoviesService = inject(UserMoviesService);
+  public userMoviesService = inject(UserMoviesService);
 
   usuario: any = null;
   carregando = true;
-  userMovies: UserMovie[] = [];
   selectedTab: string = 'all';
-  filteredMovies: UserMovie[] = [];
+  errorMessage: string = '';
+  
+  private timerInterval: any;
+
+  constructor() {
+    // Efeito para re-filtrar sempre que os dados no serviço mudarem
+    effect(() => {
+      this.userMoviesService.movies();
+      this.filterMovies();
+    });
+  }
 
   async ngOnInit() {
     await this.carregarPerfil();
-    await this.loadUserMovies();
+    if (this.usuario) {
+      await this.loadUserMovies();
+    }
+    
+    // Atualiza cronômetros a cada minuto
+    this.timerInterval = setInterval(() => {
+      this.filterMovies();
+    }, 60000);
+  }
+
+  ngOnDestroy() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
   }
 
   async carregarPerfil() {
     try {
+      this.carregando = true;
+      this.errorMessage = '';
       this.usuario = await this.appwrite.getAccount();
-    } catch (error) {
-      this.router.navigate(['/login'], { replaceUrl: true });
+    } catch (error: any) {
+      console.error('Erro ao carregar perfil:', error);
+      this.errorMessage = 'Sessão expirada. Faça login novamente.';
+      setTimeout(() => {
+        this.router.navigate(['/login'], { replaceUrl: true });
+      }, 2000);
     } finally {
       this.carregando = false;
     }
   }
 
   async loadUserMovies() {
-    await this.userMoviesService.loadUserMovies();
-    this.userMovies = this.userMoviesService.movies();
-    this.filterMovies();
+    if (!this.usuario) return;
     
-    // Verifica aluguéis expirados
-    await this.userMoviesService.removeExpiredRentals();
+    try {
+      await this.userMoviesService.loadUserMovies();
+    } catch (error) {
+      console.error('Erro ao carregar filmes do usuário:', error);
+      // Não mostra erro pro usuário, apenas loga
+    }
+  }
+
+  // Retorna a lista de filmes baseada na aba selecionada
+  get filteredMovies(): UserMovie[] {
+    try {
+      switch(this.selectedTab) {
+        case 'purchased':
+          return this.userMoviesService.purchasedMovies();
+        case 'rented':
+          return this.userMoviesService.rentedMovies();
+        default:
+          return this.userMoviesService.movies();
+      }
+    } catch (error) {
+      console.error('Erro ao filtrar filmes:', error);
+      return [];
+    }
   }
 
   filterMovies() {
-    switch(this.selectedTab) {
-      case 'purchased':
-        this.filteredMovies = this.userMoviesService.purchasedMovies();
-        break;
-      case 'rented':
-        this.filteredMovies = this.userMoviesService.rentedMovies();
-        break;
-      default:
-        this.filteredMovies = this.userMovies;
-    }
+    // Força a atualização da UI quando necessário
+    // O getter filteredMovies já lida com a lógica
   }
 
   segmentChanged(event: any) {
     this.selectedTab = event.detail.value;
-    this.filterMovies();
   }
 
-  getDaysRemaining(expiresAt: string): number {
-    return this.userMoviesService.getDaysRemaining(expiresAt);
+  getRemainingTimeText(expiresAt?: string): string {
+    if (!expiresAt) return '';
+    return this.userMoviesService.getRemainingTimeDisplay(expiresAt);
   }
 
-  watchMovie(movie: UserMovie) {
-    // Navegar para página de player do filme
-    console.log('Assistir filme:', movie);
-    // this.router.navigate(['/player', movie.movieId]);
+  async watchMovie(movie: UserMovie) {
+    try {
+      // Verifica se o filme ainda está disponível
+      if (movie.type === 'rent' && movie.expiresAt) {
+        const now = new Date();
+        const expires = new Date(movie.expiresAt);
+        
+        if (now > expires) {
+          await this.userMoviesService.removeExpiredRentals();
+          const toast = document.createElement('ion-toast');
+          toast.message = 'Este aluguel expirou!';
+          toast.duration = 2000;
+          toast.color = 'danger';
+          document.body.appendChild(toast);
+          await toast.present();
+          return;
+        }
+      }
+      
+      console.log('Assistir filme:', movie);
+      // TODO: Implementar player
+      // this.router.navigate(['/player', movie.movieId]);
+      
+    } catch (error) {
+      console.error('Erro ao acessar filme:', error);
+    }
+  }
+
+  async refreshMovies() {
+    await this.userMoviesService.refreshUserMovies();
   }
 
   async sair() {
-    await this.appwrite.logout();
-    this.cartService.clearLocalCart(); 
-    this.router.navigate(['/login']);
+    try {
+      await this.appwrite.logout();
+      this.cartService.clearLocalCart();
+      this.userMoviesService.movies().length = 0; // Limpa filmes localmente
+      this.router.navigate(['/login'], { replaceUrl: true });
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      // Mesmo com erro, tenta navegar para login
+      this.router.navigate(['/login'], { replaceUrl: true });
+    }
   }
 }

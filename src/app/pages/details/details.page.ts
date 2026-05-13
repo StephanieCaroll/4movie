@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -7,13 +7,14 @@ import { NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
+import { UserMoviesService } from '../../services/user-movies.service';
 import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
 import { 
   star, arrowBackOutline, cartOutline, heartOutline, 
   sadOutline, homeOutline, playOutline, timeOutline,
   calendarOutline, globeOutline, cashOutline, peopleOutline,
-  infiniteOutline
+  infiniteOutline, checkmarkCircleOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -38,6 +39,13 @@ import {
   ]
 })
 export class DetailsPage implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private navCtrl = inject(NavController);
+  public movieService = inject(MovieService);
+  private cartService = inject(CartService);
+  private userMoviesService = inject(UserMoviesService);
+  private sanitizer = inject(DomSanitizer);
+
   filme: any = null;
   loading: boolean = true;
   trailerUrl: SafeResourceUrl | null = null;
@@ -58,18 +66,12 @@ export class DetailsPage implements OnInit, OnDestroy {
     { value: 7, label: '7 dias' }
   ];
 
-  constructor(
-    private route: ActivatedRoute,
-    private navCtrl: NavController, 
-    public movieService: MovieService,
-    private cartService: CartService,
-    private sanitizer: DomSanitizer
-  ) {
+  constructor() {
     addIcons({ 
       star, arrowBackOutline, cartOutline, heartOutline, 
       sadOutline, homeOutline, playOutline, timeOutline,
       calendarOutline, globeOutline, cashOutline, peopleOutline,
-      infiniteOutline
+      infiniteOutline, checkmarkCircleOutline
     });
   }
 
@@ -95,6 +97,31 @@ export class DetailsPage implements OnInit, OnDestroy {
         this.loading = false;
       }
     });
+  }
+
+  /**
+   * Verifica se o usuário pode comprar ou alugar o filme.
+   * Se já comprou ou tem aluguel ativo, retorna false.
+   */
+  get canPurchase(): boolean {
+    if (!this.filme) return false;
+    return this.userMoviesService.canTransact(this.filme.id);
+  }
+
+  /**
+   * Retorna o texto do botão de ação baseado no status de posse.
+   */
+  get buttonText(): string {
+    if (!this.filme) return 'Carregando...';
+    
+    const movie = this.userMoviesService.movies().find(m => m.movieId === this.filme.id);
+    
+    if (movie) {
+      if (movie.type === 'buy') return 'Filme já Adquirido';
+      if (movie.type === 'rent' && !this.canPurchase) return 'Aluguel Ativo';
+    }
+    
+    return this.selectedType === 'buy' ? 'Comprar Agora' : 'Alugar Filme';
   }
 
   translateStatus(status: string): string {
@@ -134,7 +161,6 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.trailerUrl = null;
   }
 
-  // Calcula o preço total baseado na seleção
   get currentPrice(): number {
     if (this.selectedType === 'buy') {
       return this.buyPrice;
@@ -143,24 +169,19 @@ export class DetailsPage implements OnInit, OnDestroy {
     }
   }
 
-  // Formata o preço para exibição
   get formattedPrice(): string {
     return `R$ ${this.currentPrice.toFixed(2)}`;
   }
 
-  // Formata o preço do aluguel por dia
   get formattedRentPricePerDay(): string {
     return `R$ ${this.rentPricePerDay.toFixed(2)}`;
   }
 
-  // Método para adicionar ao carrinho
   async addToCart() {
-    if (this.filme) {
+    if (this.filme && this.canPurchase) {
       if (this.selectedType === 'buy') {
-        // Compra permanente
         await this.cartService.addToCart(this.filme, 'buy');
       } else {
-        // Aluguel por dias
         await this.cartService.addToCart(this.filme, 'rent', this.selectedDays);
       }
     }
