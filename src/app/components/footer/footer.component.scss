@@ -1,14 +1,23 @@
+
+:host {
+  display: block;
+  width: 100%;
+}
+
 @media (min-width: 768px) {
   .mobile-only-footer {
-    display: none; 
+    display: none !important; 
   }
 }
 
 ion-tab-bar {
   --background: #1a1a1a; 
+  background: #1a1a1a;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   height: 65px; 
+  --border: 0;
 }
+
 ion-tab-button {
   --color: #999;
   --color-selected: var(--ion-color-primary, #e50914);
@@ -21,6 +30,7 @@ ion-tab-button {
   ion-label {
     font-size: 11px;
     font-weight: 500;
+    margin-top: 2px;
   }
 }
 
@@ -30,4 +40,6 @@ ion-badge {
   --padding-start: 4px;
   --padding-end: 4px;
   font-size: 10px;
+  --background: var(--ion-color-primary, #e50914);
+  --color: white;
 }
