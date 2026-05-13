@@ -12,45 +12,58 @@
 ion-tab-bar.mobile-only-footer {
   --background: #1a1a1a !important;
   background: #1a1a1a !important;
-  height: 65px !important;
+  height: 70px !important; 
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
   --border: 0;
-  
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+  justify-content: space-around !important;
   width: 100% !important;
+  padding: 0 !important;
 }
 
 ion-tab-button {
   --color: #999 !important;
-  --color-selected: var(--ion-color-primary, #e50914) !important;
-  
-  flex: 1 1 0 !important; 
-  width: 100% !important;
-  max-width: none !important; 
+  --color-selected: #e50914 !important; 
+  flex: 1 !important;
+  background: transparent !important;
+  height: 100% !important;
   margin: 0 !important;
-  padding: 0 !important;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
 
   ion-icon {
-    font-size: 24px !important;
-    margin-bottom: 2px !important;
+    font-size: 26px !important;
+    margin-bottom: 4px !important;
   }
 
   ion-label {
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    margin-top: 2px !important;
-    display: block !important;
+    font-size: 10px !important; 
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: 0.5px !important;
   }
 }
 
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 ion-badge {
-  --background: var(--ion-color-primary, #e50914) !important;
+  position: absolute !important;
+  top: -5px !important;
+  right: -8px !important;
+  --background: #e50914 !important;
   --color: white !important;
   font-size: 10px !important;
-  position: absolute !important;
-  top: 8px !important;
-  right: calc(50% - 25px) !important;
+  padding: 2px 5px !important;
+  border-radius: 50% !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 10;
 }
