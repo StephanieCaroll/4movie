@@ -124,3 +124,25 @@
     }
   }
 }
+
+ion-modal {
+  --background: #1a1a1a;
+  --color: white;
+  
+  ion-toolbar {
+    --background: #1a1a1a;
+    --color: white;
+  }
+}
+
+.crimson-item {
+  --border-color: rgba(220, 38, 38, 0.5);
+  --border-color-focused: #dc2626;
+  --color: white;
+  margin-top: 10px;
+}
+
+ion-skeleton-text {
+  --background: rgba(255, 255, 255, 0.1);
+  --background-focused: rgba(255, 255, 255, 0.2);
+}
