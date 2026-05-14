@@ -15,6 +15,8 @@ import { forkJoin } from 'rxjs';
 import { register } from 'swiper/element/bundle';
 register(); 
 
+import { MovieGlowDirective } from '../../directives/movie-glow.directive';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -24,7 +26,7 @@ register();
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
     IonContent, IonIcon, IonButton,
-    HeaderComponent
+    HeaderComponent, MovieGlowDirective
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {

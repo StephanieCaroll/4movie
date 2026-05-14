@@ -1,6 +1,11 @@
 <app-header [itemCount]="itemCount"></app-header>
 
 <ion-content class="app-background">
+
+  <div class="loading-container" *ngIf="carouselMovies.length === 0" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white;">
+  <ion-spinner name="crescent" color="primary"></ion-spinner>
+  <p>Carregando filmes...</p>
+</div>
   
   <div class="hero-carousel-container" *ngIf="carouselMovies.length > 0">
     <swiper-container 
@@ -58,7 +63,7 @@
         <span class="see-all" routerLink="/category/popular">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of popularMovies" (click)="onCardClick($event, movie.id)">
+        <div class="movie-card" appMovieGlow *ngFor="let movie of popularMovies" (click)="onCardClick($event, movie.id)">
           <div class="poster-container">
             <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
             <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
@@ -73,7 +78,7 @@
         <span class="see-all" routerLink="/genre/28">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of actionMovies" (click)="onCardClick($event, movie.id)">
+        <div class="movie-card" appMovieGlow *ngFor="let movie of actionMovies" (click)="onCardClick($event, movie.id)">
           <div class="poster-container">
             <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
             <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
@@ -88,7 +93,7 @@
         <span class="see-all" routerLink="/genre/35">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of comedyMovies" (click)="onCardClick($event, movie.id)">
+        <div class="movie-card" appMovieGlow *ngFor="let movie of comedyMovies" (click)="onCardClick($event, movie.id)">
           <div class="poster-container">
             <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
             <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
@@ -103,7 +108,7 @@
         <span class="see-all" routerLink="/genre/27">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of horrorMovies" (click)="onCardClick($event, movie.id)">
+        <div class="movie-card" appMovieGlow *ngFor="let movie of horrorMovies" (click)="onCardClick($event, movie.id)">
           <div class="poster-container">
             <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
             <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
@@ -118,7 +123,7 @@
         <span class="see-all" routerLink="/genre/10749">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of romanceMovies" (click)="onCardClick($event, movie.id)">
+        <div class="movie-card" appMovieGlow *ngFor="let movie of romanceMovies" (click)="onCardClick($event, movie.id)">
           <div class="poster-container">
             <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
             <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
@@ -133,7 +138,7 @@
         <span class="see-all" routerLink="/genre/16">Ver tudo</span>
       </div>
       <div class="horizontal-scroll">
-        <div class="movie-card" *ngFor="let movie of animationMovies" (click)="onCardClick($event, movie.id)">
+        <div class="movie-card" appMovieGlow *ngFor="let movie of animationMovies" (click)="onCardClick($event, movie.id)">
           <div class="poster-container">
             <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
             <div class="card-badge" *ngIf="movie.vote_average > 0">★ {{ movie.vote_average.toFixed(1) }}</div>
