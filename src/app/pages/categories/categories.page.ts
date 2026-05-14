@@ -43,17 +43,29 @@ export class CategoriesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.movieService.getGenres().subscribe((res: any) => {
-      this.genres = res.genres;
-      this.genres.forEach(genre => {
-        this.movieService.getMoviesByGenre(genre.id).subscribe((movieRes: any) => {
+  // Busca os gêneros normais
+  this.movieService.getGenres().subscribe((res: any) => {
+    this.genres = res.genres;
+
+    // Adiciona "Populares" no início da lista para ele ser listado como os outros
+    const popularGenre = { id: 'popular', name: 'Populares', movies: [] };
+    this.genres.unshift(popularGenre);
+
+    this.genres.forEach(genre => {
+      if (genre.id === 'popular') {
+        this.movieService.getPopularMovies().subscribe((movieRes: any) => {
           genre.movies = movieRes.results.slice(0, 10);
-          
           setTimeout(() => this.initDragScroll(), 100);
         });
-      });
+      } else {
+        this.movieService.getMoviesByGenre(genre.id).subscribe((movieRes: any) => {
+          genre.movies = movieRes.results.slice(0, 10);
+          setTimeout(() => this.initDragScroll(), 100);
+        });
+      }
     });
-  }
+  });
+}
 
   initDragScroll() {
     const sliders = document.querySelectorAll('.horizontal-scroll');

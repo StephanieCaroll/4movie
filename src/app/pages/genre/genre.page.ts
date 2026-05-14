@@ -34,9 +34,14 @@ export class GenrePage implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+    if (id === 'popular') {
+      this.genreName = 'Populares';
+      this.loadPopularMovies();
+    } else {
       this.genreId = +id;
       this.loadGenreName(); 
       this.loadMovies();
+      }
     }
   }
 
@@ -51,6 +56,20 @@ export class GenrePage implements OnInit {
       }
     });
   }
+
+  loadPopularMovies() {
+  if (this.isLoading) return;
+  this.isLoading = true;
+
+  this.movieService.getPopularMovies(this.currentPage).subscribe({
+    next: (res: any) => {
+      this.movies = [...this.movies, ...res.results];
+      this.totalPages = res.total_pages;
+      this.isLoading = false;
+    },
+    error: () => this.isLoading = false
+  });
+}
 
   loadMovies() {
     if (this.isLoading) return;
@@ -68,8 +87,13 @@ export class GenrePage implements OnInit {
 
   loadMore() {
     if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+    this.currentPage++;
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id === 'popular') {
+      this.loadPopularMovies();
+    } else {
       this.loadMovies();
+    }
     }
   }
 
