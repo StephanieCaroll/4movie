@@ -35,6 +35,23 @@ $text-muted: #a3a3a3;
   }
 }
 
+.btn-gold {
+  --background: #d4af37 !important;
+  --color: #000000 !important;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.rental-active {
+  border-color: #f39c12 !important;
+  p { color: #f39c12 !important; }
+}
+
+.owned-message-banner {
+  border-color: #d4af37;
+  p { color: #d4af37; }
+}
+
 .loading-container {
   display: flex;
   flex-direction: column;

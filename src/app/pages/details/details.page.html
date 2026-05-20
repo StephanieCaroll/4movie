@@ -14,7 +14,6 @@
     <div class="movie-container">
       
       <div class="hero-section">
-        
         <div class="hero-backdrop">
           <img [src]="movieService.getBackdropUrl(filme.backdrop_path || filme.poster_path)" />
           <div class="hero-overlay"></div>
@@ -49,66 +48,103 @@
         </div>
 
         <div class="price-selector">
-          @if (!canPurchase) {
+          
+          @if (jaComprei) {
             <div class="owned-message-banner">
               <ion-icon name="checkmark-circle-outline"></ion-icon>
-              <p>Este filme já faz parte da sua biblioteca.</p>
+              <p>Filme Adquirido Permanentemente.</p>
+            </div>
+            
+            <div class="action-buttons">
+              <ion-button class="btn-primary btn-gold" expand="block" (click)="darPlayNoFilme()">
+                <ion-icon slot="start" name="play"></ion-icon>
+                Assistir Agora
+              </ion-button>
+              
+              <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
+                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+                Minha Lista
+              </ion-button>
             </div>
           }
 
-          <div class="price-options" [class.disabled-options]="!canPurchase">
-            <div class="price-card" 
-                 [class.selected]="selectedType === 'rent'" 
-                 [class.disabled]="!canPurchase"
-                 (click)="canPurchase ? selectedType = 'rent' : null">
-              <div class="price-header">
-                <ion-icon name="time-outline"></ion-icon>
-                <span class="price-type">ALUGAR POR DIA</span>
-              </div>
-              <div class="price-value">
-                <small>a partir de</small>
-                <strong>{{ formattedRentPricePerDay }}</strong>
-                <small>/dia</small>
-              </div>
-              <div class="rental-days" *ngIf="selectedType === 'rent' && canPurchase">
-                <ion-item lines="none">
-                  <ion-label>Quantos dias?</ion-label>
-                  <ion-select [(ngModel)]="selectedDays" (ionChange)="selectedDays = $event.detail.value">
-                    <ion-select-option *ngFor="let option of daysOptions" [value]="option.value">
-                      {{ option.label }} - R$ {{ (rentPricePerDay * option.value).toFixed(2) }}
-                    </ion-select-option>
-                  </ion-select>
-                </ion-item>
-              </div>
+          @if (jaAluguei && !jaComprei) {
+            <div class="owned-message-banner rental-active">
+              <ion-icon name="time-outline"></ion-icon>
+              <p>Aluguel Ativo. O filme está liberado!</p>
             </div>
-
-            <div class="price-card" 
-                 [class.selected]="selectedType === 'buy'" 
-                 [class.disabled]="!canPurchase"
-                 (click)="canPurchase ? selectedType = 'buy' : null">
-              <div class="price-header">
-                <ion-icon name="infinite-outline"></ion-icon>
-                <span class="price-type">COMPRAR</span>
-              </div>
-              <div class="price-value">
-                <strong>R$ {{ buyPrice.toFixed(2) }}</strong>
-                <small>acesso permanente</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="action-buttons">
-            <ion-button class="btn-primary" expand="block" [disabled]="!canPurchase" (click)="addToCart()">
-              <ion-icon slot="start" [name]="canPurchase ? 'cart-outline' : 'checkmark-circle-outline'"></ion-icon>
-              {{ buttonText }}
-              <span class="price-tag" *ngIf="canPurchase">{{ formattedPrice }}</span>
-            </ion-button>
             
-            <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
-              <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
-              Minha Lista
-            </ion-button>
-          </div>
+            <div class="action-buttons rental-actions">
+              <ion-button class="btn-primary btn-gold" expand="block" (click)="darPlayNoFilme()">
+                <ion-icon slot="start" name="play"></ion-icon>
+                Assistir Agora (Alugado)
+              </ion-button>
+
+              <div class="upgrade-box" style="margin-top: 15px;">
+                <ion-button fill="outline" color="warning" expand="block" (click)="selectedType = 'buy'; addToCart()">
+                  Upgrade: Comprar permanentemente (R$ {{ buyPrice.toFixed(2) }})
+                </ion-button>
+              </div>
+            </div>
+          }
+
+          @if (!jaComprei && !jaAluguei) {
+            <div class="price-options">
+              <div class="price-card" 
+                   [class.selected]="selectedType === 'rent'" 
+                   (click)="selectedType = 'rent'">
+                <div class="price-header">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span class="price-type">ALUGAR POR DIA</span>
+                </div>
+                <div class="price-value">
+                  <small>a partir de</small>
+                  <strong>{{ formattedRentPricePerDay }}</strong>
+                  <small>/dia</small>
+                </div>
+                <div class="rental-days" *ngIf="selectedType === 'rent'">
+                  <ion-item lines="none">
+                    <ion-label>Quantos dias?</ion-label>
+                    <ion-select [(ngModel)]="selectedDays" (ionChange)="selectedDays = $event.detail.value">
+                      <ion-select-option *ngFor="let option of daysOptions" [value]="option.value">
+                        {{ option.label }} - R$ {{ (rentPricePerDay * option.value).toFixed(2) }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+              </div>
+
+              <div class="price-card" 
+                   [class.selected]="selectedType === 'buy'" 
+                   (click)="selectedType = 'buy'">
+                <div class="price-header">
+                  <ion-icon name="infinite-outline"></ion-icon>
+                  <span class="price-type">COMPRAR</span>
+                </div>
+                <div class="price-value">
+                  <strong>R$ {{ buyPrice.toFixed(2) }}</strong>
+                  <small>acesso permanente</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <ion-button class="btn-primary" expand="block" (click)="addToCart()">
+                <ion-icon slot="start" name="cart-outline"></ion-icon>
+                Adicionar ao Carrinho
+                <span class="price-tag">{{ formattedPrice }}</span>
+              </ion-button>
+              
+              <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
+                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+                Minha Lista
+              </ion-button>
+            </div>
+
+            <p class="lock-notice" style="text-align: center; color: #aaaaaa; margin-top: 15px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
+              <ion-icon name="lock-closed-outline" style="color: #d4af37;"></ion-icon> Faça um aluguel ou compra para liberar o player do filme.
+            </p>
+          }
         </div>
 
         <div class="genre-list">

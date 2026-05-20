@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { IonContent, IonSpinner, IonIcon, IonButton, IonBadge, IonSelect, IonSelectOption, IonItem, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonSpinner, IonIcon, IonButton, IonBadge, IonSelect, IonSelectOption, IonItem, IonLabel, ModalController, ToastController } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { MovieService } from '../../services/movie.service';
@@ -12,11 +12,12 @@ import { FavoritesService } from '../../services/favorites.service';
 import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
 import { CompactNumberPipe } from '../../pipes/compact-number-pipe';
+import { PlayerModalComponent } from '../../components/player-modal/player-modal.component';
 import { 
   star, arrowBackOutline, cartOutline, heartOutline, heart, 
   sadOutline, homeOutline, playOutline, timeOutline,
   calendarOutline, globeOutline, cashOutline, peopleOutline,
-  infiniteOutline, checkmarkCircleOutline
+  infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -49,6 +50,8 @@ export class DetailsPage implements OnInit, OnDestroy {
   private userMoviesService = inject(UserMoviesService);
   public favoritesService = inject(FavoritesService); 
   private sanitizer = inject(DomSanitizer);
+  private modalCtrl = inject(ModalController);
+  private toastCtrl = inject(ToastController);
 
   filme: any = null;
   loading: boolean = true;
@@ -73,7 +76,7 @@ export class DetailsPage implements OnInit, OnDestroy {
       star, arrowBackOutline, cartOutline, heartOutline, heart, 
       sadOutline, homeOutline, playOutline, timeOutline,
       calendarOutline, globeOutline, cashOutline, peopleOutline,
-      infiniteOutline, checkmarkCircleOutline
+      infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline
     });
   }
 
@@ -101,25 +104,27 @@ export class DetailsPage implements OnInit, OnDestroy {
     });
   }
 
-  get canPurchase(): boolean {
+  get jaComprei(): boolean {
     if (!this.filme) return false;
-    return this.userMoviesService.canTransact(this.filme.id);
+    return this.userMoviesService.movies().some(m => m.movieId === this.filme.id && m.type === 'buy');
   }
 
-  get buttonText(): string {
-    if (!this.filme) return 'Carregando...';
-    const movie = this.userMoviesService.movies().find(m => m.movieId === this.filme.id);
-    if (movie) {
-      if (movie.type === 'buy') return 'Filme já Adquirido';
-      if (movie.type === 'rent' && !this.canPurchase) return 'Aluguel Ativo';
+  get jaAluguei(): boolean {
+    if (!this.filme) return false;
+    const aluguel = this.userMoviesService.movies().find(m => m.movieId === this.filme.id && m.type === 'rent');
+    if (!aluguel) return false;
+    
+    // Confirma se o prazo do aluguel não expirou
+    if (aluguel.expiresAt) {
+      return new Date() < new Date(aluguel.expiresAt);
     }
-    return this.selectedType === 'buy' ? 'Comprar Agora' : 'Alugar Filme';
+    return true;
   }
 
   translateStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
       'Released': 'Lançado', 'Post Production': 'Pós-Produção',
-      'In Production': 'Em Porodução', 'Planned': 'Planejado', 'Canceled': 'Cancelado'
+      'In Production': 'Em Produção', 'Planned': 'Planejado', 'Canceled': 'Cancelado'
     };
     return statusMap[status] || status;
   }
@@ -178,12 +183,52 @@ export class DetailsPage implements OnInit, OnDestroy {
   }
 
   async addToCart() {
-    if (this.filme && this.canPurchase) {
-      if (this.selectedType === 'buy') {
-        await this.cartService.addToCart(this.filme, 'buy');
-      } else {
-        await this.cartService.addToCart(this.filme, 'rent', this.selectedDays);
-      }
+    if (!this.filme) return;
+
+    if (this.selectedType === 'rent' && this.jaAluguei) {
+      this.exibirToast('Você já possui um aluguel ativo para este filme.');
+      return;
     }
+
+    if (this.jaComprei) {
+      this.exibirToast('Você já adquiriu este filme permanentemente.');
+      return;
+    }
+
+    if (this.selectedType === 'buy') {
+      await this.cartService.addToCart(this.filme, 'buy');
+    } else {
+      await this.cartService.addToCart(this.filme, 'rent', this.selectedDays);
+    }
+  }
+
+  async darPlayNoFilme() {
+    if (!this.jaComprei && !this.jaAluguei) {
+      this.exibirToast('Acesso negado. Você precisa alugar ou comprar o filme para assistir.');
+      return;
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: PlayerModalComponent,
+      componentProps: {
+        filme: this.filme
+      }
+    });
+
+    await modal.present();
+    
+    await modal.onDidDismiss();
+    this.userMoviesService.loadUserMovies();
+  }
+
+  async exibirToast(mensagem: string) {
+    const toast = await this.toastCtrl.create({
+      message: mensagem,
+      duration: 2500,
+      position: 'bottom',
+      color: 'dark',
+      cssClass: 'custom-toast'
+    });
+    await toast.present();
   }
 }

@@ -1,0 +1,37 @@
+<ion-content scrollY="false">
+
+  <div class="wrapper">
+
+    <div class="player-area">
+
+      <div class="top-bar">
+        <button class="btn-back" (click)="fecharModal()" aria-label="Voltar">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          <span>Voltar</span>
+        </button>
+      </div>
+
+      @if (isLoading) {
+        <div class="loading">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      } @else if (videoId) {
+        <iframe
+          [src]="getEmbedUrl() | safe"
+          frameborder="0"
+          allowfullscreen
+          allow="autoplay; encrypted-media; fullscreen"
+          title="{{ filme?.title }}">
+        </iframe>
+      } @else {
+        <div class="not-found">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>Vídeo não disponível</p>
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+</ion-content>
