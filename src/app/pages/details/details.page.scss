@@ -4,7 +4,6 @@
   font-family: 'Roboto', sans-serif;
 }
 
-// Variáveis de Estilo
 $primary-red: #e50914; 
 $dark-bg: #000000;
 $dark-surface: #141414;
@@ -15,7 +14,6 @@ $text-muted: #a3a3a3;
   --background: #{$dark-bg};
 }
 
-// Botão de Voltar Flutuante
 .floating-back {
   position: absolute;
   top: 40px; 
@@ -37,7 +35,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// Container de Carregamento
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -58,7 +55,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// Seção de Destaque 
 .hero-section {
   position: relative;
   width: 100%;
@@ -96,7 +92,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// Conteúdo Principal
 .main-content {
   position: relative;
   padding: 0 20px 40px;
@@ -374,7 +369,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// Estilos do Elenco
 .cast-scroll {
   display: flex;
   overflow-x: auto;
@@ -431,7 +425,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// Estilos Técnicos
 .technical-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -471,7 +464,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// --- ESTILOS DO TRAILER ---
 .trailer-wrapper-large {
   width: 100%;
   max-width: 1000px;
@@ -503,7 +495,6 @@ $text-muted: #a3a3a3;
   }
 }
 
-// Error Container
 .error-container {
   display: flex;
   flex-direction: column;
@@ -517,7 +508,6 @@ $text-muted: #a3a3a3;
   p { color: $text-muted; }
 }
 
-// --- AJUSTES PARA TELAS GRANDES ---
 @media (min-width: 768px) {
   .hero-section {
     height: 60vh;

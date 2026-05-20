@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="profile" icon="arrow-back-outline" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Meus Favoritos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="crimson-bg scroll-clean">
+  @if (favoritesService.favorites().length === 0) {
+    <div class="empty-container">
+      <ion-icon name="heart" class="empty-icon"></ion-icon>
+      <h2>Sua lista está vazia</h2>
+      <p>Adicione filmes aos favoritos na tela de detalhes!</p>
+    </div>
+  }
+
+  @if (favoritesService.favorites().length > 0) {
+    <div class="favorites-wrapper">
+      <div class="favorites-header">
+        <div class="count-badge">
+          {{ favoritesService.favorites().length }} {{ favoritesService.favorites().length === 1 ? 'filme' : 'filmes' }}
+        </div>
+      </div>
+      
+      <div class="favorites-grid">
+        @for (movie of favoritesService.favorites(); track movie.movieId) {
+          <div class="movie-card-premium" [routerLink]="['/details', movie.movieId]">
+            <div class="poster-frame">
+              <img 
+                [src]="movie.posterPath ? imageBaseUrl + movie.posterPath : 'assets/placeholder.png'" 
+                [alt]="movie.title"
+                loading="lazy"
+              />
+              <div class="card-overlay">
+                <ion-button 
+                  fill="clear" 
+                  color="danger" 
+                  class="remove-action-btn" 
+                  (click)="removeFavorite(movie); $event.stopPropagation()"
+                  aria-label="Remover dos favoritos"
+                >
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+            <div class="title-frame">
+              <h3 class="movie-title-text">{{ movie.title }}</h3>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</ion-content>

@@ -9,7 +9,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
   try {
     const loggedIn = await appwrite.isLoggedIn();
 
-    // Se o usuário tentar acessar login/signup estando logado, manda para o perfil
     if (state.url === '/login' || state.url === '/sign-up') {
       if (loggedIn) {
         router.navigate(['/profile']);
@@ -18,7 +17,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
       return true;
     }
 
-    // Para qualquer outra rota protegida, verifica se está logado
     if (!loggedIn) {
       router.navigate(['/login']);
       return false;
@@ -28,7 +26,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
     
   } catch (error) {
     console.error('Erro no authGuard:', error);
-    // Em caso de erro, redireciona para login por segurança
     router.navigate(['/login']);
     return false;
   }

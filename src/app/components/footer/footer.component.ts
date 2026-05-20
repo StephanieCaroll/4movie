@@ -1,4 +1,3 @@
-// src/app/components/footer/footer.component.ts
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';

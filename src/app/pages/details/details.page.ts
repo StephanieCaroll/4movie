@@ -8,11 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
 import { UserMoviesService } from '../../services/user-movies.service';
+import { FavoritesService } from '../../services/favorites.service'; 
 import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
 import { CompactNumberPipe } from '../../pipes/compact-number-pipe';
 import { 
-  star, arrowBackOutline, cartOutline, heartOutline, 
+  star, arrowBackOutline, cartOutline, heartOutline, heart, 
   sadOutline, homeOutline, playOutline, timeOutline,
   calendarOutline, globeOutline, cashOutline, peopleOutline,
   infiniteOutline, checkmarkCircleOutline
@@ -46,6 +47,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   public movieService = inject(MovieService);
   private cartService = inject(CartService);
   private userMoviesService = inject(UserMoviesService);
+  public favoritesService = inject(FavoritesService); 
   private sanitizer = inject(DomSanitizer);
 
   filme: any = null;
@@ -53,13 +55,11 @@ export class DetailsPage implements OnInit, OnDestroy {
   trailerUrl: SafeResourceUrl | null = null;
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
   
-  // Opções de preço
   selectedType: 'rent' | 'buy' = 'rent';
   selectedDays: number = 1;
   rentPricePerDay: number = 9.90;
   buyPrice: number = 14.90;
   
-  // Opções de dias disponíveis
   daysOptions = [
     { value: 1, label: '1 dia' },
     { value: 2, label: '2 dias' },
@@ -70,7 +70,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   constructor() {
     addIcons({ 
-      star, arrowBackOutline, cartOutline, heartOutline, 
+      star, arrowBackOutline, cartOutline, heartOutline, heart, 
       sadOutline, homeOutline, playOutline, timeOutline,
       calendarOutline, globeOutline, cashOutline, peopleOutline,
       infiniteOutline, checkmarkCircleOutline
@@ -101,38 +101,25 @@ export class DetailsPage implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Verifica se o usuário pode comprar ou alugar o filme.
-   * Se já comprou ou tem aluguel ativo, retorna false.
-   */
   get canPurchase(): boolean {
     if (!this.filme) return false;
     return this.userMoviesService.canTransact(this.filme.id);
   }
 
-  /**
-   * Retorna o texto do botão de ação baseado no status de posse.
-   */
   get buttonText(): string {
     if (!this.filme) return 'Carregando...';
-    
     const movie = this.userMoviesService.movies().find(m => m.movieId === this.filme.id);
-    
     if (movie) {
       if (movie.type === 'buy') return 'Filme já Adquirido';
       if (movie.type === 'rent' && !this.canPurchase) return 'Aluguel Ativo';
     }
-    
     return this.selectedType === 'buy' ? 'Comprar Agora' : 'Alugar Filme';
   }
 
   translateStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'Released': 'Lançado',
-      'Post Production': 'Pós-Produção',
-      'In Production': 'Em Produção',
-      'Planned': 'Planejado',
-      'Canceled': 'Cancelado'
+      'Released': 'Lançado', 'Post Production': 'Pós-Produção',
+      'In Production': 'Em Porodução', 'Planned': 'Planejado', 'Canceled': 'Cancelado'
     };
     return statusMap[status] || status;
   }
@@ -157,6 +144,17 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   voltar() {
     this.navCtrl.back();
+  }
+
+  toggleFavorite() {
+    if (this.filme) {
+      this.favoritesService.toggleFavorite(this.filme);
+    }
+  }
+
+  get isFavorite(): boolean {
+    if (!this.filme) return false;
+    return this.favoritesService.isFavorite(this.filme.id);
   }
 
   ngOnDestroy() {

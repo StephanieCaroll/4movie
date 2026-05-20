@@ -43,11 +43,9 @@ export class CategoriesPage implements OnInit {
   }
 
   ngOnInit() {
-  // Busca os gêneros normais
   this.movieService.getGenres().subscribe((res: any) => {
     this.genres = res.genres;
 
-    // Adiciona "Populares" no início da lista para ele ser listado como os outros
     const popularGenre = { id: 'popular', name: 'Populares', movies: [] };
     this.genres.unshift(popularGenre);
 

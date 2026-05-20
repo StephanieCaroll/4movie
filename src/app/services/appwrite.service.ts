@@ -7,11 +7,10 @@ import { Client, Account, ID, Databases } from 'appwrite';
 export class AppwriteService {
   client = new Client();
   account: Account;
-  databases: Databases; // Adicionado para o carrinho
+  databases: Databases; 
   private checkingSession = false;
 
   constructor() {
-    // Mantém sua lógica original de supressão de avisos
     const originalConsoleWarn = console.warn;
     console.warn = (...args) => {
       if (args[0]?.includes?.('localStorage') || args[0]?.includes?.('custom domain')) {
@@ -25,7 +24,7 @@ export class AppwriteService {
       .setProject('6a0283be001b53538516');
     
     this.account = new Account(this.client);
-    this.databases = new Databases(this.client); // Instanciado aqui
+    this.databases = new Databases(this.client); 
   }
 
   async isLoggedIn(): Promise<boolean> {

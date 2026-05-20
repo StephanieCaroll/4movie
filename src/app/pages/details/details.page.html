@@ -104,8 +104,8 @@
               <span class="price-tag" *ngIf="canPurchase">{{ formattedPrice }}</span>
             </ion-button>
             
-            <ion-button fill="solid" color="light" class="btn-list">
-              <ion-icon slot="start" name="heart-outline"></ion-icon>
+            <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
+              <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
               Minha Lista
             </ion-button>
           </div>

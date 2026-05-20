@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
   errorMessage = '';
 
   constructor() {
-    // Registrar ícones para uso no componente
+    
     addIcons({
       'mail-outline': mailOutline,
       'lock-closed-outline': lockClosedOutline,
@@ -60,7 +60,7 @@ export class LoginPage implements OnInit {
   }
 
   async entrar() {
-    // Validação básica
+  
     if (!this.email || !this.password) {
       this.errorMessage = 'Preencha todos os campos.';
       this.exibirToast(this.errorMessage, 'warning');
@@ -77,15 +77,11 @@ export class LoginPage implements OnInit {
     await loading.present();
 
     try {
-      // Tenta realizar o login
+     
       await this.appwrite.login(this.email, this.password);
       await loading.dismiss();
       await this.cartService.loadCart()
-    
-      // Exibe toast de sucesso
       await this.exibirToast('Login realizado com sucesso!', 'success');
-      
-      // Navega para o perfil
       this.router.navigate(['/profile'], { replaceUrl: true });
       
     } catch (error: any) {
