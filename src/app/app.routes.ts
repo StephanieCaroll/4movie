@@ -13,4 +13,5 @@ export const routes: Routes = [
   { path: 'genre/:id', loadComponent: () => import('./pages/genre/genre.page').then(m => m.GenrePage), },
   { path: 'category/:id', loadComponent: () => import('./pages/genre/genre.page').then(m => m.GenrePage) },
   { path: 'favorites',  loadComponent: () => import('./pages/favorites/favorites.page').then(m => m.FavoritesPage), canActivate: [authGuard] },
+  { path: 'recently-watched', loadComponent: () => import('./pages/recently-watched/recently-watched.page').then( m => m.RecentlyWatchedPage) },
 ];

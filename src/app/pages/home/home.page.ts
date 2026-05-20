@@ -10,8 +10,7 @@ import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
 import { star, play, addCircleOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
-
-
+import { RecentlyWatchedService } from '../../services/recently-watched.service';
 
 import { register } from 'swiper/element/bundle';
 register(); 
@@ -31,6 +30,7 @@ export class HomePage implements OnInit, AfterViewInit {
   private movieService = inject(MovieService);
   private cartService = inject(CartService);
   private router = inject(Router);
+  public watchedService = inject(RecentlyWatchedService);
   
   public popularMovies: any[] = [];
   public nowPlayingMovies: any[] = [];
@@ -61,6 +61,11 @@ export class HomePage implements OnInit, AfterViewInit {
   ngOnInit() {
     this.loadAllMovies();
     this.initDragScroll();
+    this.watchedService.loadRecentlyWatched(); 
+  }
+
+  ionViewWillEnter() {
+    this.watchedService.loadRecentlyWatched();
   }
 
   ngAfterViewInit() {
@@ -120,7 +125,6 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   loadAllMovies() {
-   
     this.movieService.getPopularMovies().subscribe((res: any) => {
       this.popularMovies = res.results.slice(0, 10);
       const top4 = res.results.slice(0, 4);
@@ -145,6 +149,5 @@ export class HomePage implements OnInit, AfterViewInit {
     this.movieService.getMoviesByGenre(10749).subscribe((res: any) => {this.romanceMovies = res.results.slice(0, 10);});
     // Filmes de Animação (ID: 16)
     this.movieService.getMoviesByGenre(16).subscribe((res: any) => {this.animationMovies = res.results.slice(0, 10);});
-    }
-
+  }
 }

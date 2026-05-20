@@ -53,7 +53,36 @@
   }
 
   <div class="main-sections-container">
-    
+ <section class="content-wrapper">
+      <div class="section-title">
+        <h2>Assistidos por Último</h2>
+        <span class="see-all" routerLink="/recently-watched">Ver tudo</span>
+      </div>
+      
+      @if (watchedService.recentlyWatched().length > 0) {
+        <div class="horizontal-scroll">
+          @for (movie of watchedService.recentlyWatched(); track movie.movieId) {
+            <div class="movie-card" (click)="onCardClick($event, movie.movieId)">
+              <div class="poster-container">
+                <img [src]="imageBaseUrl + movie.posterPath" [alt]="movie.title" draggable="false" />
+                
+                @if (movie.duration > 0 && movie.progress > 0) {
+                  <div class="progress-bar-container">
+                    <div class="progress-fill" [style.width.%]="(movie.progress / movie.duration) * 100"></div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state-message">
+          <ion-icon name="film-outline"></ion-icon>
+          <p>Nenhum filme assistido recentemente.</p>
+        </div>
+      }
+    </section>
+
     <section class="content-wrapper">
       <div class="section-title">
         <h2> Populares</h2>
