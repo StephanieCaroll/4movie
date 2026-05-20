@@ -546,3 +546,27 @@ $surface-dark: #121212;
     margin: 0 auto;
   }
 }
+.movie-card {
+ 
+  will-change: opacity, transform; 
+}
+
+.movie-card {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Curva de animação suave */
+  border: 3px solid transparent;
+  border-radius: 10px; /* Ajuste conforme o arredondamento dos seus posters */
+  overflow: hidden;
+}
+
+/* Efeito ao passar o mouse */
+.movie-card:hover {
+  transform: scale(1.08); /* Zoom de 8% */
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); /* Brilho vermelho ao redor */
+}
+
+/* Opcional: Escurecer a imagem levemente ao passar o mouse para dar destaque ao brilho */
+.movie-card:hover img {
+  filter: brightness(0.8);
+}

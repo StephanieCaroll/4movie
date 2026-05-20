@@ -10,6 +10,7 @@ import { CartService } from '../../services/cart.service';
 import { UserMoviesService } from '../../services/user-movies.service';
 import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
+import { CompactNumberPipe } from '../../pipes/compact-number-pipe';
 import { 
   star, arrowBackOutline, cartOutline, heartOutline, 
   sadOutline, homeOutline, playOutline, timeOutline,
@@ -35,7 +36,8 @@ import {
     IonSelectOption,
     IonItem,
     IonLabel,
-    GenreNamePipe
+    GenreNamePipe,
+    CompactNumberPipe
   ]
 })
 export class DetailsPage implements OnInit, OnDestroy {

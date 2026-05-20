@@ -12,6 +12,7 @@ import { star, play, addCircleOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 
 
+
 import { register } from 'swiper/element/bundle';
 register(); 
 

@@ -14,6 +14,7 @@
     <div class="movie-container">
       
       <div class="hero-section">
+        
         <div class="hero-backdrop">
           <img [src]="movieService.getBackdropUrl(filme.backdrop_path || filme.poster_path)" />
           <div class="hero-overlay"></div>
@@ -159,14 +160,14 @@
               <ion-icon name="cash-outline"></ion-icon>
               <div>
                 <label>Orçamento</label>
-                <span>{{ filme.budget | currency:'USD':'symbol':'1.0-0' }}</span>
+                <span>US$ {{ filme.budget | compactNumber }}</span>
               </div>
             </div>
             <div class="tech-item" *ngIf="filme.revenue">
               <ion-icon name="people-outline"></ion-icon>
               <div>
                 <label>Receita</label>
-                <span>{{ filme.revenue | currency:'USD':'symbol':'1.0-0' }}</span>
+                <span>US$ {{ filme.revenue | compactNumber }}</span>
               </div>
             </div>
           </div>
