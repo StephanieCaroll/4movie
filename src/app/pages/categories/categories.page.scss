@@ -1,0 +1,179 @@
+$primary: #e50914;
+$bg-absolute: #000000;
+
+.app-background { 
+  --background: #000000; 
+}
+
+.content-wrapper {
+  padding: 20px 0;
+  
+  .section-title {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 0 20px; 
+    margin-bottom: 15px;
+    
+    h2 { 
+      font-size: 20px; 
+      font-weight: 800; 
+      color: white; 
+      margin: 0; 
+    }
+    
+    .see-all { 
+      color: $primary; 
+      font-size: 14px; 
+      font-weight: bold; 
+      cursor: pointer;
+    }
+  }
+
+  .horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 15px 20px 25px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    &:active {
+      cursor: grabbing;
+    }
+    
+    .movie-card {
+      flex-shrink: 0;
+      width: 150px; 
+      cursor: pointer;
+      will-change: opacity, transform;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 3px solid transparent;
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 1;
+      
+      &:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+        z-index: 10;
+
+        .poster-container img {
+          filter: brightness(0.8);
+        }
+      }
+      
+      .poster-container {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 2/3; 
+        
+        img { 
+          border-radius: 8px; 
+          width: 100%; 
+          height: 100%; 
+          object-fit: cover;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+          transition: filter 0.4s ease;
+        }
+        
+        .no-image {
+          width: 100%;
+          height: 100%;
+          background: #1a1a1a;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          color: #666;
+          
+          ion-icon {
+            font-size: 32px;
+          }
+          
+          span {
+            font-size: 11px;
+          }
+        }
+        
+        .card-badge {
+          position: absolute; 
+          top: 8px; 
+          right: 8px; 
+          background: rgba(0,0,0,0.8);
+          backdrop-filter: blur(4px);
+          color: #ffc107; 
+          font-size: 10px;
+          font-weight: bold;
+          padding: 3px 6px; 
+          border-radius: 4px;
+          z-index: 2;
+        }
+      }
+
+      .movie-title {
+        color: white;
+        font-size: 12px;
+        margin-top: 8px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-home-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-home-btn {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 16px;
+    
+    ion-icon {
+      font-size: 18px;
+    }
+    
+    span {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper .horizontal-scroll {
+    padding: 15px 15px 20px;
+    
+    .movie-card {
+      width: 130px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper .horizontal-scroll {
+    padding: 12px 12px 18px;
+    
+    .movie-card {
+      width: 110px;
+    }
+  }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}

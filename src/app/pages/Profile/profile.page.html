@@ -1,0 +1,138 @@
+<ion-content class="crimson-bg">
+  
+  @if (carregando) {
+    <div class="profile-container">
+      <div class="foto-area">
+        <ion-skeleton-text animated style="width: 130px; height: 130px; border-radius: 50%"></ion-skeleton-text>
+      </div>
+      <div class="dados-usuario">
+        <ion-skeleton-text animated style="width: 60%; height: 30px; margin: 10px auto;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%; height: 20px; margin: 0 auto;"></ion-skeleton-text>
+      </div>
+    </div>
+  }
+
+  @if (!carregando && usuario) {
+    <div class="profile-container">
+      
+      <div class="foto-area">
+        <div class="avatar-wrapper" (click)="fileInput.click()">
+          <img [src]="avatarUrl" class="foto-perfil">
+          <div class="edit-badge"><ion-icon name="camera"></ion-icon></div>
+        </div>
+        <input type="file" #fileInput accept="image/*" style="display: none" (change)="onFileSelected($event)">
+      </div>
+
+      <div class="dados-usuario">
+        <h1 class="user-name">{{ usuario.name }}</h1>
+        <p class="user-email">{{ usuario.email }}</p>
+
+        <div class="action-buttons">
+          <ion-button (click)="editModal.present()" fill="solid" class="edit-btn">
+            <ion-icon name="create-outline" slot="start"></ion-icon> Editar
+          </ion-button>
+          <ion-button fill="outline" color="danger" (click)="sair()">Sair</ion-button>
+        </div>
+      </div>
+
+      <div class="my-movies-section">
+        <div class="section-header">
+          <ion-icon name="film-outline" class="section-icon"></ion-icon>
+          <h2 class="section-title">Meus Filmes</h2>
+        </div>
+
+        @if (userMoviesService.movies().length === 0) {
+          <div class="empty-movies">
+            <ion-icon name="videocam-off-outline" class="empty-icon"></ion-icon>
+            <p>Você ainda não possui filmes</p>
+            <ion-button fill="clear" size="small" routerLink="/home">
+              Explorar Catálogo
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+        } @else {
+          <ion-segment [(ngModel)]="selectedTab" (ionChange)="segmentChanged($event)">
+            <ion-segment-button value="all">
+              <ion-label>Todos</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="purchased">
+              <ion-label>Comprados</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="rented">
+              <ion-label>Alugados</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+
+          <div class="movies-grid">
+            @for (movie of filteredMovies; track movie.movieId) {
+              <div class="movie-card" (click)="watchMovie(movie)">
+                <div class="poster-wrapper">
+                  <img [src]="'https://image.tmdb.org/t/p/w200' + movie.posterPath" 
+                       [alt]="movie.title"
+                       class="movie-poster">
+                  
+                  @if (movie.type === 'rent') {
+                    <div class="movie-badge rent-badge" [class.urgent]="getRemainingTimeText(movie.expiresAt).includes('m')">
+                      <ion-icon name="time-outline"></ion-icon>
+                      <span>{{ getRemainingTimeText(movie.expiresAt!) }}</span>
+                    </div>
+                  } @else {
+                    <div class="movie-badge purchase-badge">
+                      <ion-icon name="checkmark-circle-outline"></ion-icon>
+                      <span>Comprado</span>
+                    </div>
+                  }
+                </div>
+                <div class="movie-info">
+                  <h3 class="movie-title">{{ movie.title }}</h3>
+                  <p class="movie-date">Adquirido em: {{ movie.purchaseDate | date:'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="menu-area">
+        <ion-list lines="none" class="transparent-list">
+          <ion-item button detail="true" routerLink="/recently-watched">
+            <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+            <ion-label>Continuar a assistir</ion-label>
+          </ion-item>
+
+          <ion-item button detail="true" routerLink="/favorites">
+            <ion-icon name="heart" slot="start" color="danger"></ion-icon>
+            <ion-label>Favoritos</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+  }
+
+  <ion-modal [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.8]" #editModal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Editar Perfil</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="input-wrapper">
+          <ion-item fill="outline" mode="md" class="crimson-item">
+            <ion-label position="floating">Nome Completo</ion-label>
+            <ion-input type="text" [(ngModel)]="editName"></ion-input>
+          </ion-item>
+        </div>
+        
+        <ion-button expand="block" color="danger" style="margin-top: 20px;" (click)="salvarEdicao(editModal)">
+          @if (isUpdating) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            SALVAR ALTERAÇÕES
+          }
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

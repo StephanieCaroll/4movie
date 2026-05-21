@@ -1,0 +1,214 @@
+<ion-content [fullscreen]="true" class="details-content">
+  <div class="floating-back" (click)="voltar()">
+    <ion-icon name="arrow-back-outline"></ion-icon>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <ion-spinner name="crescent" color="danger"></ion-spinner>
+      <p>Buscando informações detalhadas...</p>
+    </div>
+  }
+
+  @if (!loading && filme) {
+    <div class="movie-container">
+      
+      <div class="hero-section">
+        <div class="hero-backdrop">
+          <img [src]="movieService.getBackdropUrl(filme.backdrop_path || filme.poster_path)" />
+          <div class="hero-overlay"></div>
+          <div class="hero-gradient"></div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="header-info">
+          <div class="poster-wrapper">
+            <img [src]="movieService.getPosterUrl(filme.poster_path)" />
+          </div>
+          <div class="title-wrapper">
+            <h1 class="movie-title">{{ filme.title }}</h1>
+            <p class="tagline" *ngIf="filme.tagline">"{{ filme.tagline }}"</p>
+            
+            <div class="movie-quick-stats">
+              <span class="stat-badge highlight">
+                <ion-icon name="star"></ion-icon>
+                {{ filme.vote_average?.toFixed(1) || '0.0' }}
+              </span>
+              <span class="stat-badge">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ formatRuntime(filme.runtime) }}
+              </span>
+              <span class="stat-badge">
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ filme.release_date | slice:0:4 }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="price-selector">
+          
+          @if (jaComprei) {
+            <div class="owned-message-banner">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <p>Filme Adquirido Permanentemente.</p>
+            </div>
+            
+            <div class="action-buttons">
+              <ion-button class="btn-primary btn-gold" expand="block" (click)="darPlayNoFilme()">
+                <ion-icon slot="start" name="play"></ion-icon>
+                Assistir Agora
+              </ion-button>
+              
+              <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
+                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+                Minha Lista
+              </ion-button>
+            </div>
+          }
+
+          @if (jaAluguei && !jaComprei) {
+            <div class="owned-message-banner rental-active">
+              <ion-icon name="time-outline"></ion-icon>
+              <p>Aluguel Ativo. O filme está liberado!</p>
+            </div>
+            
+            <div class="action-buttons rental-actions">
+              <ion-button class="btn-primary btn-gold" expand="block" (click)="darPlayNoFilme()">
+                <ion-icon slot="start" name="play"></ion-icon>
+                Assistir Agora (Alugado)
+              </ion-button>
+
+              <div class="upgrade-box" style="margin-top: 15px;">
+                <ion-button fill="outline" color="warning" expand="block" (click)="selectedType = 'buy'; addToCart()">
+                  Upgrade: Comprar permanentemente (R$ {{ buyPrice.toFixed(2) }})
+                </ion-button>
+              </div>
+            </div>
+          }
+
+          @if (!jaComprei && !jaAluguei) {
+            <div class="price-options">
+              <div class="price-card" 
+                   [class.selected]="selectedType === 'rent'" 
+                   (click)="selectedType = 'rent'">
+                <div class="price-header">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span class="price-type">ALUGAR POR DIA</span>
+                </div>
+                <div class="price-value">
+                  <small>a partir de</small>
+                  <strong>{{ formattedRentPricePerDay }}</strong>
+                  <small>/dia</small>
+                </div>
+                <div class="rental-days" *ngIf="selectedType === 'rent'">
+                  <ion-item lines="none">
+                    <ion-label>Quantos dias?</ion-label>
+                    <ion-select [(ngModel)]="selectedDays" (ionChange)="selectedDays = $event.detail.value">
+                      <ion-select-option *ngFor="let option of daysOptions" [value]="option.value">
+                        {{ option.label }} - R$ {{ (rentPricePerDay * option.value).toFixed(2) }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+              </div>
+
+              <div class="price-card" 
+                   [class.selected]="selectedType === 'buy'" 
+                   (click)="selectedType = 'buy'">
+                <div class="price-header">
+                  <ion-icon name="infinite-outline"></ion-icon>
+                  <span class="price-type">COMPRAR</span>
+                </div>
+                <div class="price-value">
+                  <strong>R$ {{ buyPrice.toFixed(2) }}</strong>
+                  <small>acesso permanente</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <ion-button class="btn-primary" expand="block" (click)="addToCart()">
+                <ion-icon slot="start" name="cart-outline"></ion-icon>
+                Adicionar ao Carrinho
+                <span class="price-tag">{{ formattedPrice }}</span>
+              </ion-button>
+              
+              <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
+                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+                Minha Lista
+              </ion-button>
+            </div>
+
+            <p class="lock-notice" style="text-align: center; color: #aaaaaa; margin-top: 15px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
+              <ion-icon name="lock-closed-outline" style="color: #d4af37;"></ion-icon> Faça um aluguel ou compra para liberar o player do filme.
+            </p>
+          }
+        </div>
+
+        <div class="genre-list">
+          @if (filme.genres) {
+            @for (genre of filme.genres; track genre.id) {
+              <span class="genre-pill">{{ genre.name }}</span>
+            }
+          }
+        </div>
+
+        <div class="detail-section">
+          <h2 class="section-title">Sinopse</h2>
+          <p class="overview-text">{{ filme.overview || 'A sinopse deste filme ainda não foi traduzida.' }}</p>
+        </div>
+
+        <div class="detail-section" *ngIf="filme.credits?.cast?.length > 0">
+          <h2 class="section-title">Elenco Principal</h2>
+          <div class="cast-scroll">
+            @for (actor of filme.credits.cast.slice(0, 8); track actor.id) {
+              <div class="cast-card">
+                <img [src]="actor.profile_path ? imageBaseUrl + actor.profile_path : 'assets/icon/favicon.png'" />
+                <p class="actor-name">{{ actor.name }}</p>
+                <p class="character">{{ actor.character }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (trailerUrl) {
+          <div class="detail-section">
+            <h2 class="section-title">Trailer Oficial</h2>
+            <div class="trailer-container glass-card">
+              <iframe [src]="trailerUrl" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+        }
+
+        <div class="detail-section">
+          <h2 class="section-title">Informações Técnicas</h2>
+          <div class="technical-grid">
+            <div class="tech-item">
+              <ion-icon name="globe-outline"></ion-icon>
+              <div>
+                <label>Status</label>
+                <span>{{ translateStatus(filme.status) }}</span>
+              </div>
+            </div>
+            <div class="tech-item" *ngIf="filme.budget">
+              <ion-icon name="cash-outline"></ion-icon>
+              <div>
+                <label>Orçamento</label>
+                <span>US$ {{ filme.budget | compactNumber }}</span>
+              </div>
+            </div>
+            <div class="tech-item" *ngIf="filme.revenue">
+              <ion-icon name="people-outline"></ion-icon>
+              <div>
+                <label>Receita</label>
+                <span>US$ {{ filme.revenue | compactNumber }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</ion-content>

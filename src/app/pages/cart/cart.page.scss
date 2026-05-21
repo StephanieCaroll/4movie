@@ -1,0 +1,258 @@
+
+$primary-red: #e50914; 
+$bg-black: #000000;    
+$glass-bg: rgba(20, 20, 20, 0.7); 
+$white: #ffffff;
+$gray-text: #a4a4a4;
+
+.app-background {
+  --background: #{$bg-black};
+}
+
+.main-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.premium-header {
+  ion-toolbar {
+    --background: #{$bg-black};
+    --padding-top: 20px;
+    --padding-bottom: 10px;
+    --border-style: none;
+  }
+  
+}
+
+.content-layout {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 30px;
+  align-items: start;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1.8fr 1fr; 
+  }
+}
+
+.glass-card {
+  background: $glass-bg;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.section-header {
+  margin-bottom: 20px;
+  h3 {
+    color: $white;
+    font-weight: 800;
+    font-size: 20px;
+    span {
+      color: $primary-red;
+      font-size: 16px;
+    }
+  }
+}
+
+.item-content {
+  display: flex;
+  padding: 15px;
+  gap: 20px;
+
+  .poster-wrapper {
+    position: relative;
+    width: 100px;
+    min-width: 100px;
+    
+    img {
+      border-radius: 12px;
+      display: block;
+    }
+
+    .type-tag {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      background: $primary-red;
+      color: $white;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+
+      &.rent {
+        background: $white;
+        color: $bg-black;
+      }
+    }
+  }
+
+  .info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+
+    .movie-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: $white;
+      margin: 0 0 5px 0;
+      line-height: 1.2;
+    }
+
+    .movie-price {
+      font-size: 16px;
+      color: $primary-red;
+      font-weight: 700;
+    }
+
+    .delete-btn {
+      --color: #{$gray-text};
+      font-size: 12px;
+      height: 30px;
+      margin: 0;
+      padding: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      justify-content: flex-start;
+
+      ion-icon {
+        margin-right: 5px;
+        font-size: 16px;
+      }
+
+      &:hover {
+        --color: #{$primary-red};
+      }
+    }
+  }
+}
+
+.summary-card {
+  padding: 25px;
+  position: sticky;
+  top: 20px;
+
+  h3 {
+    margin-top: 0;
+    color: $white;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+  }
+
+  .summary-details {
+    margin: 20px 0;
+    
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      color: $gray-text;
+      font-size: 15px;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 15px 0;
+    }
+
+    .total {
+      color: $white;
+      font-weight: 800;
+      .final-value {
+        font-size: 26px;
+        color: $white;
+      }
+    }
+  }
+
+  .checkout-btn {
+    margin-top: 20px;
+  }
+}
+
+.btn-primary {
+  --background: #{$primary-red};
+  --color: #{$white};
+  --border-radius: 12px;
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+  font-weight: 800;
+  margin: 0;
+  box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3);
+  letter-spacing: 1px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .blob-animation {
+    width: 160px;
+    height: 160px;
+    background: linear-gradient(45deg, $primary-red, #ff4d4d);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: morph 8s ease-in-out infinite;
+    box-shadow: 0 15px 35px rgba(229, 9, 20, 0.4);
+    
+    .inside-blob {
+      .logo-main {
+        font-size: 22px;
+        font-weight: 900;
+        color: $white;
+        letter-spacing: -1px;
+        
+        .logo-accent {
+          color: rgba(255, 255, 255, 0.8);
+          font-weight: 300;
+        }
+      }
+    }
+  }
+
+  h2 {
+    color: $white;
+    font-weight: 900;
+    font-size: 28px;
+    margin: 0 0 10px 0;
+  }
+
+  p {
+    color: $gray-text;
+    margin-bottom: 40px;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  .btn-primary {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@keyframes morph {
+  0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+}
+
+.transparent-list {
+  background: transparent !important;
+  padding: 0;
+}

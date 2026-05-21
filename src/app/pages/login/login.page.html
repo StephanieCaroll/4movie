@@ -1,0 +1,97 @@
+<ion-content class="ion-padding crimson-bg">
+  <div class="login-container">
+    <div class="login-card">
+      
+      <div class="card-header">
+        <h1 class="title">4<span class="crimson-text">MOVIE</span></h1>
+        <p class="subtitle">Bem-vindo de volta ao melhor cinema</p>
+        <div class="red-divider"></div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="error-banner" role="alert">
+          <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <form (ngSubmit)="entrar()">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="12">
+              <div class="input-wrapper">
+                <ion-icon name="mail-outline" class="input-icon" aria-hidden="true"></ion-icon>
+                <ion-input
+                  type="email"
+                  [(ngModel)]="email"
+                  name="email"
+                  label="E-mail"
+                  label-placement="stacked"
+                  placeholder="Seu e-mail"
+                  class="crimson-input"
+                  [disabled]="isLoading"
+                  required>
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <div class="input-wrapper">
+                <ion-icon name="lock-closed-outline" class="input-icon" aria-hidden="true"></ion-icon>
+                <ion-input
+                  type="password"
+                  [(ngModel)]="password"
+                  name="password"
+                  label="Palavra-passe"
+                  label-placement="stacked"
+                  placeholder="Sua senha"
+                  class="crimson-input"
+                  [disabled]="isLoading"
+                  required>
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <div class="forgot-password">
+          <ion-button 
+            fill="clear" 
+            (click)="recuperarSenha()" 
+            class="forgot-link"
+            [disabled]="isLoading">
+            Esqueceu a palavra-passe?
+          </ion-button>
+        </div>
+
+        <ion-button 
+          expand="block" 
+          type="submit"
+          class="login-btn"
+          [disabled]="!email || !password || isLoading">
+          
+          @if (isLoading) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            <span>ENTRAR</span>
+            <ion-icon name="log-in-outline" slot="end" aria-hidden="true"></ion-icon>
+          }
+        </ion-button>
+
+        <div class="footer-links">
+          <span class="gray-text">Não possui uma conta?</span>
+          <ion-button 
+            fill="clear" 
+            (click)="irParaSignUp()" 
+            class="register-link"
+            [disabled]="isLoading">
+            Cadastrar-se 
+            <ion-icon name="person-add-outline" slot="end" aria-hidden="true"></ion-icon>
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

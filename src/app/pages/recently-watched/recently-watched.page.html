@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="dark-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" class="white-back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="page-title">Continuar Assistindo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="app-background">
+  <div class="page-container">
+    
+    @if (watchedService.recentlyWatched().length > 0) {
+      <div class="movie-grid">
+        @for (movie of watchedService.recentlyWatched(); track movie.movieId) {
+          
+          <div class="movie-card" [routerLink]="['/details', movie.movieId]">
+            <div class="poster-container">
+              @if (movie.posterPath) {
+                <img [src]="'https://image.tmdb.org/t/p/w500' + movie.posterPath" [alt]="movie.title">
+              } @else {
+                <div class="no-image">
+                  <ion-icon name="image-outline"></ion-icon>
+                  <span>Sem Imagem</span>
+                </div>
+              }
+              
+              <div class="play-overlay">
+                <ion-icon name="play-circle"></ion-icon>
+              </div>
+
+              @if (movie.duration > 0 && movie.progress > 0) {
+                <div class="progress-bar-container">
+                  <div class="progress-fill" [style.width.%]="(movie.progress / movie.duration) * 100"></div>
+                </div>
+              }
+            </div>
+            
+            <div class="movie-info">
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              
+              @if (movie.duration > 0 && movie.progress > 0) {
+                 <p class="time-left">Restam {{ getRemainingTime(movie.duration, movie.progress) }} min</p>
+              }
+            </div>
+          </div>
+          
+        }
+      </div>
+    } @else {
+      
+      <div class="empty-state">
+        <div class="empty-icon-container">
+          <ion-icon name="film-outline"></ion-icon>
+        </div>
+        <h2>Nenhum título por aqui</h2>
+        <p>Os filmes que você começar a assistir aparecerão nesta lista.</p>
+        <ion-button routerLink="/home" class="btn-primary" mode="md">
+          Explorar Catálogo
+        </ion-button>
+      </div>
+      
+    }
+    
+  </div>
+</ion-content>

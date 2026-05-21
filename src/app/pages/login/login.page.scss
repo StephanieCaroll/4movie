@@ -1,0 +1,258 @@
+
+.crimson-bg {
+  --background: radial-gradient(circle at 30% 10%, #1a1a1a 0%, #000000 100%);
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  width: 100%;
+}
+ion-header,
+ion-toolbar {
+  --background: black;
+  background: black;
+}
+
+.login-card {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  max-width: 580px;
+  width: 100%;
+  padding: 40px 35px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px -12px rgba(220, 38, 38, 0.3);
+    border-color: rgba(220, 38, 38, 0.4);
+  }
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+  animation: pulse 2s infinite;
+}
+
+.crimson-icon {
+  font-size: 45px;
+  color: white;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 0;
+  color: white;
+  letter-spacing: 3px;
+}
+
+.crimson-text {
+  color: #dc2626;
+  text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin: 8px 0 20px;
+  font-weight: 400;
+}
+
+.red-divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #dc2626, #7f1d1d);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.input-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+  transition: all 0.3s ease;
+  padding-left: 15px;
+
+  &:focus-within {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    background: #1f1f1f;
+  }
+}
+
+.input-icon {
+  color: #6b7280;
+  font-size: 20px;
+  margin-right: 12px;
+  transition: color 0.3s ease;
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: #dc2626;
+}
+
+.crimson-input {
+  --background: transparent;
+  --color: #ffffff;
+  --placeholder-color: #6b7280;
+  --placeholder-opacity: 1;
+  --padding-start: 0;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --highlight-height: 0;
+  --border-width: 0;
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 400;
+
+  &::part(native) {
+    background: transparent;
+  }
+}
+
+.forgot-password {
+  text-align: right;
+  margin: -10px 0 20px 0;
+}
+
+.forgot-link {
+  --color: #6b7280;
+  --color-hover: #dc2626;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+  font-size: 0.85rem;
+  text-transform: none;
+  font-weight: 500;
+  height: auto;
+  margin: 0;
+
+  &:hover {
+    --color: #dc2626;
+  }
+}
+
+.login-btn {
+  --background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  --background-hover: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --background-activated: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+  --background-disabled: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+  --border-radius: 12px;
+  --color: white;
+  --color-disabled: #9ca3af;
+  --box-shadow: 0 10px 20px -5px rgba(220, 38, 38, 0.4);
+  height: 52px;
+  margin-top: 20px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    --box-shadow: 0 15px 30px -5px rgba(220, 38, 38, 0.6);
+    transform: translateY(-2px);
+  }
+
+  ion-icon {
+    font-size: 20px;
+    margin-left: 8px;
+  }
+}
+
+.footer-links {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.gray-text {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.register-link {
+  --color: #dc2626;
+  --color-hover: #ef4444;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  margin: 0;
+  height: auto;
+
+  &:hover {
+    --color: #ef4444;
+  }
+
+  ion-icon {
+    font-size: 16px;
+    margin-left: 4px;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(220, 38, 38, 0.7);
+  }
+}
+
+@media (max-width: 768px) {
+  .login-card {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .crimson-icon {
+    font-size: 32px;
+  }
+}

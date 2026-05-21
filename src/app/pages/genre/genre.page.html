@@ -1,0 +1,49 @@
+<ion-content class="app-background">
+  <div class="container">
+    <div class="custom-back-button">
+      <ion-button fill="clear" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="genre-header">
+      <h1 class="genre-title">{{ genreName }}</h1>
+    </div>
+
+    <div class="movies-grid">
+      @for (movie of movies; track movie.id) {
+        <div class="movie-card" [routerLink]="['/details', movie.id]">
+          <div class="poster-wrapper">
+            @if (movie.poster_path) {
+              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" loading="lazy" />
+            } @else {
+              <div class="no-image">Sem Poster</div>
+            }
+            @if (movie.vote_average > 0) {
+              <div class="rating-badge">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ movie.vote_average.toFixed(1) }}</span>
+              </div>
+            }
+          </div>
+          <div class="movie-info">
+            <p class="movie-title">{{ movie.title }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (currentPage < totalPages) {
+      <div class="load-more-section">
+        <ion-button fill="clear" class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
+          @if (isLoading) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+            Ver Mais
+          }
+        </ion-button>
+      </div>
+    }
+  </div>
+</ion-content>

@@ -1,0 +1,190 @@
+.app-background {
+  --background: #121212;
+}
+
+ion-content {
+  --overflow-x: hidden;
+  
+  &::part(scroll) {
+    overflow-x: hidden;
+  }
+}
+
+:host {
+  overflow-x: hidden;
+  display: block;
+}
+
+.custom-back-button {
+  position: fixed;
+  top: 16px;
+  left: 8px;
+  z-index: 10;
+  max-width: 60px;
+  
+  ion-button {
+    --color: #ffffff;
+    --background: rgba(0, 0, 0, 0.5);
+    --border-radius: 30px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0;
+    height: 40px;
+    width: 40px;
+    
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+.genre-header {
+  text-align: center;
+  padding: 20px;
+  margin: 60px 0 30px 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(139, 0, 0, 0.15) 20%,
+    rgba(139, 0, 0, 0.15) 80%,
+    transparent 100%
+  );
+  
+  .genre-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: rgb(196, 196, 196);
+    font-family: 'Montserrat', 'Oswald', 'Bebas Neue', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    word-break: keep-all;
+  }
+}
+
+.container {
+  padding: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  padding: 15px;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  will-change: opacity, transform;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1;
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    z-index: 10;
+
+    .poster-wrapper img {
+      filter: brightness(0.8);
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .poster-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: filter 0.4s ease;
+    }
+
+    .rating-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      z-index: 2;
+      
+      ion-icon { 
+        color: #ffc107; 
+        font-size: 10px; 
+      }
+      
+      span { 
+        color: #fff; 
+        font-size: 10px; 
+        font-weight: 700; 
+      }
+    }
+  }
+
+  .movie-info {
+    padding: 8px 2px;
+    
+    .movie-title {
+      margin: 0;
+      color: #e0e0e0;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+  }
+}
+
+.load-more-section {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  
+  .load-more-btn {
+    --color: #ffffff;
+    --border-color: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+  }
+}
+
+@media (min-width: 768px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .movie-info .movie-title { 
+    font-size: 0.9rem; 
+  }
+  
+  .genre-header .genre-title {
+    font-size: 2.5rem;
+    letter-spacing: 12px;
+  }
+}

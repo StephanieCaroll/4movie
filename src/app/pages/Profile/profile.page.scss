@@ -1,0 +1,290 @@
+.crimson-bg {
+  --background: radial-gradient(circle at top, #1a1a1a 0%, #000000 100%);
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background-color: #ffffff; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+
+.foto-perfil {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover; 
+  display: block;
+}
+  .edit-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #dc2626;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #000;
+    font-size: 18px;
+  }
+}
+
+.dados-usuario {
+  text-align: center;
+  width: 100%;
+
+  .user-name {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .user-email {
+    color: #9ca3af;
+    font-size: 0.95rem;
+    margin: 5px 0 25px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+
+  .edit-btn {
+    --background: rgba(255, 255, 255, 0.1);
+    --background-hover: rgba(255, 255, 255, 0.2);
+    --color: white;
+    --border-radius: 12px;
+    --border-color: rgba(255, 255, 255, 0.3);
+    --border-style: solid;
+    --border-width: 1px;
+    font-weight: 600;
+    height: 45px;
+    flex: 1;
+    backdrop-filter: blur(10px);
+  }
+
+  .logout-btn {
+    --border-radius: 12px;
+    --border-width: 1px;
+    font-weight: 600;
+    height: 45px;
+    flex: 0.5;
+  }
+}
+
+.my-movies-section {
+  width: 100%;
+  margin: 30px 0;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+
+    .section-icon {
+      font-size: 28px;
+      color: #dc2626;
+    }
+
+    .section-title {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+
+  .empty-movies {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    margin: 20px 0;
+
+    .empty-icon {
+      font-size: 64px;
+      color: #dc2626;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #9ca3af;
+      margin-bottom: 15px;
+    }
+
+    ion-button {
+      --color: #dc2626;
+    }
+  }
+
+  ion-segment {
+    margin: 20px 0;
+    --background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 4px;
+
+    ion-segment-button {
+      --color: #9ca3af;
+      --color-checked: white;
+      --indicator-color: #dc2626;
+      --indicator-height: 3px;
+      min-height: 40px;
+      font-weight: 600;
+    }
+  }
+
+  .movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+
+    .movie-card {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .poster-wrapper {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        aspect-ratio: 2/3;
+        background: rgba(255, 255, 255, 0.05);
+
+        .movie-poster {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .movie-badge {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 4px 8px;
+          border-radius: 8px;
+          font-size: 11px;
+          font-weight: 600;
+          backdrop-filter: blur(10px);
+          
+          ion-icon {
+            font-size: 14px;
+          }
+
+          &.rent-badge {
+            background: rgba(255, 193, 7, 0.9);
+            color: #000;
+          }
+
+          &.purchase-badge {
+            background: rgba(34, 197, 94, 0.9);
+            color: white;
+          }
+        }
+      }
+
+      .movie-info {
+        padding: 8px 4px;
+
+        .movie-title {
+          color: white;
+          font-size: 13px;
+          font-weight: 600;
+          margin: 0 0 4px 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .movie-date {
+          color: #9ca3af;
+          font-size: 11px;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.menu-area {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+
+  .transparent-list {
+    background: transparent;
+    padding: 0;
+
+    ion-item {
+      --background: rgba(255, 255, 255, 0.03);
+      --color: white;
+      --padding-start: 16px;
+      --inner-padding-end: 16px;
+      margin-bottom: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: translateX(5px);
+        --background: rgba(220, 38, 38, 0.05);
+      }
+
+      ion-icon {
+        color: #dc2626;
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+ion-modal {
+  --background: #1a1a1a;
+  --color: white;
+  
+  ion-toolbar {
+    --background: #1a1a1a;
+    --color: white;
+  }
+}
+
+.crimson-item {
+  --border-color: rgba(220, 38, 38, 0.5);
+  --border-color-focused: #dc2626;
+  --color: white;
+  margin-top: 10px;
+}
+
+ion-skeleton-text {
+  --background: rgba(255, 255, 255, 0.1);
+  --background-focused: rgba(255, 255, 255, 0.2);
+}

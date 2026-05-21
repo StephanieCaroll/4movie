@@ -1,0 +1,32 @@
+<ion-content scrollY="false">
+  <div class="wrapper">
+    
+    <div class="top-bar">
+      <button class="btn-back" (click)="fecharModal()" aria-label="Voltar">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Voltar</span>
+      </button>
+      
+      @if (filme) {
+        <div class="movie-info-header">
+          <h2>{{ filme?.title }}</h2>
+          <span class="badge-cinema">Modo Cinema</span>
+        </div>
+      }
+    </div>
+
+    <div class="player-area">
+      <div [hidden]="!videoId" id="yt-player-iframe" class="video-container"></div>
+      
+      @if (!videoId) {
+        <div class="not-found">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>Vídeo indisponível no momento.</p>
+        </div>
+      }
+    </div>
+
+    <div class="bottom-bar-spacer"></div>
+
+  </div>
+</ion-content>

@@ -1,0 +1,43 @@
+<ion-content class="app-background">
+ 
+  <div class="main-sections-container">
+    
+    @for (genre of genres; track genre.id) {
+      <section class="content-wrapper">
+        <div class="section-title">
+          <h2>{{ genre.name }}</h2>
+          <span class="see-all" [routerLink]="['/genre', genre.id]">Ver tudo</span>
+        </div>
+
+        <div class="horizontal-scroll">
+          @for (movie of genre.movies; track movie.id) {
+            <div class="movie-card" (click)="goToMovieDetails($event, movie.id)">
+              <div class="poster-container">
+                <img 
+                  [src]="imageBaseUrl + movie.poster_path" 
+                  [alt]="movie.title" 
+                  draggable="false"
+                  (error)="movie.poster_path = null" />
+                
+                @if (!movie.poster_path) {
+                  <div class="no-image">
+                    <ion-icon name="image-outline"></ion-icon>
+                    <span>Sem imagem</span>
+                  </div>
+                }
+
+                @if (movie.vote_average > 0) {
+                  <div class="card-badge">
+                    ★ {{ movie.vote_average.toFixed(1) }}
+                  </div>
+                }
+              </div>
+              <p class="movie-title">{{ movie.title }}</p>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+  </div>
+</ion-content>
