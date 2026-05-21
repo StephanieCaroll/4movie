@@ -216,4 +216,9 @@ export class UserMoviesService {
     });
     await toast.present();
   }
+
+  reset() {
+  this.userMoviesSignal.set([]);
+}
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, effect } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { IonicModule, NavController, ToastController } from '@ionic/angular';
@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AppwriteService } from '../../services/appwrite.service';
 import { CartService } from '../../services/cart.service';
 import { UserMoviesService, UserMovie } from '../../services/user-movies.service';
+import { RecentlyWatchedService } from '../../services/recently-watched.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,13 +15,14 @@ import { UserMoviesService, UserMovie } from '../../services/user-movies.service
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, RouterLink, RouterModule]
 })
-export class ProfilePage implements OnInit, OnDestroy {
+export class ProfilePage {
   private appwrite = inject(AppwriteService);
   private router = inject(Router);
   private cartService = inject(CartService);
   public userMoviesService = inject(UserMoviesService);
   private navCtrl = inject(NavController);
   private toastCtrl = inject(ToastController);
+  private recentlyWatchedService = inject(RecentlyWatchedService);
 
   usuario: any = null;
   carregando = true;
@@ -40,7 +42,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     });
   }
 
-  async ngOnInit() {
+  async ionViewWillEnter() {
     await this.carregarPerfil();
     if (this.usuario) {
       await this.loadUserMovies();
@@ -51,7 +53,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     }, 60000);
   }
 
-  ngOnDestroy() {
+  ionViewWillLeave() {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }
@@ -224,13 +226,16 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   async sair() {
-    try {
-      await this.appwrite.logout();
-      this.cartService.clearLocalCart();
-      this.router.navigate(['/login'], { replaceUrl: true });
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error);
-      this.router.navigate(['/login'], { replaceUrl: true });
-    }
+  try {
+    
+    this.userMoviesService.reset();
+    this.recentlyWatchedService.reset();
+
+    await this.appwrite.logout();
+    
+    window.location.href = '/login'; 
+  } catch (error) {
+    window.location.href = '/login';
   }
+}
 }

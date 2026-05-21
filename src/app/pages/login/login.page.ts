@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { AppwriteService } from '../../services/appwrite.service';
 import { CartService } from '../../services/cart.service';
+import { UserMoviesService } from '../../services/user-movies.service';
+import { RecentlyWatchedService } from '../../services/recently-watched.service';
 import { addIcons } from 'ionicons';
 import { 
   mailOutline, 
@@ -27,6 +29,8 @@ export class LoginPage implements OnInit {
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
   private cartService = inject(CartService);
+  private userMoviesService = inject(UserMoviesService);
+  private recentlyWatchedService = inject(RecentlyWatchedService);
 
   email = '';
   password = '';
@@ -34,7 +38,6 @@ export class LoginPage implements OnInit {
   errorMessage = '';
 
   constructor() {
-    
     addIcons({
       'mail-outline': mailOutline,
       'lock-closed-outline': lockClosedOutline,
@@ -59,53 +62,58 @@ export class LoginPage implements OnInit {
     return this.cartService.getItemCount();
   }
 
-  async entrar() {
-  
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Preencha todos os campos.';
-      this.exibirToast(this.errorMessage, 'warning');
-      return;
-    }
-
-    this.errorMessage = '';
-    this.isLoading = true;
-
-    const loading = await this.loadingCtrl.create({ 
-      message: 'Autenticando...',
-      spinner: 'crescent'
-    });
-    await loading.present();
-
-    try {
-     
-      await this.appwrite.login(this.email, this.password);
-      await loading.dismiss();
-      await this.cartService.loadCart()
-      await this.exibirToast('Login realizado com sucesso!', 'success');
-      this.router.navigate(['/profile'], { replaceUrl: true });
-      
-    } catch (error: any) {
-      await loading.dismiss();
-      
-      // Tratamento detalhado de erros
-      if (error?.code === 401) {
-        this.errorMessage = 'E-mail ou senha incorretos. Verifique suas credenciais.';
-        await this.exibirToast(this.errorMessage, 'danger');
-      } else if (error?.code === 404) {
-        this.errorMessage = 'Usuário não encontrado.';
-        await this.exibirToast(this.errorMessage, 'danger');
-      } else if (error?.code === 429) {
-        this.errorMessage = 'Muitas tentativas. Tente novamente mais tarde.';
-        await this.exibirToast(this.errorMessage, 'warning');
-      } else {
-        this.errorMessage = 'Erro ao fazer login. Tente novamente.';
-        await this.exibirToast(this.errorMessage, 'danger');
-        console.error('Erro detalhado:', error);
-      }
-    } finally {
-      this.isLoading = false;
-    }
+async entrar() {
+  if (!this.email || !this.password) {
+    this.errorMessage = 'Preencha todos os campos.';
+    this.exibirToast(this.errorMessage, 'warning');
+    return;
   }
+
+  this.userMoviesService.reset();
+  this.recentlyWatchedService.reset();
+
+  this.errorMessage = '';
+  this.isLoading = true;
+
+  const loading = await this.loadingCtrl.create({ 
+    message: 'Autenticando...',
+    spinner: 'crescent'
+  });
+  await loading.present();
+
+  try {
+   
+    await this.appwrite.login(this.email, this.password);
+    
+    
+    await new Promise(resolve => setTimeout(resolve, 600));
+
+    await Promise.all([
+      this.cartService.loadCart(),
+      this.userMoviesService.loadUserMovies(),
+      this.recentlyWatchedService.loadRecentlyWatched()
+    ]);
+
+    await loading.dismiss();
+    await this.exibirToast('Login realizado com sucesso!', 'success');
+    
+    this.router.navigate(['/profile'], { replaceUrl: true });
+    
+  } catch (error: any) {
+    await loading.dismiss();
+    
+    if (error?.code === 401) {
+      this.errorMessage = 'E-mail ou senha incorretos.';
+      await this.exibirToast(this.errorMessage, 'danger');
+    } else {
+      this.errorMessage = 'Erro ao fazer login. Tente novamente.';
+      await this.exibirToast(this.errorMessage, 'danger');
+      console.error('Erro detalhado:', error);
+    }
+  } finally {
+    this.isLoading = false;
+  }
+}
 
   recuperarSenha() {
     this.exibirToast('Funcionalidade de recuperação em breve.', 'warning');
@@ -116,14 +124,14 @@ export class LoginPage implements OnInit {
   }
 
   async exibirToast(msg: string, cor: string) {
-  const toast = await this.toastCtrl.create({
-    message: msg,
-    duration: 3000,
-    color: cor as any,
-    position: 'bottom', 
-    buttons: cor === 'danger' ? [{ text: 'OK', role: 'cancel' }] : [],
-    cssClass: 'custom-toast' 
-  });
-  await toast.present();
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      color: cor as any,
+      position: 'bottom', 
+      buttons: cor === 'danger' ? [{ text: 'OK', role: 'cancel' }] : [],
+      cssClass: 'custom-toast' 
+    });
+    await toast.present();
   }
 }

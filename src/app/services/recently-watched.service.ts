@@ -106,4 +106,9 @@ export class RecentlyWatchedService {
       console.error('Erro ao adicionar aos assistidos:', error);
     }
   }
+
+  reset() {
+  this.watchedSignal.set([]);
+}
+
 }
