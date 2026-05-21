@@ -19,7 +19,9 @@
     <ion-tab-button routerLink="/cart" routerLinkActive="active">
       <div class="cart-wrapper">
         <ion-icon name="cart-outline"></ion-icon>
-        <ion-badge *ngIf="itemCount > 0" color="danger">{{ itemCount }}</ion-badge>
+        @if (itemCount > 0) {
+          <ion-badge color="danger">{{ itemCount }}</ion-badge>
+        }
       </div>
       <ion-label>Carrinho</ion-label>
     </ion-tab-button>

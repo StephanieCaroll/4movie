@@ -169,11 +169,6 @@ $text-muted: #a3a3a3;
             background: rgba(255, 215, 0, 0.2);
             ion-icon { color: #ffd700; }
           }
-
-          &.adult {
-            background: rgba($primary-red, 0.2);
-            color: $primary-red;
-          }
         }
       }
     }
@@ -206,13 +201,8 @@ $text-muted: #a3a3a3;
           border-color: $primary-red;
           
           .price-header {
-            .price-type {
-              color: $primary-red;
-            }
-            
-            ion-icon {
-              color: $primary-red;
-            }
+            .price-type { color: $primary-red; }
+            ion-icon { color: $primary-red; }
           }
         }
         
@@ -239,7 +229,6 @@ $text-muted: #a3a3a3;
         
         .price-value {
           text-align: center;
-          
           strong {
             font-size: 24px;
             font-weight: 800;
@@ -247,7 +236,6 @@ $text-muted: #a3a3a3;
             display: block;
             margin: 4px 0;
           }
-          
           small {
             font-size: 11px;
             color: $text-muted;
@@ -257,7 +245,6 @@ $text-muted: #a3a3a3;
         
         .rental-days {
           margin-top: 12px;
-          
           ion-item {
             --background: transparent;
             --border-color: rgba(255, 255, 255, 0.1);
@@ -369,19 +356,6 @@ $text-muted: #a3a3a3;
       font-size: 14px;
       line-height: 1.6;
       color: #cccccc;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-
-      .info-item {
-        display: flex;
-        flex-direction: column;
-        .info-label { font-size: 12px; color: $text-muted; }
-        .info-value { font-size: 14px; color: $text-light; font-weight: 500; }
-      }
     }
   }
 }
@@ -512,17 +486,217 @@ $text-muted: #a3a3a3;
   }
 }
 
-.error-container {
+.tagline {
+  color: #ffffff;
+  font-style: italic;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
+}
+
+.hero-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%; 
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scroll-wrapper {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-  padding: 20px;
-  ion-icon { font-size: 64px; color: $text-muted; }
-  h3 { color: $text-light; margin: 16px 0 8px; }
-  p { color: $text-muted; }
+  margin: 0 -15px; 
+
+  .scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+
+    ion-icon {
+      color: #ffffff;
+      font-size: 24px;
+    }
+
+    &:hover {
+      background: rgba(229, 9, 20, 0.9);
+      border-color: #e50914;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &.left-arrow {
+      left: -5px; 
+    }
+
+    &.right-arrow {
+      right: -5px;
+    }
+  }
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 10px 15px 25px;
+  cursor: grab;
+  user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  width: 100%;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.movie-card {
+  flex-shrink: 0;
+  width: 130px; 
+  will-change: opacity, transform; 
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1;
+
+  @media (min-width: 768px) {
+    width: 150px;
+  }
+
+  .poster-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    
+    img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      pointer-events: none;
+      transition: filter 0.3s ease;
+    }
+    
+    .card-badge {
+      position: absolute; 
+      top: 8px; 
+      right: 8px; 
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      color: #ffc107; 
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 6px; 
+      border-radius: 4px;
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .hover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75) !important;
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0; 
+      visibility: hidden;
+      transition: all 0.3s ease-in-out;
+      z-index: 99 !important; 
+      pointer-events: none;
+
+      .play-icon-circle {
+        width: 44px;
+        height: 44px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        background: rgba(0, 0, 0, 0.4);
+
+        ion-icon {
+          font-size: 20px;
+          color: #ffffff;
+          padding-left: 3px; 
+          margin: 0;
+        }
+      }
+
+      span {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+      }
+    }
+  }
+
+  &:hover {
+    transform: scale(1.08); 
+    box-shadow: 0 0 18px rgba(255, 0, 0, 0.7); 
+    z-index: 10;
+    
+    .poster-container {
+      img {
+        filter: blur(2px) brightness(0.4);
+      }
+      
+      .card-badge {
+        opacity: 0;
+      }
+
+      .hover-overlay {
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-wrapper .scroll-arrow {
+    display: none; 
+  }
+  
+  .scroll-wrapper {
+    margin: 0; 
+  }
+
+  .horizontal-scroll {
+    padding: 10px 0 25px; 
+  }
 }
 
 @media (min-width: 768px) {
@@ -578,20 +752,11 @@ $text-muted: #a3a3a3;
       height: 120px;
     }
   }
-}
-.tagline {
-  color: #ffffff;
-  font-style: italic;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
-}
 
-.hero-gradient {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60%; 
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
-  z-index: 2;
-  pointer-events: none;
+  .scroll-wrapper {
+    .scroll-arrow {
+      &.left-arrow { left: -20px; }
+      &.right-arrow { right: -20px; }
+    }
+  }
 }
