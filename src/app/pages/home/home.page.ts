@@ -14,6 +14,7 @@ import { RecentlyWatchedService } from '../../services/recently-watched.service'
 import { FavoritesService } from '../../services/favorites.service';
 import { LazyLoadDirective } from '../../directives/lazy-load';
 import { register } from 'swiper/element/bundle';
+import { MovieHighlightDirective } from '../../directives/highlight';
 register(); 
 
 @Component({
@@ -24,7 +25,7 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
-    IonContent, IonIcon, IonButton, LazyLoadDirective
+    IonContent, IonIcon, IonButton, LazyLoadDirective,MovieHighlightDirective
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {

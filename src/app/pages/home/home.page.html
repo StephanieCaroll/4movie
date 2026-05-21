@@ -16,9 +16,9 @@
             <div class="hero-section">
               <div class="hero-img-container">
                 <img [attr.data-src]="imageBaseUrlOriginal + movie.backdrop_path" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" />
                 <div class="hero-overlay"></div>
               </div>
               
@@ -69,14 +69,19 @@
       @if (watchedService.recentlyWatched().length > 0) {
         <div class="horizontal-scroll">
           @for (movie of watchedService.recentlyWatched(); track movie.movieId) {
-            <div class="movie-card" (click)="onCardClick($event, movie.movieId)">
+            <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.movieId)">
               <div class="poster-container">
                 <img [attr.data-src]="imageBaseUrl + movie.posterPath" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" 
-                     draggable="false" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" 
+                      draggable="false" />
                 
+                <div class="hover-overlay">
+                  <ion-icon name="play-circle-outline"></ion-icon>
+                  <span class="view-text">Ver Filme</span>
+                </div>
+
                 @if (movie.duration > 0 && movie.progress > 0) {
                   <div class="progress-bar-container">
                     <div class="progress-fill" [style.width.%]="(movie.progress / movie.duration) * 100"></div>
@@ -101,13 +106,17 @@
       </div>
       <div class="horizontal-scroll">
         @for (movie of popularMovies; track movie.id) {
-          <div class="movie-card" (click)="onCardClick($event, movie.id)">
+          <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
             <div class="poster-container">
               <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
                    appLazyLoad 
                    [alt]="movie.title" 
                    draggable="false" />
+              <div class="hover-overlay">
+                <ion-icon name="play-circle-outline"></ion-icon>
+                <span class="view-text">Ver Filme</span>
+              </div>
               @if (movie.vote_average > 0) {
                 <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
               }
@@ -125,13 +134,17 @@
         </div>
         <div class="horizontal-scroll">
           @for (movie of actionMovies; track movie.id) {
-            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+            <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
                 <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" 
-                     draggable="false" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" 
+                      draggable="false" />
+                <div class="hover-overlay">
+                  <ion-icon name="play-circle-outline"></ion-icon>
+                  <span class="view-text">Ver Filme</span>
+                </div>
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -150,13 +163,17 @@
         </div>
         <div class="horizontal-scroll">
           @for (movie of comedyMovies; track movie.id) {
-            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+            <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
                 <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" 
-                     draggable="false" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" 
+                      draggable="false" />
+                <div class="hover-overlay">
+                  <ion-icon name="play-circle-outline"></ion-icon>
+                  <span class="view-text">Ver Filme</span>
+                </div>
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -175,13 +192,17 @@
         </div>
         <div class="horizontal-scroll">
           @for (movie of horrorMovies; track movie.id) {
-            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+            <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
                 <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" 
-                     draggable="false" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" 
+                      draggable="false" />
+                <div class="hover-overlay">
+                  <ion-icon name="play-circle-outline"></ion-icon>
+                  <span class="view-text">Ver Filme</span>
+                </div>
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -200,13 +221,17 @@
         </div>
         <div class="horizontal-scroll">
           @for (movie of romanceMovies; track movie.id) {
-            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+            <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
                 <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" 
-                     draggable="false" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" 
+                      draggable="false" />
+                <div class="hover-overlay">
+                  <ion-icon name="play-circle-outline"></ion-icon>
+                  <span class="view-text">Ver Filme</span>
+                </div>
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -225,13 +250,17 @@
         </div>
         <div class="horizontal-scroll">
           @for (movie of animationMovies; track movie.id) {
-            <div class="movie-card" (click)="onCardClick($event, movie.id)">
+            <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
                 <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                     appLazyLoad 
-                     [alt]="movie.title" 
-                     draggable="false" />
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                      appLazyLoad 
+                      [alt]="movie.title" 
+                      draggable="false" />
+                <div class="hover-overlay">
+                  <ion-icon name="play-circle-outline"></ion-icon>
+                  <span class="view-text">Ver Filme</span>
+                </div>
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
