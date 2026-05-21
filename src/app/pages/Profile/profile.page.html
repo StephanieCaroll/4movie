@@ -14,11 +14,13 @@
 
   @if (!carregando && usuario) {
     <div class="profile-container">
+      
       <div class="foto-area">
-        <div class="avatar-wrapper">
-          <img src="https://ionicframework.com/docs/img/demos/avatar.svg" class="foto-perfil">
+        <div class="avatar-wrapper" (click)="fileInput.click()">
+          <img [src]="avatarUrl" class="foto-perfil">
           <div class="edit-badge"><ion-icon name="camera"></ion-icon></div>
         </div>
+        <input type="file" #fileInput accept="image/*" style="display: none" (change)="onFileSelected($event)">
       </div>
 
       <div class="dados-usuario">
@@ -26,7 +28,7 @@
         <p class="user-email">{{ usuario.email }}</p>
 
         <div class="action-buttons">
-          <ion-button id="open-edit-modal" fill="solid" class="edit-btn">
+          <ion-button (click)="editModal.present()" fill="solid" class="edit-btn">
             <ion-icon name="create-outline" slot="start"></ion-icon> Editar
           </ion-button>
           <ion-button fill="outline" color="danger" (click)="sair()">Sair</ion-button>
@@ -107,7 +109,7 @@
     </div>
   }
 
-  <ion-modal trigger="open-edit-modal" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.8]">
+  <ion-modal [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.8]" #editModal>
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -118,11 +120,16 @@
         <div class="input-wrapper">
           <ion-item fill="outline" mode="md" class="crimson-item">
             <ion-label position="floating">Nome Completo</ion-label>
-            <ion-input type="text" [value]="usuario?.name"></ion-input>
+            <ion-input type="text" [(ngModel)]="editName"></ion-input>
           </ion-item>
         </div>
-        <ion-button expand="block" color="danger" style="margin-top: 20px;">
-          SALVAR ALTERAÇÕES
+        
+        <ion-button expand="block" color="danger" style="margin-top: 20px;" (click)="salvarEdicao(editModal)">
+          @if (isUpdating) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else {
+            SALVAR ALTERAÇÕES
+          }
         </ion-button>
       </ion-content>
     </ng-template>

@@ -40,8 +40,11 @@
                     <ion-icon slot="start" name="play"></ion-icon>
                     ALUGAR
                   </ion-button>
-                  <ion-button class="btn-info" mode="md">
-                    <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+                  <ion-button class="btn-info" mode="md" (click)="toggleFavorite($event, movie)">
+                    <ion-icon slot="icon-only" 
+                              [name]="favoritesService.isFavorite(movie.id) ? 'heart' : 'heart-outline'"
+                              [style.color]="favoritesService.isFavorite(movie.id) ? '#e50914' : 'white'">
+                    </ion-icon>
                   </ion-button>
                 </div>
               </div>
@@ -53,7 +56,7 @@
   }
 
   <div class="main-sections-container">
- <section class="content-wrapper">
+    <section class="content-wrapper">
       <div class="section-title">
         <h2>Assistidos por Último</h2>
         <span class="see-all" routerLink="/recently-watched">Ver tudo</span>

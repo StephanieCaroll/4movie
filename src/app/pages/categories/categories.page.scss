@@ -34,7 +34,7 @@ $bg-absolute: #000000;
     display: flex;
     overflow-x: auto;
     gap: 15px;
-    padding: 0 20px 20px;
+    padding: 15px 20px 25px;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     cursor: grab;
@@ -51,14 +51,22 @@ $bg-absolute: #000000;
       flex-shrink: 0;
       width: 150px; 
       cursor: pointer;
-      transition: transform 0.2s ease;
+      will-change: opacity, transform;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 3px solid transparent;
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 1;
       
       &:hover {
-        transform: scale(1.05);
-      }
-      
-      &:active {
-        transform: scale(0.98);
+        transform: scale(1.08);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+        z-index: 10;
+
+        .poster-container img {
+          filter: brightness(0.8);
+        }
       }
       
       .poster-container {
@@ -72,6 +80,7 @@ $bg-absolute: #000000;
           height: 100%; 
           object-fit: cover;
           box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+          transition: filter 0.4s ease;
         }
         
         .no-image {
@@ -146,14 +155,22 @@ $bg-absolute: #000000;
 }
 
 @media (max-width: 768px) {
-  .content-wrapper .horizontal-scroll .movie-card {
-    width: 130px;
+  .content-wrapper .horizontal-scroll {
+    padding: 15px 15px 20px;
+    
+    .movie-card {
+      width: 130px;
+    }
   }
 }
 
 @media (max-width: 480px) {
-  .content-wrapper .horizontal-scroll .movie-card {
-    width: 110px;
+  .content-wrapper .horizontal-scroll {
+    padding: 12px 12px 18px;
+    
+    .movie-card {
+      width: 110px;
+    }
   }
 }
 

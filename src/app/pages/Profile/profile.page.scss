@@ -13,19 +13,19 @@
   position: relative;
   width: 130px;
   height: 130px;
-  margin-bottom: 20px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background-color: #ffffff; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 
-  .foto-perfil {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid #dc2626;
-    background: #121212;
-    padding: 5px;
-    object-fit: cover;
-    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
-  }
-
+.foto-perfil {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover; 
+  display: block;
+}
   .edit-badge {
     position: absolute;
     bottom: 5px;

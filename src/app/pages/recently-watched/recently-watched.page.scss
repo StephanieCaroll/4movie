@@ -1,4 +1,3 @@
-
 $primary-red: #e50914;
 $bg-dark: #000000;
 $surface-dark: #141414;
@@ -36,6 +35,7 @@ ion-content {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   gap: 16px;
+  padding: 15px;
 
   @media (min-width: 480px) {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -47,11 +47,18 @@ ion-content {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: opacity, transform;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    z-index: 10;
 
     .play-overlay {
       opacity: 1;
@@ -130,7 +137,7 @@ ion-content {
 }
 
 .movie-info {
-  padding: 0 4px;
+  padding: 8px 4px;
 
   .movie-title {
     margin: 0;

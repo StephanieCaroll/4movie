@@ -8,9 +8,10 @@ import {
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
-import { star, play, addCircleOutline } from 'ionicons/icons';
+import { star, play, addCircleOutline, heart, heartOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 import { RecentlyWatchedService } from '../../services/recently-watched.service';
+import { FavoritesService } from '../../services/favorites.service';
 
 import { register } from 'swiper/element/bundle';
 register(); 
@@ -31,6 +32,7 @@ export class HomePage implements OnInit, AfterViewInit {
   private cartService = inject(CartService);
   private router = inject(Router);
   public watchedService = inject(RecentlyWatchedService);
+  public favoritesService = inject(FavoritesService);
   
   public popularMovies: any[] = [];
   public nowPlayingMovies: any[] = [];
@@ -55,17 +57,19 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   constructor() {
-    addIcons({ star, play, addCircleOutline });
+    addIcons({ star, play, addCircleOutline, heart, heartOutline });
   }
 
   ngOnInit() {
     this.loadAllMovies();
     this.initDragScroll();
     this.watchedService.loadRecentlyWatched(); 
+    this.favoritesService.loadFavorites();
   }
 
   ionViewWillEnter() {
     this.watchedService.loadRecentlyWatched();
+    this.favoritesService.loadFavorites();
   }
 
   ngAfterViewInit() {
@@ -124,6 +128,12 @@ export class HomePage implements OnInit, AfterViewInit {
     this.router.navigate(['/details', movieId]);
   }
 
+  toggleFavorite(event: Event, movie: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.favoritesService.toggleFavorite(movie);
+  }
+
   loadAllMovies() {
     this.movieService.getPopularMovies().subscribe((res: any) => {
       this.popularMovies = res.results.slice(0, 10);
@@ -139,15 +149,10 @@ export class HomePage implements OnInit, AfterViewInit {
     this.movieService.getNowPlaying().subscribe((res: any) => this.nowPlayingMovies = res.results.slice(0, 10));
     this.movieService.getUpcoming().subscribe((res: any) => this.upcomingMovies = res.results.slice(0, 10));
     this.movieService.getTopRated().subscribe((res: any) => this.topRatedMovies = res.results.slice(0, 10));
-    // Filmes de Ação (ID: 28)
     this.movieService.getMoviesByGenre(28).subscribe((res: any) => this.actionMovies = res.results.slice(0, 10));
-    // Filmes de Comédia (ID: 35)
     this.movieService.getMoviesByGenre(35).subscribe((res: any) => this.comedyMovies = res.results.slice(0, 10));
-    // Filmes de Terror (ID: 27)
     this.movieService.getMoviesByGenre(27).subscribe((res: any) => {this.horrorMovies = res.results.slice(0, 10);});
-    // Filmes de Romance (ID: 10749)
     this.movieService.getMoviesByGenre(10749).subscribe((res: any) => {this.romanceMovies = res.results.slice(0, 10);});
-    // Filmes de Animação (ID: 16)
     this.movieService.getMoviesByGenre(16).subscribe((res: any) => {this.animationMovies = res.results.slice(0, 10);});
   }
 }

@@ -27,10 +27,13 @@ export class ProfilePage implements OnInit, OnDestroy {
   selectedTab: string = 'all';
   errorMessage: string = '';
   
+  editName: string = '';
+  avatarUrl: string = 'https://ionicframework.com/docs/img/demos/avatar.svg';
+  isUpdating = false;
+  
   private timerInterval: any;
 
   constructor() {
-    // Efeito para re-filtrar sempre que os dados no serviço mudarem (Signals)
     effect(() => {
       this.userMoviesService.movies();
       this.filterMovies();
@@ -43,7 +46,6 @@ export class ProfilePage implements OnInit, OnDestroy {
       await this.loadUserMovies();
     }
     
-    // Atualiza cronômetros a cada minuto para refletir tempo restante de aluguel
     this.timerInterval = setInterval(() => {
       this.filterMovies();
     }, 60000);
@@ -60,6 +62,14 @@ export class ProfilePage implements OnInit, OnDestroy {
       this.carregando = true;
       this.errorMessage = '';
       this.usuario = await this.appwrite.getAccount();
+      
+      this.editName = this.usuario.name;
+      if (this.usuario.prefs && this.usuario.prefs.avatarId) {
+        this.avatarUrl = this.appwrite.getAvatarUrl(this.usuario.prefs.avatarId);
+      } else {
+        this.avatarUrl = 'https://ionicframework.com/docs/img/demos/avatar.svg';
+      }
+
     } catch (error: any) {
       console.error('Erro ao carregar perfil:', error);
       this.errorMessage = 'Sessão expirada. Faça login novamente.';
@@ -68,6 +78,89 @@ export class ProfilePage implements OnInit, OnDestroy {
       }, 2000);
     } finally {
       this.carregando = false;
+    }
+  }
+
+  async onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.avatarUrl = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    try {
+      const toastCarregando = await this.toastCtrl.create({
+        message: 'Enviando nova foto de perfil...',
+        duration: 1500,
+        color: 'dark',
+        position: 'bottom'
+      });
+      await toastCarregando.present();
+
+      const upload = await this.appwrite.uploadAvatar(file);
+      
+      await this.appwrite.updatePrefs({ 
+        ...this.usuario.prefs, 
+        avatarId: upload.$id 
+      });
+     
+      await this.carregarPerfil();
+
+      const toastSucesso = await this.toastCtrl.create({
+        message: 'Foto de perfil atualizada com sucesso!',
+        duration: 2000,
+        color: 'success',
+        position: 'bottom'
+      });
+      await toastSucesso.present();
+
+    } catch (error) {
+      console.error('Erro ao salvar foto de perfil:', error);
+      const toastErro = await this.toastCtrl.create({
+        message: 'Erro ao salvar a imagem no servidor.',
+        duration: 2500,
+        color: 'danger',
+        position: 'bottom'
+      });
+      await toastErro.present();
+      
+      this.carregarPerfil();
+    }
+  }
+
+  async salvarEdicao(modal: any) {
+    if (!this.editName.trim()) return;
+    
+    this.isUpdating = true;
+    try {
+      if (this.editName !== this.usuario.name) {
+        await this.appwrite.updateProfileName(this.editName);
+      }
+
+      await this.carregarPerfil();
+      
+      const toast = await this.toastCtrl.create({
+        message: 'Nome atualizado com sucesso!',
+        duration: 2000,
+        color: 'success'
+      });
+      await toast.present();
+      
+      modal.dismiss();
+
+    } catch (error) {
+      console.error('Erro ao atualizar perfil:', error);
+      const toast = await this.toastCtrl.create({
+        message: 'Erro ao salvar alterações.',
+        duration: 2000,
+        color: 'danger'
+      });
+      await toast.present();
+    } finally {
+      this.isUpdating = false;
     }
   }
 
@@ -80,7 +173,6 @@ export class ProfilePage implements OnInit, OnDestroy {
     }
   }
 
-  // Retorna a lista de filmes baseada na aba selecionada
   get filteredMovies(): UserMovie[] {
     try {
       switch(this.selectedTab) {
@@ -92,14 +184,11 @@ export class ProfilePage implements OnInit, OnDestroy {
           return this.userMoviesService.movies();
       }
     } catch (error) {
-      console.error('Erro ao filtrar filmes:', error);
       return [];
     }
   }
 
-  filterMovies() {
-    // Apenas para forçar detecção de mudanças se necessário
-  }
+  filterMovies() {}
 
   segmentChanged(event: any) {
     this.selectedTab = event.detail.value;
@@ -110,10 +199,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     return this.userMoviesService.getRemainingTimeDisplay(expiresAt);
   }
 
-  // Função que abre os detalhes do filme clicado
   async watchMovie(movie: UserMovie) {
     try {
-      // Verifica se o aluguel expirou antes de navegar
       if (movie.type === 'rent' && movie.expiresAt) {
         const now = new Date();
         const expires = new Date(movie.expiresAt);
@@ -130,24 +217,16 @@ export class ProfilePage implements OnInit, OnDestroy {
           return;
         }
       }
-      
-      // Navega para a página de detalhes usando o ID do filme
       this.navCtrl.navigateForward(`/details/${movie.movieId}`);
-      
     } catch (error) {
       console.error('Erro ao acessar filme:', error);
     }
-  }
-
-  async refreshMovies() {
-    await this.userMoviesService.refreshUserMovies();
   }
 
   async sair() {
     try {
       await this.appwrite.logout();
       this.cartService.clearLocalCart();
-      // Limpa dados locais antes de sair
       this.router.navigate(['/login'], { replaceUrl: true });
     } catch (error) {
       console.error('Erro ao fazer logout:', error);

@@ -4,7 +4,7 @@ $surface-dark: #121212;
 
 .app-background { 
   --background: #000000; 
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .hero-carousel-container {
@@ -119,9 +119,11 @@ $surface-dark: #121212;
       }
       
       .btn-info {
-        --color: white;
+        --background: black;
+        --color: #000000;
         --padding-start: 8px;
         --padding-end: 8px;
+        --border-radius: 4px;
         margin: 0;
         height: 38px;
         width: 38px;
@@ -190,16 +192,15 @@ $surface-dark: #121212;
     display: flex;
     overflow-x: auto;
     gap: 15px;
-    padding: 0 20px 20px;
+    padding: 15px 20px 25px;
     cursor: grab;
     user-select: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     
     &::-webkit-scrollbar {
       display: none;
     }
-    
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     
     &:active {
       cursor: grabbing;
@@ -208,7 +209,6 @@ $surface-dark: #121212;
     .movie-card {
       flex-shrink: 0;
       width: 150px;
-      cursor: pointer;
       
       .poster-container {
         position: relative;
@@ -402,7 +402,7 @@ $surface-dark: #121212;
   .content-wrapper {
     .horizontal-scroll {
       gap: 12px;
-      padding: 0 15px 15px;
+      padding: 15px;
       
       .movie-card {
         width: 130px;
@@ -480,7 +480,7 @@ $surface-dark: #121212;
   .content-wrapper {
     .horizontal-scroll {
       gap: 10px;
-      padding: 0 12px 12px;
+      padding: 10px 12px 15px;
       
       .movie-card {
         width: 110px;
@@ -521,7 +521,7 @@ $surface-dark: #121212;
     
     .horizontal-scroll {
       gap: 20px;
-      padding: 0 25px 25px;
+      padding: 15px 25px 30px;
       
       .movie-card {
         width: 180px;
@@ -584,20 +584,19 @@ $surface-dark: #121212;
 
 .movie-card {
   will-change: opacity, transform; 
-}
-
-.movie-card {
   position: relative;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 3px solid transparent;
   border-radius: 10px;
   overflow: hidden;
+  z-index: 1;
 }
 
 .movie-card:hover {
   transform: scale(1.08); 
   box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); 
+  z-index: 10;
 }
 
 .movie-card:hover img {

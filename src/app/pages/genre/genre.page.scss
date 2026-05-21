@@ -66,7 +66,6 @@ ion-content {
   padding: 10px;
   max-width: 1200px;
   margin: 0 auto;
-  overflow-x: hidden;
 }
 
 .movies-grid {
@@ -74,14 +73,30 @@ ion-content {
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 12px;
   margin-top: 10px;
-  overflow-x: hidden;
+  padding: 15px;
 }
 
 .movie-card {
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease;
   cursor: pointer;
+  will-change: opacity, transform;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1;
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    z-index: 10;
+
+    .poster-wrapper img {
+      filter: brightness(0.8);
+    }
+  }
 
   &:active {
     transform: scale(0.95);
@@ -99,6 +114,7 @@ ion-content {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: filter 0.4s ease;
     }
 
     .rating-badge {
@@ -113,6 +129,7 @@ ion-content {
       display: flex;
       align-items: center;
       gap: 3px;
+      z-index: 2;
       
       ion-icon { 
         color: #ffc107; 
@@ -159,6 +176,7 @@ ion-content {
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 20px;
+    padding: 20px;
   }
   
   .movie-info .movie-title { 
