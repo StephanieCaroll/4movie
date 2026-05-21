@@ -32,7 +32,7 @@ export class MovieService {
   constructor(private http: HttpClient) {}
 
   getPopularMovies(page: number = 1): Observable<any> {
-  return this.http.get(`${this.baseUrl}/movie/popular?api_key=${this.apiKey}&page=${page}`);
+    return this.http.get(`${this.baseUrl}/movie/popular?api_key=${this.apiKey}&page=${page}`);
   }
 
   getNowPlaying(): Observable<any> {
@@ -48,7 +48,7 @@ export class MovieService {
   }
 
   getMoviesByGenre(genreId: number, page: number = 1): Observable<any> {
-  return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=pt-BR&page=${page}`);
+    return this.http.get(`${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=pt-BR&page=${page}`);
   }
 
   getGenres(): Observable<any> {
@@ -74,7 +74,6 @@ export class MovieService {
   }
 
   getMovieVideos(id: number): Observable<any> {
-  return this.http.get(`${this.baseUrl}/movie/${id}/videos?api_key=${this.apiKey}&language=pt-BR`);
-}
-
+    return this.http.get(`${this.baseUrl}/movie/${id}/videos?api_key=${this.apiKey}&language=pt-BR&include_video_language=pt-BR,pt,en-US,en`);
+  }
 }

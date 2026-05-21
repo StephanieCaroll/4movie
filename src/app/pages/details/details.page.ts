@@ -100,8 +100,7 @@ export class DetailsPage implements OnInit, OnDestroy {
         this.loading = false;
         this.carregarTrailer(id);
       },
-      error: (err) => {
-        console.error('Erro ao carregar detalhes:', err);
+      error: () => {
         this.loading = false;
       }
     });
@@ -117,7 +116,6 @@ export class DetailsPage implements OnInit, OnDestroy {
     const aluguel = this.userMoviesService.movies().find(m => m.movieId === this.filme.id && m.type === 'rent');
     if (!aluguel) return false;
     
-    // Confirma se o prazo do aluguel não expirou
     if (aluguel.expiresAt) {
       return new Date() < new Date(aluguel.expiresAt);
     }
@@ -140,12 +138,28 @@ export class DetailsPage implements OnInit, OnDestroy {
   }
 
   carregarTrailer(id: number) {
-    this.movieService.getMovieVideos(id).subscribe(res => {
-      const trailer = res.results?.find((v: any) => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
-      if (trailer) {
-        this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`
-        );
+    this.movieService.getMovieVideos(id).subscribe({
+      next: (res: any) => {
+        if (res && Array.isArray(res.results)) {
+          let trailer = res.results.find((v: any) => 
+            v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser') && v.iso_639_1 === 'pt'
+          );
+
+          if (!trailer) {
+            trailer = res.results.find((v: any) => 
+              v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
+            );
+          }
+
+          if (trailer) {
+            this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+              `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`
+            );
+          }
+        }
+      },
+      error: () => {
+        // Silenciado para evitar log de erro quando bloqueadores de anúncio interceptam
       }
     });
   }

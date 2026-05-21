@@ -37,17 +37,26 @@ export class PlayerModalComponent implements OnInit, OnDestroy {
   buscarVideoId() {
     this.movieService.getMovieVideos(this.filme.id).subscribe({
       next: (res: any) => {
-        const video = res.results?.find((v: any) =>
-          v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser' || v.type === 'Featurette')
-        );
-        if (video) {
-          this.videoId = video.key;
+        if (res && Array.isArray(res.results)) {
+          
+          let video = res.results.find((v: any) => 
+            v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser') && v.iso_639_1 === 'pt'
+          );
 
-          setTimeout(() => this.initYouTubePlayer(), 0);
-        } else {
-          this.mostrarToast('Vídeo não encontrado', 'warning');
-          this.isLoading = false;
-          setTimeout(() => this.fecharModal(), 2500);
+          if (!video) {
+            video = res.results.find((v: any) => 
+              v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
+            );
+          }
+
+          if (video) {
+            this.videoId = video.key;
+            this.initYouTubePlayer();
+          } else {
+            this.mostrarToast('Vídeo não encontrado', 'warning');
+            this.isLoading = false;
+            setTimeout(() => this.fecharModal(), 2500);
+          }
         }
       },
       error: () => {
@@ -58,41 +67,52 @@ export class PlayerModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  initYouTubePlayer() {
-  
-    if (!(window as any).YT) {
+  async initYouTubePlayer() {
+    if ((window as any).YT && (window as any).YT.Player) {
+      this.createPlayer();
+      return;
+    }
+
+    if (!(document.getElementById('youtube-api-script'))) {
       const tag = document.createElement('script');
+      tag.id = 'youtube-api-script';
       tag.src = 'https://www.youtube.com/iframe_api';
       document.body.appendChild(tag);
-      (window as any).onYouTubeIframeAPIReady = () => {
-        this.createPlayer();
-      };
-    } else {
-      this.createPlayer();
     }
+
+    (window as any).onYouTubeIframeAPIReady = () => {
+      this.createPlayer();
+    };
   }
 
   createPlayer() {
-    // Busca se existe progresso salvo deste filme
-    const savedData = this.watchedService.recentlyWatched().find(m => m.movieId === this.filme.id);
-    const startSeconds = savedData && savedData.progress ? Math.floor(savedData.progress) : 0;
+    const createInstance = () => {
+      const savedData = this.watchedService.recentlyWatched().find(m => m.movieId === this.filme.id);
+      const startSeconds = savedData && savedData.progress ? Math.floor(savedData.progress) : 0;
 
-    this.player = new (window as any).YT.Player('yt-player-iframe', {
-      height: '100%',
-      width: '100%',
-      videoId: this.videoId,
-      playerVars: { 
-        'autoplay': 1, 
-        'rel': 0, 
-        'modestbranding': 1,
-        'start': startSeconds 
-      },
-      events: {
-        'onReady': () => {
-          this.isLoading = false;
+      this.player = new (window as any).YT.Player('yt-player-iframe', {
+        height: '100%',
+        width: '100%',
+        videoId: this.videoId,
+        playerVars: { 
+          'autoplay': 1, 
+          'rel': 0, 
+          'modestbranding': 1,
+          'start': startSeconds 
+        },
+        events: {
+          'onReady': () => {
+            this.isLoading = false;
+          }
         }
-      }
-    });
+      });
+    };
+
+    if ((window as any).YT && (window as any).YT.ready) {
+      (window as any).YT.ready(createInstance);
+    } else {
+      createInstance();
+    }
   }
 
   async mostrarToast(mensagem: string, cor = 'light') {
@@ -101,17 +121,14 @@ export class PlayerModalComponent implements OnInit, OnDestroy {
   }
 
   fecharModal() {
-    // Salva o progresso quando o modal é fechado
     if (this.player && typeof this.player.getCurrentTime === 'function') {
       const currentTime = this.player.getCurrentTime();
       const duration = this.player.getDuration();
       
-      // Só salva se o tempo for maior que 0 para não bugar o banco
       if (duration > 0) {
         this.watchedService.addWatchedMovie(this.filme, currentTime, duration);
       }
     } else {
-      // Caso feche antes do vídeo carregar, adiciona ao histórico com progresso 0
       this.watchedService.addWatchedMovie(this.filme, 0, 0);
     }
     
