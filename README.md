@@ -105,13 +105,6 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
       </a>
     </td>
 
-   <td align="center">
-      <a href="https://github.com/lubclacerda" title="Luísa Brandão Cordeiro">
-        <img src="https://github.com/lubclacerda.png" width="100px;" alt="Foto da Luisa"/><br>
-        <sub><b>Luísa Brandão Cordeiro Lacerda</b></sub>
-      </a>
-    </td>
-
   <td align="center">
       <a href="https://github.com/lucasand-dev1" title="Lucas Gabriel Santos">
         <img src="https://github.com/lucasand-dev1.png" width="100px;" alt="Foto do Lucas"/><br>
