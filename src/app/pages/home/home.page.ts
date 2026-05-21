@@ -8,11 +8,11 @@ import {
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
-import { star, play, addCircleOutline, heart, heartOutline } from 'ionicons/icons';
+import { star, play, addCircleOutline, heart, heartOutline, filmOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 import { RecentlyWatchedService } from '../../services/recently-watched.service';
 import { FavoritesService } from '../../services/favorites.service';
-
+import { LazyLoadDirective } from '../../directives/lazy-load';
 import { register } from 'swiper/element/bundle';
 register(); 
 
@@ -24,7 +24,7 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
   imports: [
     CommonModule, RouterModule, RouterLink, FormsModule,
-    IonContent, IonIcon, IonButton
+    IonContent, IonIcon, IonButton, LazyLoadDirective
   ]
 })
 export class HomePage implements OnInit, AfterViewInit {
@@ -57,7 +57,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   constructor() {
-    addIcons({ star, play, addCircleOutline, heart, heartOutline });
+    addIcons({star,play,filmOutline,addCircleOutline,heart,heartOutline});
   }
 
   ngOnInit() {

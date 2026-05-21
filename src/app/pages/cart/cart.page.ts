@@ -5,13 +5,14 @@ import { RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
 import { trashOutline, cartOutline } from 'ionicons/icons';
+import { LazyLoadDirective } from '../../directives/lazy-load';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.page.html',
   styleUrls: ['./cart.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule]
+  imports: [IonicModule, CommonModule, RouterModule, LazyLoadDirective]
 })
 export class CartPage {
   public cartService = inject(CartService);

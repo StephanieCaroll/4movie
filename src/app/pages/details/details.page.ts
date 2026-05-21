@@ -20,6 +20,8 @@ import {
   infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline
 } from 'ionicons/icons';
 
+import { LazyLoadDirective } from '../../directives/lazy-load';
+
 @Component({
   selector: 'app-details',
   templateUrl: './details.page.html',
@@ -39,7 +41,8 @@ import {
     IonItem,
     IonLabel,
     GenreNamePipe,
-    CompactNumberPipe
+    CompactNumberPipe,
+    LazyLoadDirective
   ]
 })
 export class DetailsPage implements OnInit, OnDestroy {

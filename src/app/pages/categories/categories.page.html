@@ -14,10 +14,11 @@
             <div class="movie-card" (click)="goToMovieDetails($event, movie.id)">
               <div class="poster-container">
                 <img 
-                  [src]="imageBaseUrl + movie.poster_path" 
+                  [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                  appLazyLoad
                   [alt]="movie.title" 
-                  draggable="false"
-                  (error)="movie.poster_path = null" />
+                  draggable="false" />
                 
                 @if (!movie.poster_path) {
                   <div class="no-image">

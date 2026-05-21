@@ -59,7 +59,7 @@
           <div class="movie-card" (click)="navigateToMovie(movie.id)">
             <div class="poster-container">
               @if (movie.poster_path) {
-                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false">
+                <img [attr.data-src]="imageBaseUrl + movie.poster_path" src="assets/placeholder.png" appLazyLoad [alt]="movie.title" draggable="false">
               } @else {
                 <img src="assets/icon/favicon.png" [alt]="movie.title" class="placeholder-img">
                 <div class="no-image-overlay">Sem Imagem</div>

@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { gridOutline, personOutline, cartOutline, closeOutline, searchOutline, star } from 'ionicons/icons';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
+import { LazyLoadDirective } from '../../directives/lazy-load';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,7 @@ import { CartService } from '../../services/cart.service';
     FormsModule, 
     RouterModule,
     IonHeader, IonToolbar, IonButtons, IonMenuButton, 
-    IonSearchbar, IonButton, IonIcon
+    IonSearchbar, IonButton, IonIcon, LazyLoadDirective
   ]
 })
 export class HeaderComponent implements OnInit {

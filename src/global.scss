@@ -64,3 +64,13 @@
     --background: rgba(245, 158, 11, 0.9);
   }
 }
+
+img[appLazyLoad] {
+  opacity: 0;
+  
+  transition: opacity 0.8s ease-in-out !important; 
+}
+
+img.fade-in {
+  opacity: 1 !important;
+}

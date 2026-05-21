@@ -8,13 +8,17 @@
         autoplay-delay="5000"
         loop="true"
         speed="800"
+        slides-per-view="1" 
         class="hero-swiper">
         
         @for (movie of carouselMovies; track movie.id) {
           <swiper-slide>
             <div class="hero-section">
               <div class="hero-img-container">
-                <img [src]="imageBaseUrlOriginal + movie.backdrop_path" [alt]="movie.title" />
+                <img [attr.data-src]="imageBaseUrlOriginal + movie.backdrop_path" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" />
                 <div class="hero-overlay"></div>
               </div>
               
@@ -67,7 +71,11 @@
           @for (movie of watchedService.recentlyWatched(); track movie.movieId) {
             <div class="movie-card" (click)="onCardClick($event, movie.movieId)">
               <div class="poster-container">
-                <img [src]="imageBaseUrl + movie.posterPath" [alt]="movie.title" draggable="false" />
+                <img [attr.data-src]="imageBaseUrl + movie.posterPath" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" 
+                     draggable="false" />
                 
                 @if (movie.duration > 0 && movie.progress > 0) {
                   <div class="progress-bar-container">
@@ -95,7 +103,11 @@
         @for (movie of popularMovies; track movie.id) {
           <div class="movie-card" (click)="onCardClick($event, movie.id)">
             <div class="poster-container">
-              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+              <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                   src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                   appLazyLoad 
+                   [alt]="movie.title" 
+                   draggable="false" />
               @if (movie.vote_average > 0) {
                 <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
               }
@@ -115,7 +127,11 @@
           @for (movie of actionMovies; track movie.id) {
             <div class="movie-card" (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
-                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" 
+                     draggable="false" />
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -136,7 +152,11 @@
           @for (movie of comedyMovies; track movie.id) {
             <div class="movie-card" (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
-                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" 
+                     draggable="false" />
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -157,7 +177,11 @@
           @for (movie of horrorMovies; track movie.id) {
             <div class="movie-card" (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
-                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" 
+                     draggable="false" />
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -178,7 +202,11 @@
           @for (movie of romanceMovies; track movie.id) {
             <div class="movie-card" (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
-                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" 
+                     draggable="false" />
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }
@@ -199,7 +227,11 @@
           @for (movie of animationMovies; track movie.id) {
             <div class="movie-card" (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
-                <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" draggable="false" />
+                <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="movie.title" 
+                     draggable="false" />
                 @if (movie.vote_average > 0) {
                   <div class="card-badge">★ {{ movie.vote_average.toFixed(1) }}</div>
                 }

@@ -5,6 +5,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
 import { FavoritesService } from '../../services/favorites.service';
 import { addIcons } from 'ionicons';
 import { heart, trashOutline, arrowBackOutline } from 'ionicons/icons';
+import { LazyLoadDirective } from '../../directives/lazy-load';
 
 @Component({
   selector: 'app-favorites',
@@ -26,7 +27,8 @@ import { heart, trashOutline, arrowBackOutline } from 'ionicons/icons';
     IonCard,
     IonIcon,
     IonButton,
-    IonLabel
+    IonLabel,
+    LazyLoadDirective
   ]
 })
 export class FavoritesPage implements OnInit {

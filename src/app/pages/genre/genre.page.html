@@ -15,10 +15,16 @@
         <div class="movie-card" [routerLink]="['/details', movie.id]">
           <div class="poster-wrapper">
             @if (movie.poster_path) {
-              <img [src]="imageBaseUrl + movie.poster_path" [alt]="movie.title" loading="lazy" />
+              <img 
+                [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                appLazyLoad
+                [alt]="movie.title" 
+              />
             } @else {
               <div class="no-image">Sem Poster</div>
             }
+            
             @if (movie.vote_average > 0) {
               <div class="rating-badge">
                 <ion-icon name="star"></ion-icon>

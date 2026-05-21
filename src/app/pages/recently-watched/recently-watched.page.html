@@ -17,7 +17,12 @@
           <div class="movie-card" [routerLink]="['/details', movie.movieId]">
             <div class="poster-container">
               @if (movie.posterPath) {
-                <img [src]="'https://image.tmdb.org/t/p/w500' + movie.posterPath" [alt]="movie.title">
+                <img 
+                  [attr.data-src]="'https://image.tmdb.org/t/p/w500' + movie.posterPath" 
+                  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                  appLazyLoad
+                  [alt]="movie.title" 
+                />
               } @else {
                 <div class="no-image">
                   <ion-icon name="image-outline"></ion-icon>

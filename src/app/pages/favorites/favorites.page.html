@@ -29,10 +29,12 @@
           <div class="movie-card-premium" [routerLink]="['/details', movie.movieId]">
             <div class="poster-frame">
               <img 
-                [src]="movie.posterPath ? imageBaseUrl + movie.posterPath : 'assets/placeholder.png'" 
+                [attr.data-src]="movie.posterPath ? imageBaseUrl + movie.posterPath : ''" 
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                appLazyLoad
                 [alt]="movie.title"
-                loading="lazy"
               />
+              
               <div class="card-overlay">
                 <ion-button 
                   fill="clear" 

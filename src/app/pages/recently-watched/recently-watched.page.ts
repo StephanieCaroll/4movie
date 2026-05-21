@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { RecentlyWatchedService } from '../../services/recently-watched.service';
+import { LazyLoadDirective } from '../../directives/lazy-load';
 
 @Component({
   selector: 'app-recently-watched',
   templateUrl: './recently-watched.page.html',
   styleUrls: ['./recently-watched.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule]
+  imports: [IonicModule, CommonModule, RouterModule, LazyLoadDirective]
 })
 export class RecentlyWatchedPage implements OnInit {
   public watchedService = inject(RecentlyWatchedService);

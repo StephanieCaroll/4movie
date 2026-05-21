@@ -5,13 +5,14 @@ import { RouterModule, Router } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { addIcons } from 'ionicons';
 import { homeOutline, arrowBackOutline, cartOutline, heartOutline, sadOutline, playOutline, star, gridOutline, personOutline, closeOutline, searchOutline, imageOutline } from 'ionicons/icons';
+import { LazyLoadDirective } from '../../directives/lazy-load';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.page.html',
   styleUrls: ['./categories.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule]
+  imports: [CommonModule, IonicModule, RouterModule, LazyLoadDirective]
 })
 export class CategoriesPage implements OnInit {
   private movieService = inject(MovieService);

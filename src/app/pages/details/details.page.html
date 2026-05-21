@@ -15,7 +15,10 @@
       
       <div class="hero-section">
         <div class="hero-backdrop">
-          <img [src]="movieService.getBackdropUrl(filme.backdrop_path || filme.poster_path)" />
+          <img [attr.data-src]="movieService.getBackdropUrl(filme.backdrop_path || filme.poster_path)" 
+               src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+               appLazyLoad 
+               [alt]="filme.title" />
           <div class="hero-overlay"></div>
           <div class="hero-gradient"></div>
         </div>
@@ -24,7 +27,10 @@
       <div class="main-content">
         <div class="header-info">
           <div class="poster-wrapper">
-            <img [src]="movieService.getPosterUrl(filme.poster_path)" />
+            <img [attr.data-src]="movieService.getPosterUrl(filme.poster_path)" 
+                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                 appLazyLoad 
+                 [alt]="filme.title" />
           </div>
           <div class="title-wrapper">
             <h1 class="movie-title">{{ filme.title }}</h1>
@@ -48,7 +54,6 @@
         </div>
 
         <div class="price-selector">
-          
           @if (jaComprei) {
             <div class="owned-message-banner">
               <ion-icon name="checkmark-circle-outline"></ion-icon>
@@ -165,7 +170,10 @@
           <div class="cast-scroll">
             @for (actor of filme.credits.cast.slice(0, 8); track actor.id) {
               <div class="cast-card">
-                <img [src]="actor.profile_path ? imageBaseUrl + actor.profile_path : 'assets/icon/favicon.png'" />
+                <img [attr.data-src]="actor.profile_path ? imageBaseUrl + actor.profile_path : 'assets/icon/favicon.png'" 
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                     appLazyLoad 
+                     [alt]="actor.name" />
                 <p class="actor-name">{{ actor.name }}</p>
                 <p class="character">{{ actor.character }}</p>
               </div>

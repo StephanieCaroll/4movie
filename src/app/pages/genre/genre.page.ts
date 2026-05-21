@@ -6,13 +6,14 @@ import { Location } from '@angular/common';
 import { MovieService, Movie } from '../../services/movie.service';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, star } from 'ionicons/icons';
+import { LazyLoadDirective } from '../../directives/lazy-load';
 
 @Component({
   selector: 'app-genre',
   templateUrl: './genre.page.html',
   styleUrls: ['./genre.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule]
+  imports: [CommonModule, IonicModule, RouterModule, LazyLoadDirective]
 })
 export class GenrePage implements OnInit {
   private route = inject(ActivatedRoute);
