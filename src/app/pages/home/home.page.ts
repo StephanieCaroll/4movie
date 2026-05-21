@@ -8,7 +8,7 @@ import {
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
 import { addIcons } from 'ionicons';
-import { star, play, addCircleOutline, heart, heartOutline, filmOutline } from 'ionicons/icons';
+import { star, play, addCircleOutline, heart, heartOutline, filmOutline, addOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 import { RecentlyWatchedService } from '../../services/recently-watched.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -57,7 +57,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   constructor() {
-    addIcons({star,play,filmOutline,addCircleOutline,heart,heartOutline});
+    addIcons({star,play,addOutline,filmOutline,addCircleOutline,heart,heartOutline});
   }
 
   ngOnInit() {

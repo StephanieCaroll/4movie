@@ -7,6 +7,140 @@ $surface-dark: #121212;
   overflow: hidden;
 }
 
+.movie-card {
+  will-change: opacity, transform; 
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1;
+
+  .poster-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    
+    img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      pointer-events: none;
+      transition: filter 0.3s ease;
+    }
+    
+    .no-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #666;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .card-badge {
+      position: absolute; 
+      top: 8px; 
+      right: 8px; 
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      color: #ffc107; 
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 6px; 
+      border-radius: 4px;
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .hover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0; 
+      transition: opacity 0.3s ease;
+      z-index: 3;
+      pointer-events: none;
+
+      .play-icon-circle {
+        width: 50px;
+        height: 50px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 6px;
+        background: rgba(0, 0, 0, 0.2);
+
+        ion-icon {
+          font-size: 22px;
+          color: #ffffff;
+          padding-left: 3px; 
+          margin: 0;
+        }
+      }
+
+      span {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.3px;
+      }
+    }
+
+    .progress-bar-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 5;
+      
+      .progress-fill {
+        height: 100%;
+        background: #e50914;
+        transition: width 0.3s ease;
+      }
+    }
+  }
+
+  &:hover {
+    transform: scale(1.08); 
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); 
+    z-index: 10;
+    
+    .poster-container {
+      img {
+        filter: blur(1.5px) brightness(0.6);
+      }
+      
+      .card-badge {
+        opacity: 0;
+      }
+
+      .hover-overlay {
+        opacity: 1 !important;
+      }
+    }
+  }
+}
+
 .hero-carousel-container {
   width: 100%;
   height: 65vh;
@@ -209,55 +343,6 @@ $surface-dark: #121212;
     .movie-card {
       flex-shrink: 0;
       width: 150px;
-      
-      .poster-container {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 2/3;
-        
-        img { 
-          border-radius: 8px; 
-          width: 100%; 
-          height: 100%; 
-          object-fit: cover;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-          pointer-events: none;
-        }
-        
-        .card-badge {
-          position: absolute; 
-          top: 8px; 
-          right: 8px; 
-          background: rgba(0,0,0,0.8);
-          backdrop-filter: blur(4px);
-          color: #ffc107; 
-          font-size: 10px;
-          font-weight: bold;
-          padding: 3px 6px; 
-          border-radius: 4px;
-          z-index: 2;
-          pointer-events: none;
-        }
-
-        .progress-bar-container {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 4px;
-          background: rgba(255, 255, 255, 0.2);
-          z-index: 5;
-          border-bottom-left-radius: 8px;
-          border-bottom-right-radius: 8px;
-          overflow: hidden;
-
-          .progress-fill {
-            height: 100%;
-            background: #e50914;
-            transition: width 0.3s ease;
-          }
-        }
-      }
     }
   }
 }
@@ -290,47 +375,6 @@ $surface-dark: #121212;
     gap: 15px;
 
     .movie-card {
-      cursor: pointer;
-      
-      .poster-container {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 2/3;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #1a1a1a;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-        
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .no-image {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          color: #666;
-          font-size: 12px;
-          text-align: center;
-        }
-
-        .card-badge {
-          position: absolute; 
-          top: 6px; 
-          right: 6px; 
-          background: rgba(0,0,0,0.8);
-          backdrop-filter: blur(4px);
-          color: #ffc107; 
-          font-size: 10px;
-          font-weight: bold;
-          padding: 2px 5px; 
-          border-radius: 4px;
-        }
-      }
-
       .movie-grid-title {
         color: #e0e0e0;
         font-size: 12px;
@@ -525,11 +569,6 @@ $surface-dark: #121212;
       
       .movie-card {
         width: 180px;
-        
-        &:hover {
-          transform: scale(1.05);
-          transition: transform 0.3s ease;
-        }
       }
     }
     
@@ -552,14 +591,6 @@ $surface-dark: #121212;
     .search-grid {
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 25px;
-
-      .movie-card {
-        transition: transform 0.2s ease;
-        
-        &:hover {
-          transform: scale(1.05);
-        }
-      }
     }
   }
 }
@@ -580,25 +611,4 @@ $surface-dark: #121212;
     max-width: 1400px;
     margin: 0 auto;
   }
-}
-
-.movie-card {
-  will-change: opacity, transform; 
-  position: relative;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 3px solid transparent;
-  border-radius: 10px;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.movie-card:hover {
-  transform: scale(1.08); 
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); 
-  z-index: 10;
-}
-
-.movie-card:hover img {
-  filter: brightness(0.8);
 }
