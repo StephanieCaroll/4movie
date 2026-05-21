@@ -10,28 +10,34 @@
 
 <img src="/..." width="1200" alt="EM DESENVOLVIMENTO">
 
-> O **4Movie** é um aplicativo mobile desenvolvido com **Ionic** e **Angular (Standalone)** que consome dados de APIs de cinema para oferecer um catálogo de filmes moderno e interativo.
+> O **4Movie** é uma aplicação mobile elegante e performática, desenvolvida com **Ionic** e **Angular (Standalone Components)**. O projeto tem como objetivo proporcionar uma experiência de usuário imersiva para descoberta e visualização de detalhes de filmes.
 
 ## ✨ Sobre o Projeto
 
-O projeto foi construído focando em modularidade e performance, utilizando as funcionalidades mais recentes do Angular 18. Ele permite que usuários naveguem por uma lista de filmes e acessem detalhes específicos de cada obra.
+O 4Movie foi arquitetado focando nas melhores práticas atuais do ecossistema Angular, utilizando **Standalone Components** para reduzir a complexidade e aumentar a modularidade.
 
-### Funcionalidades Atuais (O que já fiz):
-- **Arquitetura Standalone**: Configuração completa sem o uso de módulos tradicionais[cite: 2].
-- **Service Estruturado**: Injeção de `HttpClient` para futuras chamadas de API[cite: 2].
-- **Pipe Personalizado**: Formatação de moeda brasileira (BRL) para exibição de orçamentos[cite: 2].
-- **Navegação de Páginas**: Estrutura de rotas entre a Home e a tela de Detalhes pronta[cite: 2].
+### Principais Tecnologias
+- **Frameworks**: Angular 18+ e Ionic 8+.
+- **Arquitetura**: Standalone Components (sem NgModules).
+- **Gerenciamento**: Services dedicados para integração com APIs.
+- **Utilitários**: Pipes customizados para formatação de dados.
+---
+
+### Funcionalidades Implementadas
+- ✅ **Estrutura Standalone**: Arquitetura moderna e limpa.
+- ✅ **Serviço de Filmes**: Implementação de `MovieService` com `HttpClient` para requisições de dados.
+- ✅ **Pipes Personalizados**: Formatação de moeda (BRL) e manipulação de gêneros cinematográficos.
+- ✅ **Sistema de Navegação**: Rotas configuradas para transição fluida entre *Home* e *Detalhes*.
+- ✅ **Guards de Autenticação**: Proteção de rotas implementada.
 
 ---
 
-### 🛠️ Em Desenvolvimento (Próximas Etapas)
+## 🛠️ Roadmap (Em Desenvolvimento)
 
-O projeto está em fase de implementação ativa. Os próximos passos são:
-
-- [ ] **Consumo de API Real**: Finalizar as chamadas `GET` para listar filmes dinamicamente.
-- [ ] **Diretiva de Destaque**: Implementar interação visual ao passar o mouse ou tocar nos cards.
-- [ ] **Passagem de Parâmetros**: Conectar a navegação para enviar o ID do filme selecionado para a tela de detalhes.
-- [ ] **Refinamento de UI**: Aplicar componentes avançados do Ionic para uma estética premium.
+- [ ] **Consumo de API**: Integração com a TMDB API para listagem dinâmica.
+- [ ] **Diretiva de Acessibilidade/Destaque**: Efeitos visuais responsivos.
+- [ ] **Persistência de Dados**: Implementação de `CartService` e `FavoritesService`.
+- [ ] **UI/UX Premium**: Ajustes finos na paleta de cores (Dark Theme com acentos em dourado).
 
 ---
 
