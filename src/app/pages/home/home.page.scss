@@ -637,3 +637,6 @@ $surface-dark: #121212;
 .movie-card.is-hovered .poster-container .hover-overlay {
   opacity: 1;
 }
+.movie-card:hover .poster-container .hover-overlay {
+  opacity: 1;
+}
