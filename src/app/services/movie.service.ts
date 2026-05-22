@@ -76,4 +76,8 @@ export class MovieService {
   getMovieVideos(id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/movie/${id}/videos?api_key=${this.apiKey}&language=pt-BR&include_video_language=pt-BR,pt,en-US,en`);
   }
+  
+  getSimilarMovies(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/movie/${id}/similar?api_key=${this.apiKey}&language=pt-BR&page=1`);
+  }
 }

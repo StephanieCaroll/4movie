@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -17,7 +17,8 @@ import {
   star, arrowBackOutline, cartOutline, heartOutline, heart, 
   sadOutline, homeOutline, playOutline, timeOutline,
   calendarOutline, globeOutline, cashOutline, peopleOutline,
-  infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline
+  infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline,
+  chevronBackOutline, chevronForwardOutline
 } from 'ionicons/icons';
 
 import { LazyLoadDirective } from '../../directives/lazy-load';
@@ -56,7 +57,10 @@ export class DetailsPage implements OnInit, OnDestroy {
   private modalCtrl = inject(ModalController);
   private toastCtrl = inject(ToastController);
 
+  @ViewChild('recomendadosScroll') recomendadosScroll!: ElementRef;
+
   filme: any = null;
+  filmesRecomendados: any[] = [];
   loading: boolean = true;
   trailerUrl: SafeResourceUrl | null = null;
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
@@ -79,7 +83,8 @@ export class DetailsPage implements OnInit, OnDestroy {
       star, arrowBackOutline, cartOutline, heartOutline, heart, 
       sadOutline, homeOutline, playOutline, timeOutline,
       calendarOutline, globeOutline, cashOutline, peopleOutline,
-      infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline
+      infiniteOutline, checkmarkCircleOutline, play, lockClosedOutline,
+      chevronBackOutline, chevronForwardOutline
     });
   }
 
@@ -87,6 +92,9 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
+        const content = document.querySelector('ion-content');
+        if (content) content.scrollToTop(500);
+        
         this.carregarDetalhes(parseInt(id));
       }
     });
@@ -94,16 +102,44 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   carregarDetalhes(id: number) {
     this.loading = true;
+    this.filmesRecomendados = [];
+    
     this.movieService.getMovieById(id).subscribe({
       next: (filme) => {
         this.filme = filme;
         this.loading = false;
         this.carregarTrailer(id);
+        this.carregarRecomendados(id);
       },
       error: () => {
         this.loading = false;
       }
     });
+  }
+
+  carregarRecomendados(id: number) {
+    this.movieService.getSimilarMovies(id).subscribe({
+      next: (res: any) => {
+        if (res && res.results) {
+          this.filmesRecomendados = res.results;
+        }
+      },
+      error: (err) => console.warn('Não foi possível carregar recomendados', err)
+    });
+  }
+
+  scrollRecomendados(direction: 'left' | 'right') {
+    if (this.recomendadosScroll) {
+      const element = this.recomendadosScroll.nativeElement;
+      // Define o tanto que a lista vai rolar de acordo com o tamanho da tela
+      const scrollAmount = window.innerWidth > 768 ? 600 : 300; 
+      
+      if (direction === 'left') {
+        element.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        element.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
   }
 
   get jaComprei(): boolean {
@@ -158,9 +194,7 @@ export class DetailsPage implements OnInit, OnDestroy {
           }
         }
       },
-      error: () => {
-        // Silenciado para evitar log de erro quando bloqueadores de anúncio interceptam
-      }
+      error: () => {}
     });
   }
 
