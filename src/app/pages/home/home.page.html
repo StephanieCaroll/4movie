@@ -223,7 +223,7 @@
           @for (movie of romanceMovies; track movie.id) {
             <div class="movie-card" appMovieHighlight (click)="onCardClick($event, movie.id)">
               <div class="poster-container">
-                <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
+                 <img [attr.data-src]="imageBaseUrl + movie.poster_path" 
                       src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
                       appLazyLoad 
                       [alt]="movie.title" 
