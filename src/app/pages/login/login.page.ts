@@ -51,6 +51,7 @@ export class LoginPage implements OnInit {
     try {
       const loggedIn = await this.appwrite.isLoggedIn();
       if (loggedIn) {
+        console.log('Usuário já logado, redirecionando para profile');
         this.router.navigate(['/profile'], { replaceUrl: true });
       }
     } catch (error) {
@@ -62,58 +63,76 @@ export class LoginPage implements OnInit {
     return this.cartService.getItemCount();
   }
 
-async entrar() {
-  if (!this.email || !this.password) {
-    this.errorMessage = 'Preencha todos os campos.';
-    this.exibirToast(this.errorMessage, 'warning');
-    return;
-  }
-
-  this.userMoviesService.reset();
-  this.recentlyWatchedService.reset();
-
-  this.errorMessage = '';
-  this.isLoading = true;
-
-  const loading = await this.loadingCtrl.create({ 
-    message: 'Autenticando...',
-    spinner: 'crescent'
-  });
-  await loading.present();
-
-  try {
-   
-    await this.appwrite.login(this.email, this.password);
-    
-    
-    await new Promise(resolve => setTimeout(resolve, 600));
-
-    await Promise.all([
-      this.cartService.loadCart(),
-      this.userMoviesService.loadUserMovies(),
-      this.recentlyWatchedService.loadRecentlyWatched()
-    ]);
-
-    await loading.dismiss();
-    await this.exibirToast('Login realizado com sucesso!', 'success');
-    
-    this.router.navigate(['/profile'], { replaceUrl: true });
-    
-  } catch (error: any) {
-    await loading.dismiss();
-    
-    if (error?.code === 401) {
-      this.errorMessage = 'E-mail ou senha incorretos.';
-      await this.exibirToast(this.errorMessage, 'danger');
-    } else {
-      this.errorMessage = 'Erro ao fazer login. Tente novamente.';
-      await this.exibirToast(this.errorMessage, 'danger');
-      console.error('Erro detalhado:', error);
+  async entrar() {
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Preencha todos os campos.';
+      this.exibirToast(this.errorMessage, 'warning');
+      return;
     }
-  } finally {
-    this.isLoading = false;
+
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      this.errorMessage = 'Digite um e-mail válido.';
+      this.exibirToast(this.errorMessage, 'warning');
+      return;
+    }
+
+    this.userMoviesService.reset();
+    this.recentlyWatchedService.reset();
+
+    this.errorMessage = '';
+    this.isLoading = true;
+
+    const loading = await this.loadingCtrl.create({ 
+      message: 'Autenticando...',
+      spinner: 'crescent'
+    });
+    await loading.present();
+
+    try {
+      console.log('Iniciando login para:', this.email);
+      
+      // Realiza o login
+      await this.appwrite.login(this.email, this.password);
+      
+      console.log('Login realizado, aguardando 1 segundo...');
+      // Aguarda para garantir que a sessão foi criada
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      console.log('Carregando dados do usuário...');
+      // Carrega os dados do usuário
+      await Promise.all([
+        this.cartService.loadCart(),
+        this.userMoviesService.loadUserMovies(),
+        this.recentlyWatchedService.loadRecentlyWatched()
+      ]);
+
+      await loading.dismiss();
+      await this.exibirToast('Login realizado com sucesso!', 'success');
+      
+      console.log('Redirecionando para profile...');
+      this.router.navigate(['/profile'], { replaceUrl: true });
+      
+    } catch (error: any) {
+      await loading.dismiss();
+      
+      console.error('Erro completo no login:', error);
+      
+      if (error?.code === 401) {
+        this.errorMessage = 'E-mail ou senha incorretos.';
+        await this.exibirToast(this.errorMessage, 'danger');
+      } else if (error?.code === 429) {
+        this.errorMessage = 'Muitas tentativas. Tente novamente mais tarde.';
+        await this.exibirToast(this.errorMessage, 'warning');
+      } else {
+        this.errorMessage = 'Erro ao fazer login. Verifique sua conexão.';
+        await this.exibirToast(this.errorMessage, 'danger');
+      }
+    } finally {
+      this.isLoading = false;
+    }
   }
-}
 
   recuperarSenha() {
     this.exibirToast('Funcionalidade de recuperação em breve.', 'warning');
@@ -128,9 +147,9 @@ async entrar() {
       message: msg,
       duration: 3000,
       color: cor as any,
-      position: 'bottom', 
+      position: 'bottom',
       buttons: cor === 'danger' ? [{ text: 'OK', role: 'cancel' }] : [],
-      cssClass: 'custom-toast' 
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }

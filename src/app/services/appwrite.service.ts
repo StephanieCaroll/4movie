@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Account, ID, Databases, Storage } from 'appwrite';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class AppwriteService {
   private readonly BUCKET_ID = '6a0e532700349b2c726e'; 
 
   constructor() {
+    // Silenciar warnings específicos do Appwrite
     const originalConsoleWarn = console.warn;
     console.warn = (...args) => {
       if (args[0]?.includes?.('localStorage') || args[0]?.includes?.('custom domain')) {
@@ -22,12 +24,22 @@ export class AppwriteService {
     };
 
     this.client
-      .setEndpoint('https://nyc.cloud.appwrite.io/v1')
-      .setProject('6a0283be001b53538516');
+      .setEndpoint(environment.appwrite.endpoint)
+      .setProject(environment.appwrite.projectId);
+    
+    if (environment.production) {
+      this.client.headers['X-Appwrite-Response-Format'] = '0.13.0';
+    }
     
     this.account = new Account(this.client);
     this.databases = new Databases(this.client); 
     this.storage = new Storage(this.client); 
+    
+    console.log('Appwrite configurado:', {
+      endpoint: environment.appwrite.endpoint,
+      projectId: environment.appwrite.projectId,
+      production: environment.production
+    });
   }
 
   async isLoggedIn(): Promise<boolean> {
@@ -36,8 +48,14 @@ export class AppwriteService {
     
     try {
       const session = await this.account.get();
-      return !!session;
-    } catch (error) {
+      console.log('Usuário logado:', session.$id);
+      return true;
+    } catch (error: any) {
+      if (error?.code === 401) {
+        console.log('Usuário não autenticado');
+      } else {
+        console.error('Erro ao verificar login:', error);
+      }
       return false;
     } finally {
       this.checkingSession = false;
@@ -46,7 +64,10 @@ export class AppwriteService {
 
   async createAccount(email: string, password: string, name: string) {
     try {
-      return await this.account.create(ID.unique(), email, password, name);
+      console.log('Criando conta para:', email);
+      const user = await this.account.create(ID.unique(), email, password, name);
+      console.log('Conta criada com sucesso');
+      return user;
     } catch (error: any) {
       console.error('Erro ao criar conta:', error);
       throw error;
@@ -55,9 +76,23 @@ export class AppwriteService {
 
   async login(email: string, password: string) {
     try {
-      return await this.account.createEmailPasswordSession(email, password);
+      console.log('Tentando login:', email);
+      const session = await this.account.createEmailPasswordSession(email, password);
+      console.log('Login realizado, session:', session.$id);
+     
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Verifica se realmente logou
+      const user = await this.account.get();
+      console.log('Usuário autenticado:', user.email);
+      
+      return session;
     } catch (error: any) {
-      console.error('Erro ao fazer login:', error);
+      console.error('Erro detalhado no login:', {
+        code: error?.code,
+        message: error?.message,
+        type: error?.type
+      });
       throw error;
     }
   }
@@ -75,7 +110,9 @@ export class AppwriteService {
 
   async logout() {
     try {
-      return await this.account.deleteSession('current');
+      await this.account.deleteSession('current');
+      console.log('Logout realizado com sucesso');
+      return true;
     } catch (error: any) {
       if (error?.code !== 401) {
         console.error('Erro ao fazer logout:', error);
@@ -85,25 +122,38 @@ export class AppwriteService {
   }
 
   async updateProfileName(name: string) {
-    return await this.account.updateName(name);
+    try {
+      return await this.account.updateName(name);
+    } catch (error) {
+      console.error('Erro ao atualizar nome:', error);
+      throw error;
+    }
   }
 
   async updatePrefs(prefs: any) {
-    return await this.account.updatePrefs(prefs);
+    try {
+      return await this.account.updatePrefs(prefs);
+    } catch (error) {
+      console.error('Erro ao atualizar preferências:', error);
+      throw error;
+    }
   }
 
   async uploadAvatar(file: File) {
-   
-    return await this.storage.createFile(this.BUCKET_ID, ID.unique(), file);
+    try {
+      return await this.storage.createFile(this.BUCKET_ID, ID.unique(), file);
+    } catch (error) {
+      console.error('Erro ao upload avatar:', error);
+      throw error;
+    }
   }
 
- getAvatarUrl(fileId: string): string {
+  getAvatarUrl(fileId: string): string {
     if (!fileId || fileId === 'undefined') {
       return 'https://ionicframework.com/docs/img/demos/avatar.svg';
     }
 
     try {
-      
       const view = this.storage.getFileView(this.BUCKET_ID, fileId);
       return view.toString();
     } catch (error) {
