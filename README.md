@@ -8,7 +8,7 @@
 ![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=for-the-badge&logo=ionic&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 
-<img src="/..." width="1200" alt="EM DESENVOLVIMENTO">
+<img src="src/assets/favicon.png" alt="4Movie" width="1200">
 
 > O **4Movie** é uma aplicação mobile elegante e performática, desenvolvida com **Ionic** e **Angular (Standalone Components)**. O projeto tem como objetivo proporcionar uma experiência de usuário imersiva para descoberta e visualização de detalhes de filmes.
 
