@@ -5,6 +5,16 @@ import { Router } from '@angular/router';
 import { IonicModule, ToastController, LoadingController } from '@ionic/angular';
 import { CartService } from '../../services/cart.service';
 import { AppwriteService } from '../../services/appwrite.service';
+import { addIcons } from 'ionicons';
+import { 
+  personOutline, 
+  mailOutline, 
+  lockClosedOutline, 
+  checkmarkDoneCircleOutline,
+  personCircle,
+  logOutOutline,
+  arrowForwardOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-sign-up',
@@ -20,15 +30,27 @@ export class SignUpPage implements OnInit {
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
 
-  // Dados do formulário
+  // Dados do formulário de cadastro
   nome = '';
   email = '';
-  telefone = '';
   senha = '';
   confirmarSenha = '';
 
-  // Estado do Usuário
+  // Estado do Usuário logado
   usuarioLogado: any = null;
+  isLoading = false;
+
+  constructor() {
+    addIcons({
+      'person-outline': personOutline,
+      'mail-outline': mailOutline,
+      'lock-closed-outline': lockClosedOutline,
+      'checkmark-done-circle-outline': checkmarkDoneCircleOutline,
+      'person-circle': personCircle,
+      'log-out-outline': logOutOutline,
+      'arrow-forward-outline': arrowForwardOutline
+    });
+  }
 
   public get itemCount(): number {
     return this.cartService.getItemCount();
@@ -41,14 +63,17 @@ export class SignUpPage implements OnInit {
   async verificarSessao() {
     try {
       this.usuarioLogado = await this.appwrite.getAccount();
-    } catch (e) {
+      console.log('Usuário logado:', this.usuarioLogado);
+    } catch (error) {
       this.usuarioLogado = null;
+      console.log('Nenhum usuário logado');
     }
   }
 
   async cadastrar() {
+    // Validações
     if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
-      this.exibirToast('Preencha os campos para garantir seu ingresso!', 'warning');
+      this.exibirToast('Preencha todos os campos para criar sua conta!', 'warning');
       return;
     }
 
@@ -57,6 +82,18 @@ export class SignUpPage implements OnInit {
       return;
     }
 
+    if (this.senha.length < 8) {
+      this.exibirToast('A senha deve ter no mínimo 8 caracteres.', 'warning');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      this.exibirToast('Digite um e-mail válido.', 'warning');
+      return;
+    }
+
+    this.isLoading = true;
     const loading = await this.loadingCtrl.create({
       message: 'Criando sua conta de cinema...',
       spinner: 'crescent'
@@ -64,27 +101,61 @@ export class SignUpPage implements OnInit {
     await loading.present();
 
     try {
+      console.log('Criando conta para:', this.email);
+      
+      // Cria a conta no Appwrite
       await this.appwrite.createAccount(this.email, this.senha, this.nome);
+      
       await loading.dismiss();
-      this.exibirToast('Conta criada! Faça login para começar.', 'success');
+      this.exibirToast('Conta criada com sucesso! Faça login para começar.', 'success');
+      
+      // Limpa o formulário
+      this.nome = '';
+      this.email = '';
+      this.senha = '';
+      this.confirmarSenha = '';
+      
+      // Redireciona para o login
       this.router.navigate(['/login']);
-    } catch (e: any) {
+      
+    } catch (error: any) {
       await loading.dismiss();
+      
+      console.error('Erro no cadastro:', error);
+      
       let msg = 'Erro ao criar conta. Tente novamente.';
-      if (e.code === 409) msg = 'Este e-mail já está em uso em nossa base.';
+      if (error?.code === 409) {
+        msg = 'Este e-mail já está em uso. Tente outro e-mail.';
+      } else if (error?.code === 400) {
+        msg = 'Dados inválidos. Verifique suas informações.';
+      }
+      
       this.exibirToast(msg, 'danger');
+    } finally {
+      this.isLoading = false;
     }
   }
 
   async logout() {
-    const loading = await this.loadingCtrl.create({ message: 'Encerrando sessão...' });
+    const loading = await this.loadingCtrl.create({ 
+      message: 'Encerrando sessão...',
+      spinner: 'crescent'
+    });
     await loading.present();
+    
     try {
       await this.appwrite.logout();
       this.usuarioLogado = null;
-      this.exibirToast('Até logo! Sessão encerrada.', 'success');
-    } catch (e) {
-      this.exibirToast('Erro ao sair.', 'danger');
+      this.exibirToast('Até logo! Sessão encerrada com sucesso.', 'success');
+      
+      // Recarrega a página para resetar o estado
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1500);
+      
+    } catch (error: any) {
+      console.error('Erro no logout:', error);
+      this.exibirToast('Erro ao sair. Tente novamente.', 'danger');
     } finally {
       await loading.dismiss();
     }
@@ -95,14 +166,14 @@ export class SignUpPage implements OnInit {
   }
 
   async exibirToast(msg: string, cor: 'success' | 'danger' | 'warning') {
-  const toast = await this.toastCtrl.create({
-    message: msg,
-    duration: 3000,
-    color: cor,
-    position: 'bottom', 
-    buttons: [{ icon: 'close', role: 'cancel' }],
-    cssClass: 'custom-toast'
-  });
-  await toast.present();
-}
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      color: cor,
+      position: 'bottom',
+      buttons: cor === 'danger' ? [{ text: 'OK', role: 'cancel' }] : [],
+      cssClass: 'custom-toast'
+    });
+    await toast.present();
+  }
 }

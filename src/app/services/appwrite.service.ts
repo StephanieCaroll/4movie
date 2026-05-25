@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Client, Account, ID, Databases, Storage } from 'appwrite';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ export class AppwriteService {
   databases: Databases; 
   storage: Storage;
   private checkingSession = false;
-  private readonly BUCKET_ID = '6a0e532700349b2c726e'; 
+  private readonly BUCKET_ID = '6a0e532700349b2c726e';
 
   constructor() {
     // Silenciar warnings específicos do Appwrite
@@ -24,22 +23,16 @@ export class AppwriteService {
     };
 
     this.client
-      .setEndpoint(environment.appwrite.endpoint)
-      .setProject(environment.appwrite.projectId);
-    
-    if (environment.production) {
-      this.client.headers['X-Appwrite-Response-Format'] = '0.13.0';
-    }
+      .setEndpoint('https://nyc.cloud.appwrite.io/v1')  
+      .setProject('6a0283be001b53538516');
     
     this.account = new Account(this.client);
     this.databases = new Databases(this.client); 
     this.storage = new Storage(this.client); 
     
-    console.log('Appwrite configurado:', {
-      endpoint: environment.appwrite.endpoint,
-      projectId: environment.appwrite.projectId,
-      production: environment.production
-    });
+    console.log('✅ Appwrite configurado com sucesso!');
+    console.log('Endpoint:', this.client.config.endpoint);
+    console.log('Project ID:', this.client.config.project);
   }
 
   async isLoggedIn(): Promise<boolean> {
@@ -48,11 +41,11 @@ export class AppwriteService {
     
     try {
       const session = await this.account.get();
-      console.log('Usuário logado:', session.$id);
+      console.log('✅ Usuário logado:', session.$id);
       return true;
     } catch (error: any) {
       if (error?.code === 401) {
-        console.log('Usuário não autenticado');
+        console.log('❌ Usuário não autenticado');
       } else {
         console.error('Erro ao verificar login:', error);
       }
@@ -64,31 +57,34 @@ export class AppwriteService {
 
   async createAccount(email: string, password: string, name: string) {
     try {
-      console.log('Criando conta para:', email);
+      console.log('📝 Criando conta para:', email);
       const user = await this.account.create(ID.unique(), email, password, name);
-      console.log('Conta criada com sucesso');
+      console.log('✅ Conta criada com sucesso');
       return user;
     } catch (error: any) {
-      console.error('Erro ao criar conta:', error);
+      console.error('❌ Erro ao criar conta:', error);
       throw error;
     }
   }
 
   async login(email: string, password: string) {
     try {
-      console.log('Tentando login:', email);
+      console.log('🔐 Tentando login:', email);
+      console.log('Usando endpoint:', this.client.config.endpoint);
+      
       const session = await this.account.createEmailPasswordSession(email, password);
-      console.log('Login realizado, session:', session.$id);
-     
+      console.log('✅ Login realizado, session:', session.$id);
+      
+      // Aguarda um pouco para garantir que a sessão foi criada
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Verifica se realmente logou
       const user = await this.account.get();
-      console.log('Usuário autenticado:', user.email);
+      console.log('✅ Usuário autenticado:', user.email);
       
       return session;
     } catch (error: any) {
-      console.error('Erro detalhado no login:', {
+      console.error('❌ Erro detalhado no login:', {
         code: error?.code,
         message: error?.message,
         type: error?.type
@@ -111,7 +107,7 @@ export class AppwriteService {
   async logout() {
     try {
       await this.account.deleteSession('current');
-      console.log('Logout realizado com sucesso');
+      console.log('✅ Logout realizado com sucesso');
       return true;
     } catch (error: any) {
       if (error?.code !== 401) {
