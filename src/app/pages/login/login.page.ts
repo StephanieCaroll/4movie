@@ -70,7 +70,6 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    // Validação básica de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email)) {
       this.errorMessage = 'Digite um e-mail válido.';
@@ -93,15 +92,11 @@ export class LoginPage implements OnInit {
     try {
       console.log('Iniciando login para:', this.email);
       
-      // Realiza o login
       await this.appwrite.login(this.email, this.password);
       
-      console.log('Login realizado, aguardando 1 segundo...');
-      // Aguarda para garantir que a sessão foi criada
+      console.log('Login realizado, carregando dados...');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      console.log('Carregando dados do usuário...');
-      // Carrega os dados do usuário
       await Promise.all([
         this.cartService.loadCart(),
         this.userMoviesService.loadUserMovies(),

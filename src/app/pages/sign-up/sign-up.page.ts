@@ -30,13 +30,10 @@ export class SignUpPage implements OnInit {
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
 
-  // Dados do formulário de cadastro
   nome = '';
   email = '';
   senha = '';
   confirmarSenha = '';
-
-  // Estado do Usuário logado
   usuarioLogado: any = null;
   isLoading = false;
 
@@ -62,16 +59,21 @@ export class SignUpPage implements OnInit {
 
   async verificarSessao() {
     try {
-      this.usuarioLogado = await this.appwrite.getAccount();
-      console.log('Usuário logado:', this.usuarioLogado);
+     
+      const user = await this.appwrite.getAccount();
+      this.usuarioLogado = user;
+      if (user) {
+        console.log('Usuário logado:', user);
+      } else {
+        console.log('Nenhum usuário logado');
+      }
     } catch (error) {
       this.usuarioLogado = null;
-      console.log('Nenhum usuário logado');
+      console.log('Erro ao verificar sessão');
     }
   }
 
   async cadastrar() {
-    // Validações
     if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
       this.exibirToast('Preencha todos os campos para criar sua conta!', 'warning');
       return;
@@ -103,19 +105,16 @@ export class SignUpPage implements OnInit {
     try {
       console.log('Criando conta para:', this.email);
       
-      // Cria a conta no Appwrite
       await this.appwrite.createAccount(this.email, this.senha, this.nome);
       
       await loading.dismiss();
       this.exibirToast('Conta criada com sucesso! Faça login para começar.', 'success');
       
-      // Limpa o formulário
       this.nome = '';
       this.email = '';
       this.senha = '';
       this.confirmarSenha = '';
       
-      // Redireciona para o login
       this.router.navigate(['/login']);
       
     } catch (error: any) {
@@ -148,7 +147,6 @@ export class SignUpPage implements OnInit {
       this.usuarioLogado = null;
       this.exibirToast('Até logo! Sessão encerrada com sucesso.', 'success');
       
-      // Recarrega a página para resetar o estado
       setTimeout(() => {
         this.router.navigate(['/login']);
       }, 1500);

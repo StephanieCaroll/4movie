@@ -45,7 +45,8 @@ export class AppwriteService {
       return true;
     } catch (error: any) {
       if (error?.code === 401) {
-        console.log('❌ Usuário não autenticado');
+        
+        console.log('ℹ️ Usuário não autenticado (estado normal)');
       } else {
         console.error('Erro ao verificar login:', error);
       }
@@ -97,9 +98,12 @@ export class AppwriteService {
     try {
       return await this.account.get();
     } catch (error: any) {
-      if (error?.code !== 401) {
-        console.error('Erro ao obter conta:', error);
+      if (error?.code === 401) {
+       
+        console.log('ℹ️ Usuário não autenticado, retornando null');
+        return null;
       }
+      console.error('Erro ao obter conta:', error);
       throw error;
     }
   }
