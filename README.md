@@ -124,7 +124,7 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
 ## 📫 Contribuindo para 4Movie
 
 
-Para contribuir com **4Movie**, siga estas etapas:
+Para contribuir com *4Movie*, siga estas etapas:
 
 1. Bifurque este repositório.
 2. Crie um branch:  
