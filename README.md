@@ -1,4 +1,4 @@
-# 🎬 4Movie (Em Desenvolvimento)
+# 🎬 4Movie
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/StephanieCaroll/4movie?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/StephanieCaroll/bakery?style=for-the-badge)
@@ -8,36 +8,28 @@
 ![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=for-the-badge&logo=ionic&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 
-<img src="src/assets/favicon.png" alt="4Movie" width="1200">
+<img src="src/assets/icon/image.app.png" alt="4Movie" width="1200">
 
-> O **4Movie** é uma aplicação mobile elegante e performática, desenvolvida com **Ionic** e **Angular (Standalone Components)**. O projeto tem como objetivo proporcionar uma experiência de usuário imersiva para descoberta e visualização de detalhes de filmes.
+> **O 4Movie** é uma aplicação mobile focada em descoberta de filmes, desenvolvida com uma arquitetura moderna baseada em **Angular 18+** (Standalone Components) e **Ionic 8+**.
 
 ## ✨ Sobre o Projeto
 
-O 4Movie foi arquitetado focando nas melhores práticas atuais do ecossistema Angular, utilizando **Standalone Components** para reduzir a complexidade e aumentar a modularidade.
+O projeto foi arquitetado para oferecer uma experiência de usuário (UX) elegante, utilizando práticas recomendadas de performance e modularidade. O foco é a navegação fluida e a visualização detalhada de conteúdos cinematográficos.
 
 ### Principais Tecnologias
 - **Frameworks**: Angular 18+ e Ionic 8+.
 - **Arquitetura**: Standalone Components (sem NgModules).
-- **Gerenciamento**: Services dedicados para integração com APIs.
+- **Gerenciamento**: Services dedicados para integração com APIs. **(MovieService, CartService, FavoritesService, AppwriteService).**
 - **Utilitários**: Pipes customizados para formatação de dados.
+- **Estilização**: SCSS global e customizado por componente.
 ---
 
-### Funcionalidades Implementadas
-- ✅ **Estrutura Standalone**: Arquitetura moderna e limpa.
-- ✅ **Serviço de Filmes**: Implementação de `MovieService` com `HttpClient` para requisições de dados.
-- ✅ **Pipes Personalizados**: Formatação de moeda (BRL) e manipulação de gêneros cinematográficos.
-- ✅ **Sistema de Navegação**: Rotas configuradas para transição fluida entre *Home* e *Detalhes*.
-- ✅ **Guards de Autenticação**: Proteção de rotas implementada.
-
----
-
-## 🛠️ Roadmap (Em Desenvolvimento)
-
-- [ ] **Consumo de API**: Integração com a TMDB API para listagem dinâmica.
-- [ ] **Diretiva de Acessibilidade/Destaque**: Efeitos visuais responsivos.
-- [ ] **Persistência de Dados**: Implementação de `CartService` e `FavoritesService`.
-- [ ] **UI/UX Premium**: Ajustes finos na paleta de cores (Dark Theme com acentos em dourado).
+### Funcionalidades
+- ✅ **Arquitetura Standalone**: Código limpo e fácil de manter.
+- ✅ **Navegação Inteligente**: Sistema de rotas modular com **AuthGuards** (auth.guard.ts).
+- ✅ **Pipes Personalizados**: Formatação de moeda (currency-brl), números (compact-number) e tratamento de gêneros.
+- ✅ **Experiência do Usuário**: Modal de reprodução, gestão de lista de favoritos e histórico de exibição.
+- ✅ **Integração Backend**: Preparado para integração com Appwrite para autenticação e persistência.
 
 ---
 
