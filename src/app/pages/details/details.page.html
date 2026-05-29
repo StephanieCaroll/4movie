@@ -69,8 +69,8 @@
                 Assistir Agora
               </ion-button>
               
-              <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
-                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+              <ion-button fill="solid" class="btn-list" (click)="toggleFavorite()">
+                <ion-icon slot="start" [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
                 Minha Lista
               </ion-button>
             </div>
@@ -86,6 +86,11 @@
               <ion-button class="btn-primary btn-gold" expand="block" (click)="darPlayNoFilme()">
                 <ion-icon slot="start" name="play"></ion-icon>
                 Assistir Agora (Alugado)
+              </ion-button>
+
+              <ion-button fill="solid" class="btn-list" (click)="toggleFavorite()" style="margin-top: 10px;">
+                <ion-icon slot="start" [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+                Minha Lista
               </ion-button>
 
               <div class="upgrade-box" style="margin-top: 15px;">
@@ -148,8 +153,8 @@
                 <span class="price-tag">{{ formattedPrice }}</span>
               </ion-button>
               
-              <ion-button fill="solid" color="light" class="btn-list" (click)="toggleFavorite()">
-                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+              <ion-button fill="solid" class="btn-list" (click)="toggleFavorite()">
+                <ion-icon slot="start" [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
                 Minha Lista
               </ion-button>
             </div>
@@ -191,14 +196,19 @@
           </div>
         }
 
-        @if (trailerUrl) {
-          <div class="detail-section">
-            <h2 class="section-title">Trailer Oficial</h2>
+        <div class="detail-section">
+          <h2 class="section-title">Trailer Oficial</h2>
+          @if (trailerUrl) {
             <div class="trailer-container glass-card">
               <iframe [src]="trailerUrl" frameborder="0" allowfullscreen></iframe>
             </div>
-          </div>
-        }
+          } @else {
+            <div class="trailer-container glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; background: rgba(220, 38, 38, 0.05); border: 1px dashed rgba(220, 38, 38, 0.2); border-radius: 16px; min-height: 200px;">
+              <ion-icon name="sad-outline" style="font-size: 45px; color: #dc2626; margin-bottom: 12px;"></ion-icon>
+              <span style="color: #fca5a5; font-size: 0.95rem; font-weight: 500;">Nenhum trailer oficial foi encontrado para este filme no banco de dados.</span>
+            </div>
+          }
+        </div>
 
         <div class="detail-section">
           <h2 class="section-title">Informações Técnicas</h2>

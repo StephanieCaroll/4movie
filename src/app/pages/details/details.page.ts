@@ -131,7 +131,6 @@ export class DetailsPage implements OnInit, OnDestroy {
   scrollRecomendados(direction: 'left' | 'right') {
     if (this.recomendadosScroll) {
       const element = this.recomendadosScroll.nativeElement;
-      // Define o tanto que a lista vai rolar de acordo com o tamanho da tela
       const scrollAmount = window.innerWidth > 768 ? 600 : 300; 
       
       if (direction === 'left') {
@@ -174,9 +173,13 @@ export class DetailsPage implements OnInit, OnDestroy {
   }
 
   carregarTrailer(id: number) {
+    
+    this.trailerUrl = null;
+
     this.movieService.getMovieVideos(id).subscribe({
       next: (res: any) => {
-        if (res && Array.isArray(res.results)) {
+        if (res && Array.isArray(res.results) && res.results.length > 0) {
+        
           let trailer = res.results.find((v: any) => 
             v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser') && v.iso_639_1 === 'pt'
           );
@@ -191,10 +194,19 @@ export class DetailsPage implements OnInit, OnDestroy {
             this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
               `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`
             );
+          } else {
+           
+            this.exibirToast('Este filme não possui um trailer oficial disponível.', 'danger');
           }
+        } else {
+         
+          this.exibirToast('Nenhum trailer foi encontrado para este filme no banco de dados.', 'danger');
         }
       },
-      error: () => {}
+      error: (err) => {
+        console.error('Erro ao buscar vídeos do filme:', err);
+        this.exibirToast('Não foi possível carregar as mídias deste filme.', 'danger');
+      }
     });
   }
 
@@ -237,12 +249,12 @@ export class DetailsPage implements OnInit, OnDestroy {
     if (!this.filme) return;
 
     if (this.selectedType === 'rent' && this.jaAluguei) {
-      this.exibirToast('Você já possui um aluguel ativo para este filme.');
+      this.exibirToast('Você já possui um aluguel ativo para este filme.', 'danger');
       return;
     }
 
     if (this.jaComprei) {
-      this.exibirToast('Você já adquiriu este filme permanentemente.');
+      this.exibirToast('Você já adquiriu este filme permanentemente.', 'danger');
       return;
     }
 
@@ -255,7 +267,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   async darPlayNoFilme() {
     if (!this.jaComprei && !this.jaAluguei) {
-      this.exibirToast('Acesso negado. Você precisa alugar ou comprar o filme para assistir.');
+      this.exibirToast('Acesso negado. Você precisa alugar ou comprar o filme para assistir.', 'danger');
       return;
     }
 
@@ -272,13 +284,14 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.userMoviesService.loadUserMovies();
   }
 
-  async exibirToast(mensagem: string) {
+  async exibirToast(mensagem: string, cor: 'success' | 'danger' | 'warning' | 'dark' = 'dark') {
     const toast = await this.toastCtrl.create({
       message: mensagem,
-      duration: 2500,
+      duration: 3500,
       position: 'bottom',
-      color: 'dark',
-      cssClass: 'custom-toast'
+      color: cor === 'success' ? 'success' : undefined, 
+      buttons: cor === 'danger' ? [{ text: 'OK', role: 'cancel' }] : [],
+      cssClass: cor === 'success' ? 'success-toast' : 'custom-toast' 
     });
     await toast.present();
   }

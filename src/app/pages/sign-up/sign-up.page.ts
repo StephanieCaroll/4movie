@@ -59,7 +59,6 @@ export class SignUpPage implements OnInit {
 
   async verificarSessao() {
     try {
-     
       const user = await this.appwrite.getAccount();
       this.usuarioLogado = user;
       if (user) {
@@ -74,24 +73,25 @@ export class SignUpPage implements OnInit {
   }
 
   async cadastrar() {
+    // Validações Locais 
     if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
-      this.exibirToast('Preencha todos os campos para criar sua conta!', 'warning');
-      return;
-    }
-
-    if (this.senha !== this.confirmarSenha) {
-      this.exibirToast('As senhas não coincidem.', 'warning');
-      return;
-    }
-
-    if (this.senha.length < 8) {
-      this.exibirToast('A senha deve ter no mínimo 8 caracteres.', 'warning');
+      this.exibirToast('Preencha todos os campos para criar sua conta!', 'danger');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email)) {
-      this.exibirToast('Digite um e-mail válido.', 'warning');
+      this.exibirToast('O formato do e-mail digitado não é válido. Verifique se há algum erro de digitação.', 'danger');
+      return;
+    }
+
+    if (this.senha.length < 8) {
+      this.exibirToast('Sua senha está muito curta! Ela precisa ter no mínimo 8 caracteres para garantir sua segurança.', 'danger');
+      return;
+    }
+
+    if (this.senha !== this.confirmarSenha) {
+      this.exibirToast('As senhas digitadas não coincidem. Certifique-se de digitar a mesma senha nos dois campos.', 'danger');
       return;
     }
 
@@ -104,29 +104,39 @@ export class SignUpPage implements OnInit {
 
     try {
       console.log('Criando conta para:', this.email);
-      
       await this.appwrite.createAccount(this.email, this.senha, this.nome);
+      console.log('Efetuando login automático para:', this.email);
+      await this.appwrite.login(this.email, this.senha);
       
       await loading.dismiss();
-      this.exibirToast('Conta criada com sucesso! Faça login para começar.', 'success');
+      this.exibirToast('Conta criada com sucesso! Seja bem-vindo(a).', 'success');
       
+      // Limpa os campos do formulário
       this.nome = '';
       this.email = '';
       this.senha = '';
       this.confirmarSenha = '';
-      
-      this.router.navigate(['/login']);
+      this.router.navigate(['/profile']);
       
     } catch (error: any) {
       await loading.dismiss();
+      console.error('Erro detalhado no cadastro:', error);
       
-      console.error('Erro no cadastro:', error);
+      // Mensagem padrão genérica caso o erro não caia nos mapeamentos abaixo
+      let msg = 'Não foi possível criar sua conta neste momento. Verifique sua conexão ou tente novamente.';
       
-      let msg = 'Erro ao criar conta. Tente novamente.';
-      if (error?.code === 409) {
-        msg = 'Este e-mail já está em uso. Tente outro e-mail.';
+      if (error?.type === 'user_already_exists' || error?.code === 409) {
+        msg = 'Este endereço de e-mail já está sendo utilizado por outra conta registrada.';
+      } else if (error?.type === 'password_too_short') {
+        msg = 'O servidor recusou a senha: ela precisa ter pelo menos 8 caracteres.';
+      } else if (error?.type === 'user_email_invalid' || error?.type === 'user_invalid_email') {
+        msg = 'O servidor identificou este endereço de e-mail como inválido.';
+      } else if (error?.type === 'user_password_invalid') {
+        msg = 'A senha informada não atende aos requisitos de segurança recomendados.';
       } else if (error?.code === 400) {
-        msg = 'Dados inválidos. Verifique suas informações.';
+        msg = 'Os dados enviados estão inválidos ou incompletos. Revise os campos.';
+      } else if (error?.code === 500) {
+        msg = 'Erro interno no servidor de autenticação. Por favor, tente novamente mais tarde.';
       }
       
       this.exibirToast(msg, 'danger');
@@ -166,11 +176,11 @@ export class SignUpPage implements OnInit {
   async exibirToast(msg: string, cor: 'success' | 'danger' | 'warning') {
     const toast = await this.toastCtrl.create({
       message: msg,
-      duration: 3000,
-      color: cor,
+      duration: 4000, 
+      color: cor === 'success' ? 'success' : undefined,
       position: 'bottom',
-      buttons: cor === 'danger' ? [{ text: 'OK', role: 'cancel' }] : [],
-      cssClass: 'custom-toast'
+      buttons: cor !== 'success' ? [{ text: 'OK', role: 'cancel' }] : [],
+      cssClass: cor === 'success' ? 'success-toast' : 'custom-toast'
     });
     await toast.present();
   }

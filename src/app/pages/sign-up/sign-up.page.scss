@@ -228,6 +228,18 @@
   }
 }
 
+::v-deep ion-toast.custom-toast {
+  --background: #dc2626 !important;
+  --color: #ffffff !important;
+  font-weight: 500;
+
+  &::part(button) {
+    color: #ffffff !important;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
