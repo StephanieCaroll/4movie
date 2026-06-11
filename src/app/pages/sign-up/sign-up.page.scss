@@ -90,7 +90,6 @@
   border-radius: 12px;
   border: 1px solid #2a2a2a;
   transition: all 0.3s ease;
-  overflow: hidden;
   cursor: text;
 
   &:focus-within {
@@ -110,8 +109,7 @@
   transition: all 0.3s ease;
   margin: 0;
   flex-shrink: 0;
-  pointer-events: none; 
-  flex-shrink: 0;
+  pointer-events: none;
 }
 
 .input-wrapper:focus-within .input-icon {
@@ -133,10 +131,13 @@
   font-size: 1rem;
   font-weight: 400;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  pointer-events: auto !important;
 
   &::part(native) {
     background: transparent;
+    pointer-events: auto !important;
+    cursor: text;
   }
 
   &.has-focus {
@@ -276,21 +277,5 @@
   .input-wrapper .input-icon {
     width: 45px;
     font-size: 18px;
-  }
-}
-
-//teste
-
-.input-wrapper {
-  cursor: text;
-  
-  ion-input {
-    pointer-events: auto !important;
-    z-index: 2;
-    position: relative;
-  }
-  
-  .input-icon {
-    pointer-events: none;
   }
 }

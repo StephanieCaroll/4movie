@@ -1,4 +1,3 @@
-
 .crimson-bg {
   --background: radial-gradient(circle at 30% 10%, #1a1a1a 0%, #000000 100%);
   --padding-top: 20px;
@@ -134,10 +133,13 @@ ion-toolbar {
   font-size: 1rem;
   font-weight: 400;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  pointer-events: auto !important;
 
   &::part(native) {
     background: transparent;
+    pointer-events: auto !important;
+    cursor: text;
   }
 }
 
@@ -259,21 +261,5 @@ ion-toolbar {
 
   .crimson-icon {
     font-size: 32px;
-  }
-}
-
-//teste
-
-.input-wrapper {
-  cursor: text;
-  
-  ion-input {
-    pointer-events: auto !important;
-    z-index: 2;
-    position: relative;
-  }
-  
-  .input-icon {
-    pointer-events: none;
   }
 }
