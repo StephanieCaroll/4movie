@@ -261,3 +261,19 @@ ion-toolbar {
     font-size: 32px;
   }
 }
+
+//teste
+
+.input-wrapper {
+  cursor: text;
+  
+  ion-input {
+    pointer-events: auto !important;
+    z-index: 2;
+    position: relative;
+  }
+  
+  .input-icon {
+    pointer-events: none;
+  }
+}
