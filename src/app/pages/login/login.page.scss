@@ -97,6 +97,7 @@ ion-toolbar {
   border: 1px solid #2a2a2a;
   transition: all 0.3s ease;
   padding-left: 15px;
+  cursor: text;
 
   &:focus-within {
     border-color: #dc2626;
@@ -110,6 +111,8 @@ ion-toolbar {
   font-size: 20px;
   margin-right: 12px;
   transition: color 0.3s ease;
+  pointer-events: none;
+  flex-shrink: 0;
 }
 
 .input-wrapper:focus-within .input-icon {
@@ -130,6 +133,8 @@ ion-toolbar {
   flex: 1;
   font-size: 1rem;
   font-weight: 400;
+  position: relative;
+  z-index: 1;
 
   &::part(native) {
     background: transparent;

@@ -42,7 +42,7 @@ export class UserMoviesService {
     try {
       const user = await this.userService.getCurrentUser();
       if (!user) {
-        console.log('Usuário não logado, não é possível carregar filmes');
+        console.log('Usuário não logado, não é possível carregar filmes assistidos');
         this.userMoviesSignal.set([]);
         return;
       }
