@@ -19,26 +19,32 @@
 
         <div class="input-wrapper">
           <ion-icon name="mail-outline" class="input-icon" aria-hidden="true"></ion-icon>
-          <input
+          <ion-input
             type="email"
             [(ngModel)]="email"
             name="email"
+            label="E-mail"
+            label-placement="stacked"
             placeholder="Seu e-mail"
-            class="native-input"
+            class="crimson-input"
             [disabled]="isLoading"
             required>
+          </ion-input>
         </div>
 
         <div class="input-wrapper">
           <ion-icon name="lock-closed-outline" class="input-icon" aria-hidden="true"></ion-icon>
-          <input
+          <ion-input
             type="password"
             [(ngModel)]="password"
             name="password"
+            label="Palavra-passe"
+            label-placement="stacked"
             placeholder="Sua senha"
-            class="native-input"
+            class="crimson-input"
             [disabled]="isLoading"
             required>
+          </ion-input>
         </div>
 
         <div class="forgot-password">
