@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonCard, IonIcon, IonButton, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { FavoritesService } from '../../services/favorites.service';
 import { addIcons } from 'ionicons';
 import { heart, trashOutline, arrowBackOutline } from 'ionicons/icons';
@@ -21,13 +21,8 @@ import { LazyLoadDirective } from '../../directives/lazy-load';
     IonToolbar,
     IonButtons,
     IonBackButton,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonCard,
     IonIcon,
     IonButton,
-    IonLabel,
     LazyLoadDirective
   ]
 })

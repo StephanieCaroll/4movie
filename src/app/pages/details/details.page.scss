@@ -145,6 +145,14 @@ $text-muted: #a3a3a3;
         color: $text-light;
         margin: 0 0 4px;
         line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; 
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        white-space: normal;
+        max-width: 100%;
       }
 
       .movie-quick-stats {

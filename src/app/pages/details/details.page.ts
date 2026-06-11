@@ -1,15 +1,14 @@
 import { Component, OnInit, OnDestroy, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { IonContent, IonSpinner, IonIcon, IonButton, IonBadge, IonSelect, IonSelectOption, IonItem, IonLabel, ModalController, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonSpinner, IonIcon, IonButton, IonSelect, IonSelectOption, IonItem, IonLabel, ModalController, ToastController } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { MovieService } from '../../services/movie.service';
 import { CartService } from '../../services/cart.service';
 import { UserMoviesService } from '../../services/user-movies.service';
 import { FavoritesService } from '../../services/favorites.service'; 
-import { GenreNamePipe } from '../../pipes/genre-name.pipe';
 import { addIcons } from 'ionicons';
 import { CompactNumberPipe } from '../../pipes/compact-number-pipe';
 import { PlayerModalComponent } from '../../components/player-modal/player-modal.component';
@@ -36,18 +35,17 @@ import { LazyLoadDirective } from '../../directives/lazy-load';
     IonSpinner, 
     IonIcon, 
     IonButton,
-    IonBadge,
     IonSelect,
     IonSelectOption,
     IonItem,
     IonLabel,
-    GenreNamePipe,
     CompactNumberPipe,
     LazyLoadDirective
   ]
 })
 export class DetailsPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private navCtrl = inject(NavController);
   public movieService = inject(MovieService);
   private cartService = inject(CartService);
@@ -64,6 +62,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   loading: boolean = true;
   trailerUrl: SafeResourceUrl | null = null;
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  tituloRecebidoDaLista: string = '';
   
   selectedType: 'rent' | 'buy' = 'rent';
   selectedDays: number = 1;
@@ -79,6 +78,12 @@ export class DetailsPage implements OnInit, OnDestroy {
   ];
 
   constructor() {
+   
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras.state && nav.extras.state['tituloBR']) {
+      this.tituloRecebidoDaLista = nav.extras.state['tituloBR'];
+    }
+
     addIcons({ 
       star, arrowBackOutline, cartOutline, heartOutline, heart, 
       sadOutline, homeOutline, playOutline, timeOutline,
@@ -107,6 +112,11 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.movieService.getMovieById(id).subscribe({
       next: (filme) => {
         this.filme = filme;
+        
+        if (this.tituloRecebidoDaLista) {
+          this.filme.title = this.tituloRecebidoDaLista;
+        }
+
         this.loading = false;
         this.carregarTrailer(id);
         this.carregarRecomendados(id);
@@ -173,7 +183,6 @@ export class DetailsPage implements OnInit, OnDestroy {
   }
 
   carregarTrailer(id: number) {
-    
     this.trailerUrl = null;
 
     this.movieService.getMovieVideos(id).subscribe({
@@ -195,11 +204,9 @@ export class DetailsPage implements OnInit, OnDestroy {
               `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`
             );
           } else {
-           
             this.exibirToast('Este filme não possui um trailer oficial disponível.', 'danger');
           }
         } else {
-         
           this.exibirToast('Nenhum trailer foi encontrado para este filme no banco de dados.', 'danger');
         }
       },
