@@ -45,54 +45,42 @@
 
           <div class="input-wrapper">
             <ion-icon name="person-outline" class="input-icon"></ion-icon>
-            <ion-input 
-              type="text" 
-              [(ngModel)]="nome" 
-              name="nome" 
-              label="Nome Completo" 
-              label-placement="stacked"
-              placeholder="Seu nome" 
-              class="crimson-input">
-            </ion-input>
+            <input
+              type="text"
+              [(ngModel)]="nome"
+              name="nome"
+              placeholder="Seu nome"
+              class="native-input">
           </div>
 
           <div class="input-wrapper">
             <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-            <ion-input 
-              type="email" 
-              [(ngModel)]="email" 
-              name="email" 
-              label="E-mail" 
-              label-placement="stacked"
-              placeholder="Seu e-mail" 
-              class="crimson-input">
-            </ion-input>
+            <input
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="Seu e-mail"
+              class="native-input">
           </div>
 
           <div class="input-wrapper">
             <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-            <ion-input 
-              type="password" 
-              [(ngModel)]="senha" 
-              name="senha" 
-              label="Senha" 
-              label-placement="stacked"
-              placeholder="Crie uma senha" 
-              class="crimson-input">
-            </ion-input>
+            <input
+              type="password"
+              [(ngModel)]="senha"
+              name="senha"
+              placeholder="Crie uma senha"
+              class="native-input">
           </div>
 
           <div class="input-wrapper">
             <ion-icon name="checkmark-done-circle-outline" class="input-icon"></ion-icon>
-            <ion-input 
-              type="password" 
-              [(ngModel)]="confirmarSenha" 
-              name="confirmarSenha" 
-              label="Confirmar Senha" 
-              label-placement="stacked"
-              placeholder="Repita a senha" 
-              class="crimson-input">
-            </ion-input>
+            <input
+              type="password"
+              [(ngModel)]="confirmarSenha"
+              name="confirmarSenha"
+              placeholder="Repita a senha"
+              class="native-input">
           </div>
 
           <ion-button expand="block" type="submit" class="register-btn" [disabled]="!nome || !email || !senha || (senha !== confirmarSenha)">
